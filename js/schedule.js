@@ -30,8 +30,29 @@
   var root = document.getElementById('schedule');
   if (!root) return;
 
+
+  /**
+   * Site root, derived from this script's own URL.
+   *
+   * The site runs at the domain root in production (parcradio.net) but at a
+   * subpath when a fork publishes it for review
+   * (…github.io/parc-website-beta/). Hard-coding "/data/…" breaks the second
+   * case; deriving the root from where this file was loaded from works in both
+   * with nothing to configure.
+   */
+  var BASE = (function () {
+    var s = document.currentScript;
+    if (!s) {
+      var all = document.getElementsByTagName('script');
+      for (var i = all.length - 1; i >= 0; i--) {
+        if (/\/js\/[a-z-]+\.js(\?|$)/.test(all[i].src)) { s = all[i]; break; }
+      }
+    }
+    return s && s.src ? s.src.replace(/js\/[^/]+$/, '') : '/';
+  })();
+
   var WORKER_URL = (root.getAttribute('data-availability-endpoint') || '').trim();
-  var SNAPSHOT_URL = '/data/availability.json';
+  var SNAPSHOT_URL = BASE + 'data/availability.json';
   var GATE_KEY = 'parc-schedule-audience';
 
   var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

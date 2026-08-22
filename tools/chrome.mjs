@@ -10,6 +10,26 @@ import { SITE, NAV } from './site-data.mjs';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/**
+ * Relative-path prefix for a page, so a build works at ANY mount point.
+ *
+ * The site is served from the domain root in production (parcradio.net) but
+ * from a SUBPATH when a fork publishes it for review
+ * (collinpikeusa.github.io/parc-website-beta/). Root-relative "/css/site.css"
+ * breaks in the second case. Emitting "../css/site.css" from pages/ and
+ * "css/site.css" from the root works in both, with no build flag to remember.
+ */
+export function relPrefix(rel) {
+  const depth = rel.replace(/\\/g, '/').split('/').length - 1;
+  return depth ? '../'.repeat(depth) : '';
+}
+
+/** Turn a site-absolute path ("/pages/faq.html") into one relative to `rel`. */
+export function link(rel, path) {
+  if (!path || !path.startsWith('/')) return path;
+  return relPrefix(rel) + path.slice(1);
+}
+
 /* ---------- head ---------------------------------------------------------- */
 export function buildHead(rel, meta) {
   const url = SITE.origin + '/' + rel.replace(/\\/g, '/');
@@ -40,10 +60,10 @@ export function buildHead(rel, meta) {
     L.push('');
   }
   L.push('<meta name="theme-color" content="#BA0005">');
-  L.push('<link rel="icon" href="/favicon.ico" sizes="any">');
-  L.push('<link rel="stylesheet" href="/css/site.css">');
+  L.push(`<link rel="icon" href="${link(rel, '/favicon.ico')}" sizes="any">`);
+  L.push(`<link rel="stylesheet" href="${link(rel, '/css/site.css')}">`);
   if (meta.preloadBanner !== false)
-    L.push(`<link rel="preload" as="image" href="${SITE.banner}" fetchpriority="high">`);
+    L.push(`<link rel="preload" as="image" href="${link(rel, SITE.banner)}" fetchpriority="high">`);
   if (meta.schemaJson) {
     L.push('');
     L.push('<script type="application/ld+json">');
@@ -59,11 +79,11 @@ export function navHtml(rel) {
   const item = (n) => {
     if (!n.children) {
       const cur = n.href === here ? ' aria-current="page"' : '';
-      return `        <li><a href="${esc(n.href)}"${cur}>${esc(n.label)}</a></li>`;
+      return `        <li><a href="${esc(link(rel, n.href))}"${cur}>${esc(n.label)}</a></li>`;
     }
     const kids = n.children.map((c) => {
       const ext = c.external ? ' target="_blank" rel="noopener"' : '';
-      return `            <li><a href="${esc(c.href)}"${ext}>${esc(c.label)}</a></li>`;
+      return `            <li><a href="${esc(link(rel, c.href))}"${ext}>${esc(c.label)}</a></li>`;
     }).join('\n');
     return `        <li class="has-sub">
           <button type="button" class="nav-sub-toggle" aria-expanded="false">${esc(n.label)}</button>
@@ -81,10 +101,10 @@ export function buildHeader(rel) {
   return `<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="site-header">
-  <a class="site-banner" href="/index.html" aria-label="${esc(SITE.name)} home">
+  <a class="site-banner" href="${link(rel, '/index.html')}" aria-label="${esc(SITE.name)} home">
     <picture>
-      <source media="(max-width: 700px)" srcset="${SITE.bannerMobile}">
-      <img src="${SITE.banner}" width="1600" height="192" fetchpriority="high"
+      <source media="(max-width: 700px)" srcset="${link(rel, SITE.bannerMobile)}">
+      <img src="${link(rel, SITE.banner)}" width="1600" height="192" fetchpriority="high"
            alt="${esc(SITE.name)}">
     </picture>
   </a>
@@ -108,7 +128,7 @@ ${navHtml(rel)}
 }
 
 /* ---------- footer -------------------------------------------------------- */
-export function buildFooter() {
+export function buildFooter(rel = 'index.html') {
   const a = SITE.address;
   return `</main>
 
@@ -126,25 +146,25 @@ export function buildFooter() {
     <div>
       <h2>Exams</h2>
       <ul>
-        <li><a href="/pages/calendar.html">Schedule an exam</a></li>
-        <li><a href="/pages/Online_InstructionSeparation.html">Online testing</a></li>
-        <li><a href="/pages/inperson.html">In-person testing</a></li>
-        <li><a href="/pages/faq.html">FAQ</a></li>
+        <li><a href="${link(rel, '/pages/calendar.html')}">Schedule an exam</a></li>
+        <li><a href="${link(rel, '/pages/Online_InstructionSeparation.html')}">Online testing</a></li>
+        <li><a href="${link(rel, '/pages/inperson.html')}">In-person testing</a></li>
+        <li><a href="${link(rel, '/pages/faq.html')}">FAQ</a></li>
       </ul>
     </div>
     <div>
       <h2>More</h2>
       <ul>
-        <li><a href="/pages/whatnext.html">What's next after passing</a></li>
-        <li><a href="/pages/handiham.html">Accessible testing</a></li>
-        <li><a href="/pages/donations.html">Support PARC</a></li>
+        <li><a href="${link(rel, '/pages/whatnext.html')}">What's next after passing</a></li>
+        <li><a href="${link(rel, '/pages/handiham.html')}">Accessible testing</a></li>
+        <li><a href="${link(rel, '/pages/donations.html')}">Support PARC</a></li>
         <li><a href="${esc(SITE.facebook)}" target="_blank" rel="noopener">Facebook group</a></li>
       </ul>
     </div>
   </div>
   <div class="site-footer__bottom">
     <span>&copy; 2020&ndash;${new Date().getFullYear()} ${esc(SITE.name)}</span>
-    <a class="site-footer__ve" href="/pages/script.html" rel="nofollow">VE Access</a>
+    <a class="site-footer__ve" href="${link(rel, '/pages/script.html')}" rel="nofollow">VE Access</a>
   </div>
 </footer>`;
 }

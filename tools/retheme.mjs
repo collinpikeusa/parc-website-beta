@@ -16,7 +16,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync, rmSync, existsSync 
 import { join, relative, dirname } from 'node:path';
 import { PAGES, VE_PAGES, DELETE_PAGES, VE_SHELL_META } from './site-data.mjs';
 import { organizationSchema, faqSchema } from './schema.mjs';
-import { buildHead, buildHeader, buildFooter } from './chrome.mjs';
+import { buildHead, buildHeader, buildFooter, link } from './chrome.mjs';
 
 const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -78,7 +78,13 @@ function retheme(rel, dry) {
   const meta = metaFor(rel);
   if (!meta) return { rel, status: 'skipped (no metadata)' };
 
-  const content = extractContent(html);
+  let content = extractContent(html);
+  // Page bodies also carry a few site-absolute links; make them relative so the
+  // build works at a subpath too. Protocol-relative and external URLs untouched.
+  if (content) {
+    content = content.replace(/(href|src)="(\/[^\/"][^"]*)"/g,
+      (m, attr, path) => `${attr}="${link(rel, path)}"`);
+  }
   if (!content) return { rel, status: 'SKIPPED — no <div class="container"> / <footer> markers' };
 
   // Exactly one <h1> per page, carrying the page's real subject. Rendered
@@ -98,9 +104,9 @@ ${buildHead(rel, meta)}
 ${buildHeader(rel)}
 ${pageH1}
 ${content}
-${buildFooter()}
+${buildFooter(rel)}
 
-<script src="/js/site.js" defer></script>
+<script src="${link(rel, '/js/site.js')}" defer></script>
 </body>
 </html>
 `;

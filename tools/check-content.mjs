@@ -10,6 +10,11 @@
  *   node tools/check-content.mjs snapshot .baseline
  *   node tools/check-content.mjs verify   .baseline
  *
+ * To compare against the site as it was BEFORE this work, use the tag:
+ *   git show pre-facelift-2026-08-22:pages/script.html
+ * Comparing against HEAD is meaningless for VE pages — those hold ciphertext
+ * now; their plaintext lives in the gitignored _ve-source/.
+ *
  * "Content zone" = everything from <div class="container"> up to the <footer>.
  * That is the region the retheme pass must never touch.
  */
