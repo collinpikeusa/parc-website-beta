@@ -33,7 +33,7 @@ import { join, basename, extname } from 'node:path';
 import { pbkdf2Sync, randomBytes, createCipheriv } from 'node:crypto';
 import { createInterface } from 'node:readline';
 import { VE_PAGES, VE_SHELL_META, VE_TITLES, SITE } from './site-data.mjs';
-import { buildHead, buildHeader, buildFooter } from './chrome.mjs';
+import { buildHead, buildHeader, buildFooter, link } from './chrome.mjs';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const SRC = join(ROOT, '_ve-source');
@@ -90,16 +90,16 @@ ${buildHeader(rel)}
       <button class="btn btn--primary" type="submit" id="ve-submit">Unlock</button>
       <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
     </form>
-    <p class="ve-lock__foot">Not a VE? <a href="/index.html">Return to the PARC home page</a>.
+    <p class="ve-lock__foot">Not a VE? <a href="${link(rel, '/index.html')}">Return to the PARC home page</a>.
       For access, email <a href="mailto:${SITE.veEmail}">${SITE.veEmail}</a>.</p>
   </div>
 </section>
 </div>
 
-${buildFooter()}
+${buildFooter(rel)}
 
 <script type="application/json" id="ve-payload">${JSON.stringify(payload)}</script>
-<script src="/js/ve-lock.js" defer></script>
+<script src="${link(rel, '/js/ve-lock.js')}" defer></script>
 </body>
 </html>
 `;

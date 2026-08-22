@@ -14,7 +14,7 @@
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, rmSync, existsSync } from 'node:fs';
 import { join, relative, dirname } from 'node:path';
-import { PAGES, VE_PAGES, DELETE_PAGES, VE_SHELL_META } from './site-data.mjs';
+import { PAGES, VE_PAGES, DELETE_PAGES } from './site-data.mjs';
 import { organizationSchema, faqSchema } from './schema.mjs';
 import { buildHead, buildHeader, buildFooter, link } from './chrome.mjs';
 
@@ -64,7 +64,11 @@ function extractContent(html) {
 
 /* ---------- driver -------------------------------------------------------- */
 function metaFor(rel) {
-  if (VE.has(rel)) return { ...VE_SHELL_META, preloadBanner: false };
+  // VE pages are OUTPUT of tools/parc-lock.mjs, not source. Regenerating one
+  // here would overwrite its ciphertext payload with an empty unlock form —
+  // the page would then never unlock and the encrypted content would be gone
+  // from pages/. Always rebuild them with parc-lock.mjs instead.
+  if (VE.has(rel)) return null;
   const meta = PAGES[rel];
   if (!meta) return null;
   if (meta.schema === 'organization') meta.schemaJson = organizationSchema();
@@ -76,6 +80,7 @@ function retheme(rel, dry) {
   const abs = join(ROOT, rel);
   const html = readFileSync(abs, 'utf8');
   const meta = metaFor(rel);
+  if (VE.has(rel)) return { rel, status: 'skipped (encrypted — rebuild with parc-lock.mjs)' };
   if (!meta) return { rel, status: 'skipped (no metadata)' };
 
   let content = extractContent(html);

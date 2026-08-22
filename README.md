@@ -57,6 +57,18 @@ the `exclude:` list in `_config.yml`.
 
 ## Everyday tasks
 
+### Build order matters
+
+`tools/retheme.mjs` regenerates public pages. `tools/parc-lock.mjs` generates the
+encrypted VE pages. **Run retheme first, then parc-lock.** retheme now refuses to
+touch VE pages for exactly this reason — an earlier version regenerated them as
+empty unlock forms and silently discarded the ciphertext, leaving pages that
+could never be unlocked.
+
+```bash
+node tools/retheme.mjs && node tools/build-seo.mjs && node tools/parc-lock.mjs
+```
+
 **Edit an exam script** — edit the file in `_ve-source/`, then re-lock:
 
 ```bash
