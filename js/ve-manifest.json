@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "salt": "DbK8dnwu01nZtw78qj9kqg==",
+  "it": 600000,
+  "files": {
+    "parc-handbook1": {
+      "name": "PARC Handbook1.pdf",
+      "type": "application/pdf"
+    },
+    "prohibitlist": {
+      "name": "prohibitlist.pdf",
+      "type": "application/pdf"
+    }
+  },
+  "verify": {
+    "iv": "I69Ct3lDCcjTpVOn",
+    "ct": "xxLnvGujVR/sT0GqulLmxj6MfsfNCeSls9E="
+  }
+}
