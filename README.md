@@ -1,20 +1,41 @@
 # parcradio.net
 
-Static site for PARC Radio & Technology, served by GitHub Pages from `main`
-(`CNAME` → parcradio.net).
+Static site for PARC Radio & Technology.
+
+**This repository is a public fork of `parctesting/beta`.** The upstream repo is
+what serves parcradio.net via GitHub Pages; changes reach the live site by pull
+request to the owner.
 
 ---
 
-## ⚠️ Before the first push
+## ⚠️ Never commit the plaintext exam scripts
 
-1. **Make this repository private.** Settings → General → Danger Zone → Change
-   visibility. Until that happens the exam scripts in `_ve-source/` are readable
-   by anyone on github.com, and the encryption below buys you nothing.
-2. **Re-run the lock with your own passphrase.** The pages currently in `pages/`
-   were built with a throwaway passphrase for testing. See "Changing the VE
-   passphrase" below. **Do this before deploying.**
-3. **Never add a `.nojekyll` file.** See `_config.yml` for why — it would publish
-   every exam script in plaintext.
+The VE scripts live in `_ve-source/`, which is **gitignored on purpose**. Only the
+encrypted output (`pages/*.html`, `ve/files/*.enc`) belongs in this repository.
+
+Two GitHub behaviours make a mistake here permanent, both quoted from their docs:
+
+- *"You cannot change the visibility of a fork by itself."* This repo cannot be
+  made private while `parctesting/beta` is public.
+- *"Commits can remain accessible in the repository network even after a fork is
+  deleted."* Anything pushed here stays retrievable by commit SHA through the
+  upstream repo. Deleting the fork or force-pushing does **not** undo it.
+
+So the encryption — not repository visibility — is what protects the scripts.
+That is the correct design regardless: it also means GitHub Pages keeps working
+on the **Free** plan, which requires the repository to be public
+(*"If the account that owns the repository uses GitHub Free… the repository must
+be public"*).
+
+**Keep `_ve-source/` in a separate private repository.** Private repos are free;
+they simply cannot serve Pages, which does not matter because they only hold
+source. A dated tarball backup also sits at `~/parc-ve-source-backup-*.tar.gz`.
+
+Before any push, confirm nothing plaintext is staged:
+
+```bash
+git status --porcelain | grep _ve-source && echo "STOP" || echo "clean"
+```
 
 ---
 
