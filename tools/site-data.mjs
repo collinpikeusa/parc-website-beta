@@ -84,6 +84,11 @@ export const PAGES = {
     schema: 'organization',
   },
   'pages/calendar.html': {
+    // Extra scripts belong HERE, not patched in after retheme runs. Anything
+    // added to the built page by hand is silently discarded the next time
+    // retheme regenerates it — which is exactly how schedule.js went missing
+    // and broke the whole schedule page.
+    scripts: ['/js/schedule.js'],
     title: 'Schedule a Ham Radio License Exam',
     desc: 'Book your amateur radio license exam. Sessions run throughout the day and night — pick a time that works and reserve your seat online.',
     h1: 'Schedule Your Exam',
@@ -222,6 +227,7 @@ export const PAGES = {
     noindex: true,
   },
   'pages/ve-file.html': {
+    scripts: ['/js/ve-file.js'],
     title: 'Volunteer Examiner Access',
     desc: '',
     noindex: true,
