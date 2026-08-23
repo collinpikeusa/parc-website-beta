@@ -45,7 +45,9 @@ const SESSIONS = [
   { letter: 'F', match: /Exam Sessions F\b/i },
   { letter: 'S', match: /Exam Sessions S\b/i },
 ];
-const YOUTH = { letter: 'YOUTH', match: /YOUTH ONLY/i };
+// 'Y' must match data/availability.json and js/schedule.js. Emitting
+// 'YOUTH' here silently broke youth badges and youth-first booking.
+const YOUTH = { letter: 'Y', match: /YOUTH ONLY/i, youth: true };
 
 const ALLOWED_ORIGINS = [
   'https://parcradio.net',
@@ -144,7 +146,7 @@ export default {
       return new Response(JSON.stringify({
         generated: new Date().toISOString(),
         timezone: tz,
-        sources: types.map((t) => ({ letter: t.letter, slug: t.slug })),
+        sources: types.map((t) => ({ letter: t.letter, slug: t.slug, youth: !!t.youth })),
         partial: okCount < types.length,   // some calendars failed; page can note it
         slots,
       }), {

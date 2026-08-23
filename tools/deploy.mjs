@@ -161,14 +161,27 @@ try {
                    : bad(`${unbalanced} page(s) with unbalanced <main> — re-run retheme`);
 }
 
-// schedule data freshness
+// schedule data: live Worker, or the committed snapshot?
 {
+  const page = join(ROOT, 'pages', 'calendar.html');
+  const m = existsSync(page) && readFileSync(page, 'utf8').match(/data-availability-endpoint="([^"]*)"/);
+  const worker = m && m[1] ? m[1] : '';
   const f = join(ROOT, 'data', 'availability.json');
-  if (!existsSync(f)) warn('data/availability.json missing — the schedule page will show its fallback');
-  else {
-    const age = (Date.now() - new Date(JSON.parse(readFileSync(f, 'utf8')).generated)) / 3600000;
-    if (age < 24) ok(`schedule availability is ${age.toFixed(1)}h old`);
-    else warn(`schedule availability is ${(age / 24).toFixed(1)} days old — run with --refresh, or candidates see stale times`);
+  const age = existsSync(f)
+    ? (Date.now() - new Date(JSON.parse(readFileSync(f, 'utf8')).generated)) / 3600000
+    : null;
+
+  if (worker) {
+    ok(`live availability via Worker: ${worker}`);
+    if (age === null) warn('no data/availability.json — nothing to fall back on if the Worker fails');
+    else if (age > 24 * 14) warn(`fallback snapshot is ${(age / 24).toFixed(0)} days old — refresh it occasionally`);
+    else ok(`fallback snapshot present (${(age / 24).toFixed(1)} days old)`);
+  } else if (age === null) {
+    bad('no Worker configured AND no data/availability.json — the schedule page has no data at all');
+  } else if (age < 24) {
+    ok(`schedule availability is ${age.toFixed(1)}h old (snapshot; no Worker configured)`);
+  } else {
+    warn(`schedule availability is ${(age / 24).toFixed(1)} days old — run with --refresh, or configure the Worker`);
   }
 }
 
