@@ -150,6 +150,9 @@ body { overflow-wrap: break-word; }
   max-width: var(--wrap); margin-inline: auto;
   display: flex; align-items: stretch; gap: var(--sp-2);
   padding-inline: var(--sp-4);
+  /* Donate sits hard against this edge; without the extra breathing room it
+     looks like it is falling off the bar on a narrow desktop window. */
+  padding-right: var(--sp-5);
 }
 
 .nav-toggle {
@@ -224,17 +227,37 @@ body { overflow-wrap: break-word; }
 }
 
 .nav-donate {
+  /* Matched to the nav's own type: the items around it are uppercase and
+     letterspaced, so a title-case rounded pill read as bolted on. Square
+     corners and the same type treatment make it part of the bar. */
   align-self: center; margin-left: auto;
-  display: inline-flex; align-items: center;
+  display: inline-flex; align-items: center; gap: .5em;
   background: var(--parc-red); color: #fff;
-  padding: var(--sp-2) var(--sp-4); border-radius: 999px;
-  font-weight: 700; font-size: var(--step--1); text-decoration: none;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-sm);
   border: 0; cursor: pointer; white-space: nowrap;
+  font: inherit; font-weight: 700; font-size: var(--step--1);
+  letter-spacing: .04em; text-transform: uppercase;
+  text-decoration: none; line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0,0,0,.28);
+  transition: background-color .15s ease, transform .06s ease;
+}
+.nav-donate::before {
+  /* A heart reads instantly and stops it being a generic red rectangle. */
+  content: "\2665"; font-size: 1.05em; line-height: 1;
+  transform: translateY(-.04em);
 }
 .nav-donate:hover { background: var(--parc-700); }
+.nav-donate:active { transform: translateY(1px); }
 
 @media (max-width: 900px) {
-  .site-nav__inner { flex-wrap: wrap; padding-inline: var(--sp-3); }
+  .site-nav__inner {
+    flex-wrap: wrap;
+    padding-inline: var(--sp-3);
+    /* padding-inline resets the desktop padding-right, so restate it or
+       Donate sits flush against the screen edge on a phone. */
+    padding-right: var(--sp-4);
+  }
   .nav-toggle { display: inline-flex; }
   .nav-menu {
     flex: 1 0 100%; flex-direction: column;
@@ -278,7 +301,7 @@ body { overflow-wrap: break-word; }
   /* Keep Donate on the same row as the Menu button; the menu itself wraps
      underneath. Without the explicit order it lands on a third row. */
   .nav-toggle { order: 1; }
-  .nav-donate-form { order: 2; margin-left: auto; align-self: center; }
+  .nav-donate-form { order: 2; margin-left: auto; align-self: center; display: flex; }
   .nav-menu { order: 3; }
   .nav-donate { margin: 0; }
 }
