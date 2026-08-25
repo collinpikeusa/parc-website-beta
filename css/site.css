@@ -269,7 +269,7 @@ body { overflow-wrap: break-word; }
     border-left: 3px solid rgba(255,255,255,.35);
     margin-left: var(--sp-4);
   }
-  .nav-sub a {
+  .nav-sub a, .nav-sub a:link, .nav-sub a:visited {
     color: #fff; font-size: var(--step-0);
     padding: var(--sp-3) var(--sp-4);
     min-height: 2.75rem; display: flex; align-items: center;
@@ -380,6 +380,39 @@ a {
 }
 a:hover { color: var(--parc-700); }
 a:visited { color: var(--parc-700); }
+
+/* ---------------------------------------------------------------------------
+   Component links must not inherit the global :visited colour.
+
+   `a:visited` has specificity (0,1,1), which beats a bare class like
+   `.btn--primary` (0,1,0). So once a visitor had opened the schedule page, the
+   "Schedule an exam" button rendered dark red text on a red background —
+   1.44:1, effectively invisible. Same for the footer's VE link and the mobile
+   submenu, both dark red on a dark ground.
+
+   Anything whose colour is set by a component rather than by running text needs
+   its link states pinned explicitly.
+   --------------------------------------------------------------------------- */
+.btn:link, .btn:visited            { color: var(--ink); }
+.btn--primary:link,
+.btn--primary:visited,
+.btn--primary:hover,
+.btn--primary:focus                { color: #fff; }
+.card__link:link, .card__link:visited     { color: var(--parc-red); }
+.slot:link, .slot:visited, .avail-slot a:link, .avail-slot a:visited { color: inherit; }
+.site-footer a:link, .site-footer a:visited { color: #fff; }
+.site-footer__ve:link, .site-footer__ve:visited { color: var(--muted-dark); }
+.nav-menu > li > a:link, .nav-menu > li > a:visited { color: #fff; }
+.nav-sub a:link, .nav-sub a:visited { color: var(--ink); }
+.skip-link:link, .skip-link:visited { color: #fff; }
+
+/* The mobile submenu sits on the dark nav, so it needs the opposite of the
+   desktop rule. Its original declaration is earlier in the file than
+   `a:visited`, so at equal specificity it lost. Restating it here — after
+   a:visited — is what makes it stick. */
+@media (max-width: 900px) {
+  .nav-sub a:link, .nav-sub a:visited { color: #fff; }
+}
 
 blockquote {
   margin: var(--sp-5) 0; padding: var(--sp-4) var(--sp-5);
