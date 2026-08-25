@@ -31,10 +31,11 @@
      with room to spare at ~15:1. */
   --ink:        #1F2328;
   --ink-2:      #4A5158;
-  --muted:      #0E141B;   /* clears 4.5:1 on BOTH surface and surface-2 */
+  --muted:      #677079;   /* clears 4.5:1 on surface AND the card tone */
+  --muted-dark: #8A939C;   /* muted, but against the dark footer */
   --surface:    #FCFCFB;
   --surface-2:  #F6F7F8;
-  --page:       #EFF1F3;
+  --page:       #F1F3F5;
   --line:       #DFE4E9;
   --line-2:     #C9D1D8;
 
@@ -42,22 +43,22 @@
   --ok:         #0E7C2A;
   --warn:       #9A6700;
 
-  /* ---- exam-script colour code -------------------------------------------
-     These carry operational meaning during a live exam. Chosen by simulating
-     protanopia, deuteranopia and tritanopia and maximising the worst-case
-     perceptual distance: the previous red/green pair collapsed to dE 12 under
-     protanopia, meaning a red-green colour-blind VE could not reliably tell
-     "do not read aloud" from "read only to some candidates".
+  /* ---- exam-script colour code — LEFT AS IT WAS, ON PURPOSE ---------------
+     VEs read these live during exams and the site owner asked that the scripts
+     not change. Used by <p2> (a question to ask), <p5>/<h8> (do not read
+     aloud) and <p6> (applies to some candidates only).
 
-     Worst case across all three CVD types is now dE 45.7.
-
-     RED MUST STAY RED. Six places in the scripts say "All red text is VE Guide
-     information" — changing the hue would contradict the written instruction.
-     Colour is never the only cue: see the p5/h8 rules further down. */
-  --ve-note:    #B81E1E;   /* do not read aloud   6.3:1 */
-  --ve-blue:    #323DAE;   /* a question to ask   8.5:1 */
-  --ve-subset:  #6B2458;   /* applies to some candidates only  10.1:1 */
-  --ve-green:   var(--ve-subset);   /* legacy alias */
+     KNOWN LIMITATION, not an oversight: simulating protanopia puts the red and
+     green only dE 12 apart, so a red-green colour-blind VE cannot reliably tell
+     "do not read aloud" from "applies to some candidates". 89% of <p5> blocks
+     also carry a [bracket] or "* DO NOT READ *" marker, which is what those VEs
+     have to rely on. Changing <p6> from green to plum would fix it
+     (dE 46 worst case) and breaks no written instruction, since no script text
+     names any colour except red. Offered and deferred. */
+  --ve-note:    #C40606;
+  --ve-blue:    #1F5FBF;
+  --ve-green:   #0E7C2A;
+  --ve-subset:  var(--ve-green);
 
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
           Arial, "Noto Sans", sans-serif;
@@ -329,37 +330,15 @@ h6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
 
 /* Invented elements — see the header note. Unknown tags default to inline. */
 h7 { display: block; font-size: var(--step-3); color: var(--ink); text-align: center; }
-h8 {
-  display: block; font-size: var(--step-1); color: var(--ve-note);
-  border-left: 3px solid var(--ve-note);
-  background: #FBF0F0;
-  padding: .2em .5em .2em .6em;
-  border-radius: 0 4px 4px 0;
-}
+h8 { display: block; font-size: var(--step-1); color: var(--ve-note); }
 
 p  { margin: 0 0 var(--sp-4); }
 p1 { display: block; }
 p2 { color: var(--ve-blue); }
 p3 { display: block; font-weight: 700; text-decoration: underline; }
 p4 { color: var(--ink-2); }
-/* VE instruction, not read aloud.
-   A faint tint acts as a second cue alongside the colour, so the meaning does
-   not rest on hue alone (WCAG 1.4.1) — a tint reads as a lightness change even
-   where hue does not register.
-
-   Deliberately NOT a bordered block: 46 of these are short fragments sitting
-   inside a sentence ("Click the link, [wait] bookmark it"), and boxing those
-   would chop the line apart. Only <h8>, which is always standalone, gets the
-   heavier treatment. */
-p5 {
-  color: var(--ve-note); font-weight: 600;
-  background: #FBF1F1;
-  border-radius: 2px;
-  padding: 0 .2em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-p6 { color: var(--ve-subset); font-weight: 600; }
+p5 { color: var(--ve-note); font-weight: 600; }        /* VE instruction, not read aloud */
+p6 { color: var(--ve-green); font-weight: 600; }
 p7 { display: block; font-size: var(--step--1); color: var(--ink-2); }
 
 strong, b { font-weight: 700; }
@@ -471,12 +450,12 @@ button:active, .btn:active { transform: translateY(1px); }
 .site-footer a { color: #fff; }
 .site-footer a:hover { color: var(--parc-50); }
 .site-footer__bottom {
+  color: var(--muted-dark);
   max-width: var(--wrap); margin: var(--sp-6) auto 0;
   padding-top: var(--sp-4); border-top: 1px solid rgba(255,255,255,.14);
   display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: space-between; align-items: center;
-  color: var(--muted);
 }
-.site-footer__ve { color: var(--muted); text-decoration: none; font-size: var(--step--1); }
+.site-footer__ve { color: var(--muted-dark); text-decoration: none; font-size: var(--step--1); }
 .site-footer__ve:hover { color: #fff; }
 
 /* Legacy footer classes, in case any page is missed by the retheme pass. */
@@ -797,8 +776,8 @@ button:active, .btn:active { transform: translateY(1px); }
 /* Youth sessions are a different session and a different fee, so they stay
    visually distinct — unlike the internal A–F session letters, which candidates
    have no reason to think about. */
-.slot--youth { border-color: var(--ve-blue); background: #F1F2FC; }
-.slot--youth:hover { border-color: var(--ve-blue); background: #E4E6F8; }
+.slot--youth { border-color: var(--ve-blue); background: #F2F7FF; }
+.slot--youth:hover { border-color: var(--ve-blue); background: #E6F0FF; }
 .slot__youth {
   display: inline-block; margin-left: 4px; padding: 0 5px; border-radius: 3px;
   background: var(--ve-blue); color: #fff;
