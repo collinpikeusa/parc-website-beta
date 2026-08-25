@@ -226,11 +226,21 @@ body { overflow-wrap: break-word; }
   .nav-menu > li:hover > .nav-sub { display: block; }
 }
 
+/* The form wrapping the button is a flex child of .site-nav__inner, which sets
+   align-items: stretch — so it grew to the full 67px bar height while the button
+   sat at its top edge, 0px above and 30px below. The button's own
+   align-self: center did nothing, because the form was not a flex container on
+   desktop (only inside the mobile media query). Making it one centres it. */
+.nav-donate-form {
+  display: flex; align-items: center;
+  margin-left: auto;
+}
+
 .nav-donate {
   /* Matched to the nav's own type: the items around it are uppercase and
      letterspaced, so a title-case rounded pill read as bolted on. Square
      corners and the same type treatment make it part of the bar. */
-  align-self: center; margin-left: auto;
+  align-self: center;
   display: inline-flex; align-items: center; gap: .5em;
   background: var(--parc-red); color: #fff;
   padding: var(--sp-2) var(--sp-4);
