@@ -39,6 +39,13 @@
   --line:       #DFE4E9;
   --line-2:     #C9D1D8;
 
+  /* Navigation sits directly beneath an already-red banner. A second
+     full-width red band doubled the amount of saturated red on every page.
+     Charcoal separates the two, and lets red mean "act on this" instead of
+     "this is a surface". */
+  --nav-bg:     #23272C;
+  --nav-bg-2:   #313740;
+
   --focus:      #1F5FBF;
   --ok:         #0E7C2A;
   --warn:       #9A6700;
@@ -136,7 +143,7 @@ body { overflow-wrap: break-word; }
 /* ---------- navigation --------------------------------------------------- */
 .site-nav {
   position: sticky; top: 0; z-index: 100;
-  background: var(--parc-red);
+  background: var(--nav-bg);
   box-shadow: var(--shadow-1);
 }
 .site-nav__inner {
@@ -185,9 +192,12 @@ body { overflow-wrap: break-word; }
 .nav-menu > li > a:hover,
 .nav-sub-toggle:hover,
 .nav-menu > li > a:focus-visible,
-.nav-sub-toggle:focus-visible { background: var(--parc-700); }
+.nav-sub-toggle:focus-visible { background: var(--nav-bg-2); }
 
-.nav-menu > li > a[aria-current="page"] { border-bottom-color: #fff; background: var(--parc-700); }
+.nav-menu > li > a[aria-current="page"] {
+  border-bottom-color: var(--parc-red);      /* red earns its place here */
+  background: var(--nav-bg-2);
+}
 
 .nav-sub-toggle::after {
   content: ""; width: 0; height: 0; margin-top: 1px;
@@ -216,12 +226,12 @@ body { overflow-wrap: break-word; }
 .nav-donate {
   align-self: center; margin-left: auto;
   display: inline-flex; align-items: center;
-  background: #fff; color: var(--parc-700);
+  background: var(--parc-red); color: #fff;
   padding: var(--sp-2) var(--sp-4); border-radius: 999px;
   font-weight: 700; font-size: var(--step--1); text-decoration: none;
   border: 0; cursor: pointer; white-space: nowrap;
 }
-.nav-donate:hover { background: var(--parc-50); }
+.nav-donate:hover { background: var(--parc-700); }
 
 @media (max-width: 900px) {
   .site-nav__inner { flex-wrap: wrap; padding-inline: var(--sp-3); }
@@ -255,7 +265,7 @@ body { overflow-wrap: break-word; }
   .nav-sub-toggle::after { margin-left: auto; }
   .nav-sub {
     position: static; display: none; box-shadow: none; border-radius: 0;
-    background: var(--parc-700); min-width: 0; padding: var(--sp-1) 0;
+    background: var(--nav-bg-2); min-width: 0; padding: var(--sp-1) 0;
     border-left: 3px solid rgba(255,255,255,.35);
     margin-left: var(--sp-4);
   }
@@ -321,10 +331,18 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 }
 :is(h2, h3, h4, h5, h6, h7, h8):not(:first-child) { margin-top: var(--sp-6); }
 
-h1 { font-size: var(--step-4); color: var(--parc-red); text-align: center; }
+h1 { font-size: var(--step-4); color: var(--ink); text-align: center; }
+/* A short rule carries the brand instead of colouring the whole headline. */
+.container > section > h1::after,
+.hero h1::after,
+main > h1::after {
+  content: ""; display: block; width: 3.5rem; height: 3px;
+  background: var(--parc-red); border-radius: 2px;
+  margin: var(--sp-3) auto 0;
+}
 h2 { font-size: var(--step-3); color: var(--ink); }
 h3 { font-size: var(--step-2); color: var(--ink); }
-h4 { font-size: var(--step-1); color: var(--parc-red); }
+h4 { font-size: var(--step-1); color: var(--ink-2); }
 h5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
 h6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
 
@@ -511,8 +529,8 @@ button:active, .btn:active { transform: translateY(1px); }
   border-radius: var(--radius);
   transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
-.card:hover { border-color: var(--parc-red); box-shadow: var(--shadow-2); transform: translateY(-2px); }
-.card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--parc-red); }
+.card:hover { border-color: var(--nav-bg); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--ink); }
 .card p { color: var(--ink-2); font-size: var(--step--1); flex: 1; }
 .card__link { font-weight: 700; text-decoration: none; margin-top: var(--sp-3); }
 .card__link::after { content: " \2192"; }
@@ -528,8 +546,10 @@ button:active, .btn:active { transform: translateY(1px); }
 .home-main > h2:first-child { margin-top: 0; }
 
 .callout {
-  background: var(--parc-50); border: 1px solid var(--line);
-  border-left: 4px solid var(--parc-red);
+  /* Information, not a warning — the red tint made a meeting notice read as an
+     alert. Red stays on .booking-alert and #example3, which really are. */
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-left: 4px solid var(--nav-bg);
   border-radius: 0 var(--radius) var(--radius) 0;
   padding: var(--sp-5);
 }
@@ -583,7 +603,7 @@ button:active, .btn:active { transform: translateY(1px); }
 .age-gate__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
 
 .audience-note {
-  background: var(--parc-50); border-left: 4px solid var(--parc-red);
+  background: var(--surface-2); border-left: 4px solid var(--ve-blue);
   padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--radius) var(--radius) 0;
 }
 
@@ -601,7 +621,7 @@ button:active, .btn:active { transform: translateY(1px); }
   padding: var(--sp-2) var(--sp-3); text-decoration: none;
   background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
-.avail-slot a:hover { border-color: var(--parc-red); background: var(--parc-50); }
+.avail-slot a:hover { border-color: #0F6B62; background: #E8F4F3; }
 .avail-slot__time { font-weight: 700; color: var(--ink); }
 .avail-slot__meta { font-size: var(--step--1); color: var(--muted); }
 
@@ -643,10 +663,12 @@ button:active, .btn:active { transform: translateY(1px); }
   width: 100% !important;
   min-height: 3rem;
   padding: var(--sp-3) var(--sp-4);
-  background: var(--parc-red); border-color: var(--parc-red); color: #fff;
-  text-align: center;
+  /* Outlined rather than filled: these pages carry four to eight of them, and
+     as solid red blocks they dominated the page. */
+  background: var(--surface); border: 2px solid var(--parc-red); color: var(--parc-700);
+  text-align: center; font-weight: 700;
 }
-.container button[style]:hover { background: var(--parc-700); border-color: var(--parc-700); }
+.container button[style]:hover { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
 .container button h3, .container button h7, .container button h5 {
   margin: 0; font-size: var(--step--1); color: inherit;
   text-transform: uppercase; letter-spacing: .03em;
@@ -689,7 +711,8 @@ button:active, .btn:active { transform: translateY(1px); }
   font-size: var(--step--1); font-weight: 600;
   background: var(--surface); border: 1px solid var(--line-2); color: var(--muted);
 }
-.chip.is-on { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+/* Matched to the calendar they filter, rather than a row of black pills. */
+.chip.is-on { background: #0F6B62; border-color: #0F6B62; color: #fff; }
 .chip__hint { font-weight: 400; opacity: .75; font-size: .85em; }
 
 .cal-summary { font-size: var(--step--1); color: var(--ink-2); margin-bottom: var(--sp-4); }
@@ -720,20 +743,23 @@ button:active, .btn:active { transform: translateY(1px); }
 .cal-cell__num { font-size: var(--step--1); font-weight: 600; }
 .cal-cell__count { font-size: .7rem; font-weight: 700; line-height: 1; }
 
-/* Availability density — three steps so a glance shows where the room is. */
+/* Availability density — three steps so a glance shows where the room is.
+   Teal rather than the brand red: this is data, and a red-saturated grid read
+   as a warning when it actually means "plenty of room". Single-hue lightness
+   ramp, so it stays legible under every colour-vision deficiency. */
 .cal-cell.has-slots { cursor: pointer; color: var(--ink); }
-.cal-cell.lvl-1 { background: #FDECEC; border-color: #F6C9C9; }
-.cal-cell.lvl-2 { background: #F3A3A3; border-color: #E88585; }
-.cal-cell.lvl-3 { background: var(--parc-red); border-color: var(--parc-700); color: #fff; }
-.cal-cell.has-slots:hover { outline: 2px solid var(--parc-700); outline-offset: 1px; }
+.cal-cell.lvl-1 { background: #E8F4F3; border-color: #C4E2DF; }
+.cal-cell.lvl-2 { background: #8FCBC6; border-color: #6FB5AF; }
+.cal-cell.lvl-3 { background: #0F6B62; border-color: #0B554E; color: #fff; }
+.cal-cell.has-slots:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
 .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ve-blue); }
 .cal-cell.is-selected { outline: 3px solid var(--ink); outline-offset: 1px; }
 
 .cal-legend { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
   font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
 .cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line-2); }
-.cal-key.lvl-1 { background: #FDECEC; } .cal-key.lvl-2 { background: #F3A3A3; }
-.cal-key.lvl-3 { background: var(--parc-red); }
+.cal-key.lvl-1 { background: #E8F4F3; } .cal-key.lvl-2 { background: #8FCBC6; }
+.cal-key.lvl-3 { background: #0F6B62; }
 
 .cal-daybox {
   padding: var(--sp-4); background: var(--surface-2);
@@ -753,7 +779,7 @@ button:active, .btn:active { transform: translateY(1px); }
   padding: var(--sp-2) var(--sp-3);
   background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
-.slot:hover { border-color: var(--parc-red); background: var(--parc-50); }
+.slot:hover { border-color: #0F6B62; background: #E8F4F3; }
 .slot__time { font-weight: 700; color: var(--ink); }
 .slot__meta { font-size: .75rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
 .cal-foot { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
@@ -785,11 +811,12 @@ button:active, .btn:active { transform: translateY(1px); }
   text-transform: uppercase; vertical-align: middle;
 }
 #filter-youth.is-on { background: var(--ve-blue); border-color: var(--ve-blue); color: #fff; }
+.cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink-2); }
 
 /* Section headings that used to be <h1> in the old template. Demoted to <h2>
    for a correct document outline; styled here so the pages look unchanged. */
 .page-section {
-  font-size: var(--step-4); color: var(--parc-red);
+  font-size: var(--step-4); color: var(--ink);
   text-align: center; font-weight: 700;
 }
 
@@ -803,6 +830,6 @@ button:active, .btn:active { transform: translateY(1px); }
    APPEARANCE must stay as it was. The old template picked heading levels for
    their font size and colour rather than for structure; these classes keep the
    look while the level does the semantic work. */
-.hx-4 { font-size: var(--step-1); color: var(--parc-red); font-weight: 700; }
+.hx-4 { font-size: var(--step-1); color: var(--ink-2); font-weight: 700; }
 .hx-5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
 .hx-6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
