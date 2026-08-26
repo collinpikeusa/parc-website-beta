@@ -31,6 +31,15 @@ export const SITE = {
   ogImage: '/images/og-parc.jpg',
   // Paste the token from Search Console -> Settings -> Ownership verification.
   googleSiteVerification: '',
+
+  /* Cloudflare Web Analytics token, or '' for none.
+     Deliberately this and not Google Analytics: the schedule page asks minors
+     for a date of birth, so anything that sets cookies or builds a cross-site
+     profile is the wrong tool here. Cloudflare Web Analytics is cookieless,
+     stores no personal data, and needs no consent banner.
+     Get a token at: Cloudflare dash -> Web Analytics -> Add a site.
+     Override per build with ANALYTICS_TOKEN=... */
+  analyticsToken: process.env.ANALYTICS_TOKEN || '9ba7325d05ee4c318c7d359aefcac7a8',
 };
 
 export const NAV = [

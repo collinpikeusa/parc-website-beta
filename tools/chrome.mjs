@@ -64,6 +64,20 @@ export function buildHead(rel, meta) {
   L.push(`<link rel="stylesheet" href="${link(rel, '/css/site.css')}">`);
   if (meta.preloadBanner !== false)
     L.push(`<link rel="preload" as="image" href="${link(rel, SITE.banner)}" fetchpriority="high">`);
+  /* Cloudflare Web Analytics. Matches the snippet Cloudflare issues verbatim
+     (type="module", which defers by default). The token is not a secret — it
+     ships in the HTML of every page by design. */
+  /* Not on noindex pages. The VE script pages are the reason: examiners open
+     them repeatedly during a live exam session, which would inflate pageviews
+     and distort any comparison of public traffic between two sites. Also keeps
+     volunteers off the analytics entirely. */
+  if (SITE.analyticsToken && !noindex) {
+    L.push('');
+    L.push('<!-- Cloudflare Web Analytics -->');
+    L.push('<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" ' +
+           `data-cf-beacon='{"token": "${esc(SITE.analyticsToken)}"}'></script>`);
+    L.push('<!-- End Cloudflare Web Analytics -->');
+  }
   if (meta.schemaJson) {
     L.push('');
     L.push('<script type="application/ld+json">');
