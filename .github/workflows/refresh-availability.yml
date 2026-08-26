@@ -1,29 +1,30 @@
-# Refreshes data/availability.json so the schedule page does not advertise
-# times that are already booked.
+# Failsafe for the schedule page.
 #
-# This is the FALLBACK path. It commits a snapshot on a schedule, so the page
-# is only ever as fresh as the last run. Deploying worker/parc-availability.js
-# instead makes the page fetch live data on every load and removes the need for
-# this workflow entirely — see DEPLOY.md.
+# The page normally fetches live availability from the Cloudflare Worker on
+# every load. This exists for when that does not happen: the Worker is down,
+# Calendly changes the undocumented endpoint it reads, or an origin is missing
+# from the Worker's CORS allowlist — that last one fails silently, with the page
+# quietly serving whatever snapshot was last committed.
 #
-# Two things to know about GitHub's scheduler:
-#   - 5 minutes is the minimum interval, but scheduled runs are queued at low
-#     priority and are routinely 5-20 minutes late, and are sometimes skipped
-#     under load. Treat the interval as a floor, not a guarantee.
-#   - GitHub disables scheduled workflows after 60 days with no repository
-#     activity. Re-enable from the Actions tab if the calendar goes stale.
+# Keeping data/availability.json fresh means the fallback is hours old rather
+# than months old.
+#
+# GitHub's scheduler is best-effort: runs are queued at low priority and are
+# routinely 5-20 minutes late, occasionally skipped. Treat the interval as a
+# floor. GitHub also disables scheduled workflows after 60 days with no
+# repository activity — re-enable from the Actions tab if the calendar goes cold.
 name: Refresh schedule availability
 
 on:
   schedule:
-    - cron: '*/15 * * * *'      # every 15 minutes (see caveat above)
-  workflow_dispatch:            # lets you refresh on demand from the Actions tab
+    - cron: '23 */3 * * *'      # every 3 hours, offset off the hour
+  workflow_dispatch:            # manual run button in the Actions tab
 
 permissions:
   contents: write
 
 concurrency:
-  group: refresh-availability
+  group: refresh-availability-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -39,19 +40,14 @@ jobs:
       - name: Fetch and merge every Calendly session
         run: node tools/fetch-availability.mjs --days=21
 
-      - name: Commit only if availability actually changed
+      - name: Commit only when availability actually changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/availability.json
-          # `generated` changes every run; ignore it so identical availability
-          # does not produce an empty commit every 15 minutes forever.
           if git diff --staged --quiet; then
-            echo "no change"
+            echo "no change — nothing to commit"
           else
-            CHANGED=$(git diff --staged -U0 data/availability.json \
-                      | grep -c '^[+-]' || true)
             git commit -m "Refresh schedule availability [skip ci]"
             git push
-            echo "committed ($CHANGED changed lines)"
           fi
