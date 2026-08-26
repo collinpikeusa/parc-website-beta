@@ -39,7 +39,7 @@ export const SITE = {
      stores no personal data, and needs no consent banner.
      Get a token at: Cloudflare dash -> Web Analytics -> Add a site.
      Override per build with ANALYTICS_TOKEN=... */
-  analyticsToken: process.env.ANALYTICS_TOKEN || '',
+  analyticsToken: process.env.ANALYTICS_TOKEN || '9ba7325d05ee4c318c7d359aefcac7a8',
 };
 
 export const NAV = [
