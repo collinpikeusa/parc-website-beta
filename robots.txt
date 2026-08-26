@@ -1,9 +1,13 @@
-# radiotest.org — STAGING copy of parcradio.net.
-#
-# Every page carries <meta name="robots" content="noindex, nofollow">.
-# Crawling is deliberately ALLOWED so that tag can actually be read: a
-# Disallow here would stop the crawl before the noindex is seen, and URLs
-# could sit in the index with no way to remove them.
+# radiotest.org
+
 User-agent: *
 Allow: /
+
+# VE pages are deliberately NOT disallowed: they carry a noindex meta tag, and a
+# crawler has to be able to fetch a page to read it. A Disallow here would block
+# the crawl, the noindex would never be seen, and URLs already known to a search
+# engine could sit in the index with no way to remove them. The pages are
+# encrypted, so there is nothing to read even when fetched.
 Disallow: /ve/files/
+
+Sitemap: https://radiotest.org/sitemap.xml

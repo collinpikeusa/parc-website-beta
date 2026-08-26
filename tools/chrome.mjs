@@ -41,13 +41,7 @@ export function buildHead(rel, meta) {
   L.push(`<title>${esc(title)}</title>`);
   if (meta.desc) L.push(`<meta name="description" content="${esc(meta.desc)}">`);
   L.push(`<link rel="canonical" href="${esc(url)}">`);
-  /* STAGING=1 forces noindex on EVERY page.
-     A staging copy on its own domain is a byte-for-byte duplicate of
-     production. Left indexable it competes with parcradio.net for the same
-     queries and splits the ranking signal across two hosts. robots.txt alone
-     will not do: a Disallow stops the crawl, which stops the crawler from ever
-     reading the noindex, and URLs can linger in the index regardless. */
-  if (noindex || process.env.STAGING) {
+  if (noindex) {
     L.push('<meta name="robots" content="noindex, nofollow">');
   } else {
     L.push('<meta name="robots" content="index, follow, max-image-preview:large">');
@@ -70,6 +64,11 @@ export function buildHead(rel, meta) {
   L.push(`<link rel="stylesheet" href="${link(rel, '/css/site.css')}">`);
   if (meta.preloadBanner !== false)
     L.push(`<link rel="preload" as="image" href="${link(rel, SITE.banner)}" fetchpriority="high">`);
+  if (SITE.analyticsToken) {
+    L.push('');
+    L.push('<script defer src="https://static.cloudflareinsights.com/beacon.min.js" ' +
+           `data-cf-beacon='{"token":"${esc(SITE.analyticsToken)}"}'></script>`);
+  }
   if (meta.schemaJson) {
     L.push('');
     L.push('<script type="application/ld+json">');

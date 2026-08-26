@@ -13,7 +13,13 @@
 export const SITE = {
   name: 'PARC Radio & Technology',
   short: 'PARC',
-  origin: 'https://parcradio.net',
+  /* Override per build so canonical tags, Open Graph URLs and the sitemap all
+     name the host actually serving the page:
+        SITE_ORIGIN=https://radiotest.org node tools/deploy.mjs
+     A canonical pointing at a different host tells search engines that host has
+     the real version — which is wrong, and actively harmful when that host is
+     serving different content. */
+  origin: process.env.SITE_ORIGIN || 'https://parcradio.net',
   tagline: 'Amateur radio license exams, online and in person.',
   email: 'vetesting@yahoo.com',
   veEmail: 've@parcradio.org',
@@ -25,6 +31,15 @@ export const SITE = {
   ogImage: '/images/og-parc.jpg',
   // Paste the token from Search Console -> Settings -> Ownership verification.
   googleSiteVerification: '',
+
+  /* Cloudflare Web Analytics token, or '' for none.
+     Deliberately this and not Google Analytics: the schedule page asks minors
+     for a date of birth, so anything that sets cookies or builds a cross-site
+     profile is the wrong tool here. Cloudflare Web Analytics is cookieless,
+     stores no personal data, and needs no consent banner.
+     Get a token at: Cloudflare dash -> Web Analytics -> Add a site.
+     Override per build with ANALYTICS_TOKEN=... */
+  analyticsToken: process.env.ANALYTICS_TOKEN || '',
 };
 
 export const NAV = [
