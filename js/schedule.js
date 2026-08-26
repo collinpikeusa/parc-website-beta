@@ -479,14 +479,18 @@
       if (!g || !g.length) return;
       html += '<div class="slot-group"><h4>' + band.label + '</h4><ul class="slot-list">';
       g.forEach(function (s) {
+        /* Seat counts are deliberately not displayed. Even from the live Worker
+           the number is up to a minute behind Calendly, so "1 seat left" can be
+           wrong by the time it is read — and a wrong scarcity claim is worse
+           than none. Calendly shows the true count on the booking page.
+           The value is still used internally: bookingUrl() picks the session
+           with the most room when several offer the same time. */
         var y = state.audience === 'youth' && youthPart(s);
-        var seats = y ? (y.remaining || 0) : s.remaining;
         html += '<li><a class="slot' + (y ? ' slot--youth' : '') + '" href="' + bookingUrl(s) +
           '" target="_blank" rel="noopener">' +
           '<span class="slot__time">' + timeLabel(s.date, state.tz) +
           (y ? ' <span class="slot__youth">Youth</span>' : '') + '</span>' +
-          '<span class="slot__meta">' + seats + ' seat' + (seats === 1 ? '' : 's') +
-          ' left</span></a></li>';
+          '</a></li>';
       });
       html += '</ul></div>';
     });

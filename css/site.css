@@ -881,10 +881,13 @@ button:active, .btn:active { transform: translateY(1px); }
   text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .slot-group:first-of-type h4 { margin-top: 0; }
 .slot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-2);
-  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
 .slot {
-  display: flex; flex-direction: column; gap: 2px; text-decoration: none;
-  padding: var(--sp-2) var(--sp-3);
+  /* One line now that the seat count is gone — centred rather than left-aligned
+     with a phantom second row. */
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  padding: var(--sp-3) var(--sp-3);
   background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
 .slot:hover { border-color: #0F6B62; background: #E8F4F3; }
