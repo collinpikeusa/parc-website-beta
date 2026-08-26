@@ -94,6 +94,12 @@
 /* ---------- reset -------------------------------------------------------- */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* The hidden attribute maps to display:none through a low-specificity UA
+   rule, so ANY author `display` beats it. .cal-filter{display:flex} silently
+   defeated it on the Youth filter, which then rendered for every visitor
+   regardless of the age gate. Four other elements had the same latent bug. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -314,6 +320,37 @@ body { overflow-wrap: break-word; }
   .nav-donate-form { order: 2; margin-left: auto; align-self: center; display: flex; }
   .nav-menu { order: 3; }
   .nav-donate { margin: 0; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Submenu link colours - every state stated explicitly.
+
+   These had been split across a general rule, the :link/:visited pins added for
+   the visited-link fix, and a mobile override. All three sat at the same
+   specificity, so which one won came down to source order - and the answer
+   differed between the light desktop panel and the dark mobile one. Measured
+   with hover forced: 1.05:1 at desktop width, 1.00:1 on a phone. A menu you
+   could hover and not read.
+
+   The .site-nav prefix lifts these above the generic a:link / a:visited /
+   a:hover rules so nothing else can reach in.
+   --------------------------------------------------------------------------- */
+.site-nav .nav-sub a,
+.site-nav .nav-sub a:link,
+.site-nav .nav-sub a:visited { color: var(--ink); background: transparent; }
+
+.site-nav .nav-sub a:hover,
+.site-nav .nav-sub a:focus-visible { background: var(--parc-50); color: var(--parc-700); }
+
+@media (max-width: 900px) {
+  /* The mobile panel sits on the dark nav, so the polarity flips. */
+  .site-nav .nav-sub a,
+  .site-nav .nav-sub a:link,
+  .site-nav .nav-sub a:visited { color: #fff; background: transparent; }
+
+  .site-nav .nav-sub a:hover,
+  .site-nav .nav-sub a:focus-visible { background: rgba(255,255,255,.16); color: #fff; }
 }
 
 /* ---------- layout ------------------------------------------------------- */
@@ -757,18 +794,24 @@ button:active, .btn:active { transform: translateY(1px); }
 .cal-unavailable h2 { margin-top: 0; font-size: var(--step-1); }
 
 .cal-toolbar {
-  display: flex; flex-wrap: wrap; gap: var(--sp-5);
+  display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-4);
+  align-items: flex-end;
   padding: var(--sp-4); margin-bottom: var(--sp-4);
   background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
 }
 .cal-filter { display: flex; flex-direction: column; gap: var(--sp-2); }
-.cal-filter--tz { margin-left: auto; }
+/* Inline, and directly after the chips. Stacking label-over-select the way the
+   chip groups stack was out of scale for one small dropdown, and
+   margin-left:auto stranded it alone on an empty row once five bands no longer
+   fit on a single line. */
+.cal-filter--tz { flex-direction: row; align-items: center; gap: var(--sp-2); }
+.cal-filter--tz .cal-filter__label { white-space: nowrap; }
 .cal-filter__label {
   font-size: var(--step--1); font-weight: 700; color: var(--ink-2);
   text-transform: uppercase; letter-spacing: .04em;
 }
 .cal-filter select {
-  font: inherit; padding: var(--sp-2) var(--sp-3);
+  font: inherit; padding: var(--sp-2) var(--sp-3); max-width: 11rem;
   border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
 }
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }

@@ -64,11 +64,11 @@
      10pm round to 6am, which lumped a 2am slot in with an 11pm one — very
      different propositions for a candidate. Split at midnight instead. */
   var BANDS = [
-    { id: 'earlymorning', label: 'Early morning', hint: 'midnight–6am', from: 0,  to: 6  },
-    { id: 'morning',      label: 'Morning',       hint: '6am–noon',     from: 6,  to: 12 },
-    { id: 'afternoon',    label: 'Afternoon',     hint: 'noon–5pm',     from: 12, to: 17 },
-    { id: 'evening',      label: 'Evening',       hint: '5pm–10pm',     from: 17, to: 22 },
-    { id: 'latenight',    label: 'Late night',    hint: '10pm–midnight', from: 22, to: 24 }
+    { id: 'earlymorning', label: 'Early morning', hint: '12–6am', from: 0,  to: 6  },
+    { id: 'morning',      label: 'Morning',       hint: '6am–12pm',     from: 6,  to: 12 },
+    { id: 'afternoon',    label: 'Afternoon',     hint: '12–5pm',     from: 12, to: 17 },
+    { id: 'evening',      label: 'Evening',       hint: '5–10pm',     from: 17, to: 22 },
+    { id: 'latenight',    label: 'Late night',    hint: '10pm–12am', from: 22, to: 24 }
   ];
 
   var state = {
