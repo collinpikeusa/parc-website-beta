@@ -58,7 +58,7 @@
      KNOWN LIMITATION, not an oversight: simulating protanopia puts the red and
      green only dE 12 apart, so a red-green colour-blind VE cannot reliably tell
      "do not read aloud" from "applies to some candidates". 89% of <p5> blocks
-     also carry a [bracket] or "* DO NOT READ *" marker, which is what those VEs
+     also carry a bracketed or asterisked marker, which is what those VEs
      have to rely on. Changing <p6> from green to plum would fix it
      (dE 46 worst case) and breaks no written instruction, since no script text
      names any colour except red. Offered and deferred. */
