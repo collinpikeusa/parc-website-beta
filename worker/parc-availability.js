@@ -49,27 +49,51 @@ const SESSIONS = [
 // 'YOUTH' here silently broke youth badges and youth-first booking.
 const YOUTH = { letter: 'Y', match: /YOUTH ONLY/i, youth: true };
 
-/* Every host the site is served from must be listed. A missing entry does not
-   error visibly — the browser blocks the response, the page silently falls back
-   to the committed snapshot, and the calendar quietly shows yesterday's data.
-   That is exactly what happened when radiotest.org went up. */
-const ALLOWED_ORIGINS = [
-  'https://parcradio.net',
-  'https://www.parcradio.net',
-  'https://radiotests.org',
-  'https://www.radiotests.org',
-  'https://collinpikeusa.github.io',
+/* Which sites may call this Worker.
+ *
+ * A missing entry does not error visibly: the browser blocks the response, the
+ * page silently falls back to its committed snapshot, and the calendar quietly
+ * shows yesterday. That is what happened when radiotests.org went up.
+ *
+ * So rather than an exact list that needs a redeploy every time a host is
+ * added, any subdomain of the domains below is accepted as well — beta.,
+ * staging., www. and so on all work without touching this file.
+ *
+ * Not wide open: this Worker has a free-tier request budget, and an unrestricted
+ * allowlist would let any site on the internet spend it. It only proxies public
+ * Calendly availability, so there is nothing confidential here — the limit is
+ * about the quota, not secrecy. */
+const ALLOWED_DOMAINS = [
+  'parcradio.net',
+  'parcradio.org',
+  'radiotests.org',
+  'github.io',
+];
+
+const ALLOWED_EXACT = [
   'http://127.0.0.1:8088',
   'http://localhost:8088',
   'http://127.0.0.1:8090',
   'http://localhost:8090',
 ];
 
+const DEFAULT_ORIGIN = 'https://parcradio.net';
+
+function originAllowed(origin) {
+  if (!origin) return false;
+  if (ALLOWED_EXACT.includes(origin)) return true;
+  let host;
+  try { host = new URL(origin).hostname.toLowerCase(); } catch { return false; }
+  // Exact domain, or a subdomain of it. The leading dot stops "notparcradio.net"
+  // matching "parcradio.net".
+  return ALLOWED_DOMAINS.some((d) => host === d || host.endsWith('.' + d));
+}
+
 const PROFILE_TTL = 3600;   // event-type list: changes rarely
 const RANGE_TTL = 60;       // availability: fresh enough to act on, gentle upstream
 
 function corsHeaders(origin) {
-  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allow = originAllowed(origin) ? origin : DEFAULT_ORIGIN;
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
