@@ -800,11 +800,10 @@ button:active, .btn:active { transform: translateY(1px); }
   background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
 }
 .cal-filter { display: flex; flex-direction: column; gap: var(--sp-2); }
-/* Inline, and directly after the chips. Stacking label-over-select the way the
-   chip groups stack was out of scale for one small dropdown, and
-   margin-left:auto stranded it alone on an empty row once five bands no longer
-   fit on a single line. */
-.cal-filter--tz { flex-direction: row; align-items: center; gap: var(--sp-2); }
+/* Label above the select, matching the chip groups beside it. Deliberately no
+   margin-left:auto — pushing it to the far right stranded it alone on an
+   otherwise empty row whenever the five band chips filled the line. Sitting
+   directly after the chips keeps it part of the same group at any width. */
 .cal-filter--tz .cal-filter__label { white-space: nowrap; }
 .cal-filter__label {
   font-size: var(--step--1); font-weight: 700; color: var(--ink-2);
