@@ -1,4 +1,4 @@
-# radiotest.org
+# radiotests.org
 
 User-agent: *
 Allow: /
@@ -10,4 +10,4 @@ Allow: /
 # encrypted, so there is nothing to read even when fetched.
 Disallow: /ve/files/
 
-Sitemap: https://radiotest.org/sitemap.xml
+Sitemap: https://radiotests.org/sitemap.xml

@@ -49,11 +49,20 @@ const SESSIONS = [
 // 'YOUTH' here silently broke youth badges and youth-first booking.
 const YOUTH = { letter: 'Y', match: /YOUTH ONLY/i, youth: true };
 
+/* Every host the site is served from must be listed. A missing entry does not
+   error visibly — the browser blocks the response, the page silently falls back
+   to the committed snapshot, and the calendar quietly shows yesterday's data.
+   That is exactly what happened when radiotests.org went up. */
 const ALLOWED_ORIGINS = [
   'https://parcradio.net',
   'https://www.parcradio.net',
+  'https://radiotests.org',
+  'https://www.radiotests.org',
+  'https://collinpikeusa.github.io',
   'http://127.0.0.1:8088',
   'http://localhost:8088',
+  'http://127.0.0.1:8090',
+  'http://localhost:8090',
 ];
 
 const PROFILE_TTL = 3600;   // event-type list: changes rarely

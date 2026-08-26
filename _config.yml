@@ -17,6 +17,7 @@
 # ############################################################################
 
 exclude:
+  - .github/         # workflows; Jekyll skips dotdirs anyway, but be explicit
   - _ve-source/      # plaintext exam scripts + VE training PDFs
   - tools/           # build scripts
   - worker/          # Cloudflare Worker source

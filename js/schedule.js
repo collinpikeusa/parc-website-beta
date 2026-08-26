@@ -59,12 +59,16 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
                 'August', 'September', 'October', 'November', 'December'];
 
-  /* Time-of-day buckets, so "I can only test after work" is one click. */
+  /* Time-of-day buckets, so "I can only test after work" is one click.
+     Listed in clock order across a single day. "Late night" used to wrap from
+     10pm round to 6am, which lumped a 2am slot in with an 11pm one — very
+     different propositions for a candidate. Split at midnight instead. */
   var BANDS = [
-    { id: 'morning',   label: 'Morning',    hint: '6am–noon',   from: 6,  to: 12 },
-    { id: 'afternoon', label: 'Afternoon',  hint: 'noon–5pm',   from: 12, to: 17 },
-    { id: 'evening',   label: 'Evening',    hint: '5pm–10pm',   from: 17, to: 22 },
-    { id: 'latenight', label: 'Late night', hint: '10pm–6am',   from: 22, to: 6 }
+    { id: 'earlymorning', label: 'Early morning', hint: 'midnight–6am', from: 0,  to: 6  },
+    { id: 'morning',      label: 'Morning',       hint: '6am–noon',     from: 6,  to: 12 },
+    { id: 'afternoon',    label: 'Afternoon',     hint: 'noon–5pm',     from: 12, to: 17 },
+    { id: 'evening',      label: 'Evening',       hint: '5pm–10pm',     from: 17, to: 22 },
+    { id: 'latenight',    label: 'Late night',    hint: '10pm–midnight', from: 22, to: 24 }
   ];
 
   var state = {
@@ -115,8 +119,14 @@
     if (t.getMonth() + 1 < m || (t.getMonth() + 1 === m && t.getDate() < d)) age--;
     return age;
   }
-  function readAudience() { try { return sessionStorage.getItem(GATE_KEY); } catch (e) { return null; } }
-  function saveAudience(v) { try { sessionStorage.setItem(GATE_KEY, v); } catch (e) {} }
+  /* Deliberately NOT remembered.
+     The gate is shown on every page load. Remembering the answer meant a
+     visitor who once entered a youth date kept seeing youth sessions on every
+     later visit, which looked like youth exams showing for everyone. It also
+     means nothing derived from a date of birth is stored anywhere at all,
+     which is the stronger position for a form minors fill in. */
+  function readAudience() { return null; }
+  function saveAudience() { /* intentionally does not persist */ }
 
   function initGate() {
     var mSel = document.getElementById('dob-month');
