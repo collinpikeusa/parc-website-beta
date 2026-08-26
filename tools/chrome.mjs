@@ -41,7 +41,13 @@ export function buildHead(rel, meta) {
   L.push(`<title>${esc(title)}</title>`);
   if (meta.desc) L.push(`<meta name="description" content="${esc(meta.desc)}">`);
   L.push(`<link rel="canonical" href="${esc(url)}">`);
-  if (noindex) {
+  /* STAGING=1 forces noindex on EVERY page.
+     A staging copy on its own domain is a byte-for-byte duplicate of
+     production. Left indexable it competes with parcradio.net for the same
+     queries and splits the ranking signal across two hosts. robots.txt alone
+     will not do: a Disallow stops the crawl, which stops the crawler from ever
+     reading the noindex, and URLs can linger in the index regardless. */
+  if (noindex || process.env.STAGING) {
     L.push('<meta name="robots" content="noindex, nofollow">');
   } else {
     L.push('<meta name="robots" content="index, follow, max-image-preview:large">');

@@ -55,6 +55,23 @@ git status --porcelain | grep _ve-source && echo "STOP" || echo "clean"
 `_ve-source/`, `tools/`, `worker/`, and `design/` are kept off the live site by
 the `exclude:` list in `_config.yml`.
 
+## Deploying
+
+See **[DEPLOY.md](DEPLOY.md)** for the full checklist — one-time setup, the
+Cloudflare Worker, scheduled availability refresh, Search Console, and rollback.
+
+Day to day, one command does everything and refuses to push if anything is wrong:
+
+```bash
+PARC_PASSCODE='...' node tools/deploy.mjs --refresh --push
+```
+
+Verify without changing anything:
+
+```bash
+node tools/deploy.mjs --check
+```
+
 ## Everyday tasks
 
 ### Build order matters

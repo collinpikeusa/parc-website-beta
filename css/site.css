@@ -26,24 +26,46 @@
   --parc-600:   #A00105;
   --parc-50:    #FDF2F2;
 
-  --ink:        #14171A;
-  --ink-2:      #454B52;
-  --muted:      #6B747D;
-  --surface:    #FFFFFF;
-  --surface-2:  #F8FAFB;
-  --page:       #F2F4F6;
+  /* Softened for long reading. Pure #FFF against near-black was 18:1 — far past
+     any requirement and harsh on a bright screen. These still clear AAA (7:1)
+     with room to spare at ~15:1. */
+  --ink:        #1F2328;
+  --ink-2:      #4A5158;
+  --muted:      #677079;   /* clears 4.5:1 on surface AND the card tone */
+  --muted-dark: #8A939C;   /* muted, but against the dark footer */
+  --surface:    #FCFCFB;
+  --surface-2:  #F6F7F8;
+  --page:       #F1F3F5;
   --line:       #DFE4E9;
   --line-2:     #C9D1D8;
+
+  /* Navigation sits directly beneath an already-red banner. A second
+     full-width red band doubled the amount of saturated red on every page.
+     Charcoal separates the two, and lets red mean "act on this" instead of
+     "this is a surface". */
+  --nav-bg:     #23272C;
+  --nav-bg-2:   #313740;
 
   --focus:      #1F5FBF;
   --ok:         #0E7C2A;
   --warn:       #9A6700;
 
-  /* Exam-script colour code. VEs rely on these mid-session — do not restyle
-     without asking. red = VE instruction, not read aloud. */
+  /* ---- exam-script colour code — LEFT AS IT WAS, ON PURPOSE ---------------
+     VEs read these live during exams and the site owner asked that the scripts
+     not change. Used by <p2> (a question to ask), <p5>/<h8> (do not read
+     aloud) and <p6> (applies to some candidates only).
+
+     KNOWN LIMITATION, not an oversight: simulating protanopia puts the red and
+     green only dE 12 apart, so a red-green colour-blind VE cannot reliably tell
+     "do not read aloud" from "applies to some candidates". 89% of <p5> blocks
+     also carry a [bracket] or "* DO NOT READ *" marker, which is what those VEs
+     have to rely on. Changing <p6> from green to plum would fix it
+     (dE 46 worst case) and breaks no written instruction, since no script text
+     names any colour except red. Offered and deferred. */
   --ve-note:    #C40606;
   --ve-blue:    #1F5FBF;
   --ve-green:   #0E7C2A;
+  --ve-subset:  var(--ve-green);
 
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
           Arial, "Noto Sans", sans-serif;
@@ -121,13 +143,16 @@ body { overflow-wrap: break-word; }
 /* ---------- navigation --------------------------------------------------- */
 .site-nav {
   position: sticky; top: 0; z-index: 100;
-  background: var(--parc-red);
+  background: var(--nav-bg);
   box-shadow: var(--shadow-1);
 }
 .site-nav__inner {
   max-width: var(--wrap); margin-inline: auto;
   display: flex; align-items: stretch; gap: var(--sp-2);
   padding-inline: var(--sp-4);
+  /* Donate sits hard against this edge; without the extra breathing room it
+     looks like it is falling off the bar on a narrow desktop window. */
+  padding-right: var(--sp-5);
 }
 
 .nav-toggle {
@@ -170,9 +195,12 @@ body { overflow-wrap: break-word; }
 .nav-menu > li > a:hover,
 .nav-sub-toggle:hover,
 .nav-menu > li > a:focus-visible,
-.nav-sub-toggle:focus-visible { background: var(--parc-700); }
+.nav-sub-toggle:focus-visible { background: var(--nav-bg-2); }
 
-.nav-menu > li > a[aria-current="page"] { border-bottom-color: #fff; background: var(--parc-700); }
+.nav-menu > li > a[aria-current="page"] {
+  border-bottom-color: var(--parc-red);      /* red earns its place here */
+  background: var(--nav-bg-2);
+}
 
 .nav-sub-toggle::after {
   content: ""; width: 0; height: 0; margin-top: 1px;
@@ -198,18 +226,48 @@ body { overflow-wrap: break-word; }
   .nav-menu > li:hover > .nav-sub { display: block; }
 }
 
-.nav-donate {
-  align-self: center; margin-left: auto;
-  display: inline-flex; align-items: center;
-  background: #fff; color: var(--parc-700);
-  padding: var(--sp-2) var(--sp-4); border-radius: 999px;
-  font-weight: 700; font-size: var(--step--1); text-decoration: none;
-  border: 0; cursor: pointer; white-space: nowrap;
+/* The form wrapping the button is a flex child of .site-nav__inner, which sets
+   align-items: stretch — so it grew to the full 67px bar height while the button
+   sat at its top edge, 0px above and 30px below. The button's own
+   align-self: center did nothing, because the form was not a flex container on
+   desktop (only inside the mobile media query). Making it one centres it. */
+.nav-donate-form {
+  display: flex; align-items: center;
+  margin-left: auto;
 }
-.nav-donate:hover { background: var(--parc-50); }
+
+.nav-donate {
+  /* Matched to the nav's own type: the items around it are uppercase and
+     letterspaced, so a title-case rounded pill read as bolted on. Square
+     corners and the same type treatment make it part of the bar. */
+  align-self: center;
+  display: inline-flex; align-items: center; gap: .5em;
+  background: var(--parc-red); color: #fff;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-sm);
+  border: 0; cursor: pointer; white-space: nowrap;
+  font: inherit; font-weight: 700; font-size: var(--step--1);
+  letter-spacing: .04em; text-transform: uppercase;
+  text-decoration: none; line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0,0,0,.28);
+  transition: background-color .15s ease, transform .06s ease;
+}
+.nav-donate::before {
+  /* A heart reads instantly and stops it being a generic red rectangle. */
+  content: "\2665"; font-size: 1.05em; line-height: 1;
+  transform: translateY(-.04em);
+}
+.nav-donate:hover { background: var(--parc-700); }
+.nav-donate:active { transform: translateY(1px); }
 
 @media (max-width: 900px) {
-  .site-nav__inner { flex-wrap: wrap; padding-inline: var(--sp-3); }
+  .site-nav__inner {
+    flex-wrap: wrap;
+    padding-inline: var(--sp-3);
+    /* padding-inline resets the desktop padding-right, so restate it or
+       Donate sits flush against the screen edge on a phone. */
+    padding-right: var(--sp-4);
+  }
   .nav-toggle { display: inline-flex; }
   .nav-menu {
     flex: 1 0 100%; flex-direction: column;
@@ -240,11 +298,11 @@ body { overflow-wrap: break-word; }
   .nav-sub-toggle::after { margin-left: auto; }
   .nav-sub {
     position: static; display: none; box-shadow: none; border-radius: 0;
-    background: var(--parc-700); min-width: 0; padding: var(--sp-1) 0;
+    background: var(--nav-bg-2); min-width: 0; padding: var(--sp-1) 0;
     border-left: 3px solid rgba(255,255,255,.35);
     margin-left: var(--sp-4);
   }
-  .nav-sub a {
+  .nav-sub a, .nav-sub a:link, .nav-sub a:visited {
     color: #fff; font-size: var(--step-0);
     padding: var(--sp-3) var(--sp-4);
     min-height: 2.75rem; display: flex; align-items: center;
@@ -253,7 +311,7 @@ body { overflow-wrap: break-word; }
   /* Keep Donate on the same row as the Menu button; the menu itself wraps
      underneath. Without the explicit order it lands on a third row. */
   .nav-toggle { order: 1; }
-  .nav-donate-form { order: 2; margin-left: auto; align-self: center; }
+  .nav-donate-form { order: 2; margin-left: auto; align-self: center; display: flex; }
   .nav-menu { order: 3; }
   .nav-donate { margin: 0; }
 }
@@ -306,10 +364,18 @@ h1, h2, h3, h4, h5, h6, h7, h8 {
 }
 :is(h2, h3, h4, h5, h6, h7, h8):not(:first-child) { margin-top: var(--sp-6); }
 
-h1 { font-size: var(--step-4); color: var(--parc-red); text-align: center; }
+h1 { font-size: var(--step-4); color: var(--ink); text-align: center; }
+/* A short rule carries the brand instead of colouring the whole headline. */
+.container > section > h1::after,
+.hero h1::after,
+main > h1::after {
+  content: ""; display: block; width: 3.5rem; height: 3px;
+  background: var(--parc-red); border-radius: 2px;
+  margin: var(--sp-3) auto 0;
+}
 h2 { font-size: var(--step-3); color: var(--ink); }
 h3 { font-size: var(--step-2); color: var(--ink); }
-h4 { font-size: var(--step-1); color: var(--parc-red); }
+h4 { font-size: var(--step-1); color: var(--ink-2); }
 h5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
 h6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
 
@@ -335,9 +401,51 @@ ul, ol { margin: 0 0 var(--sp-4); padding-left: 1.5em; }
 li { margin-bottom: var(--sp-2); }
 li::marker { color: var(--parc-red); }
 
-a { color: var(--parc-red); text-underline-offset: .16em; text-decoration-thickness: 1px; }
+a {
+  color: var(--parc-red);
+  /* Always underlined. Brand red and the VE "do not read aloud" red are only
+     dE 3.7 apart for normal vision and effectively identical under
+     deuteranopia, so a link inside a script page cannot be told from an
+     instruction by colour. The underline is what distinguishes it. */
+  text-decoration: underline;
+  text-underline-offset: .16em;
+  text-decoration-thickness: 1px;
+}
 a:hover { color: var(--parc-700); }
 a:visited { color: var(--parc-700); }
+
+/* ---------------------------------------------------------------------------
+   Component links must not inherit the global :visited colour.
+
+   `a:visited` has specificity (0,1,1), which beats a bare class like
+   `.btn--primary` (0,1,0). So once a visitor had opened the schedule page, the
+   "Schedule an exam" button rendered dark red text on a red background —
+   1.44:1, effectively invisible. Same for the footer's VE link and the mobile
+   submenu, both dark red on a dark ground.
+
+   Anything whose colour is set by a component rather than by running text needs
+   its link states pinned explicitly.
+   --------------------------------------------------------------------------- */
+.btn:link, .btn:visited            { color: var(--ink); }
+.btn--primary:link,
+.btn--primary:visited,
+.btn--primary:hover,
+.btn--primary:focus                { color: #fff; }
+.card__link:link, .card__link:visited     { color: var(--parc-red); }
+.slot:link, .slot:visited, .avail-slot a:link, .avail-slot a:visited { color: inherit; }
+.site-footer a:link, .site-footer a:visited { color: #fff; }
+.site-footer__ve:link, .site-footer__ve:visited { color: var(--muted-dark); }
+.nav-menu > li > a:link, .nav-menu > li > a:visited { color: #fff; }
+.nav-sub a:link, .nav-sub a:visited { color: var(--ink); }
+.skip-link:link, .skip-link:visited { color: #fff; }
+
+/* The mobile submenu sits on the dark nav, so it needs the opposite of the
+   desktop rule. Its original declaration is earlier in the file than
+   `a:visited`, so at equal specificity it lost. Restating it here — after
+   a:visited — is what makes it stick. */
+@media (max-width: 900px) {
+  .nav-sub a:link, .nav-sub a:visited { color: #fff; }
+}
 
 blockquote {
   margin: var(--sp-5) 0; padding: var(--sp-4) var(--sp-5);
@@ -426,12 +534,12 @@ button:active, .btn:active { transform: translateY(1px); }
 .site-footer a { color: #fff; }
 .site-footer a:hover { color: var(--parc-50); }
 .site-footer__bottom {
+  color: var(--muted-dark);
   max-width: var(--wrap); margin: var(--sp-6) auto 0;
   padding-top: var(--sp-4); border-top: 1px solid rgba(255,255,255,.14);
   display: flex; flex-wrap: wrap; gap: var(--sp-3); justify-content: space-between; align-items: center;
-  color: var(--muted);
 }
-.site-footer__ve { color: var(--muted); text-decoration: none; font-size: var(--step--1); }
+.site-footer__ve { color: var(--muted-dark); text-decoration: none; font-size: var(--step--1); }
 .site-footer__ve:hover { color: #fff; }
 
 /* Legacy footer classes, in case any page is missed by the retheme pass. */
@@ -487,8 +595,8 @@ button:active, .btn:active { transform: translateY(1px); }
   border-radius: var(--radius);
   transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
 }
-.card:hover { border-color: var(--parc-red); box-shadow: var(--shadow-2); transform: translateY(-2px); }
-.card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--parc-red); }
+.card:hover { border-color: var(--nav-bg); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.card h2 { font-size: var(--step-1); margin-bottom: var(--sp-2); color: var(--ink); }
 .card p { color: var(--ink-2); font-size: var(--step--1); flex: 1; }
 .card__link { font-weight: 700; text-decoration: none; margin-top: var(--sp-3); }
 .card__link::after { content: " \2192"; }
@@ -504,8 +612,10 @@ button:active, .btn:active { transform: translateY(1px); }
 .home-main > h2:first-child { margin-top: 0; }
 
 .callout {
-  background: var(--parc-50); border: 1px solid var(--line);
-  border-left: 4px solid var(--parc-red);
+  /* Information, not a warning — the red tint made a meeting notice read as an
+     alert. Red stays on .booking-alert and #example3, which really are. */
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-left: 4px solid var(--nav-bg);
   border-radius: 0 var(--radius) var(--radius) 0;
   padding: var(--sp-5);
 }
@@ -559,7 +669,7 @@ button:active, .btn:active { transform: translateY(1px); }
 .age-gate__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
 
 .audience-note {
-  background: var(--parc-50); border-left: 4px solid var(--parc-red);
+  background: var(--surface-2); border-left: 4px solid var(--ve-blue);
   padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--radius) var(--radius) 0;
 }
 
@@ -577,7 +687,7 @@ button:active, .btn:active { transform: translateY(1px); }
   padding: var(--sp-2) var(--sp-3); text-decoration: none;
   background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
-.avail-slot a:hover { border-color: var(--parc-red); background: var(--parc-50); }
+.avail-slot a:hover { border-color: #0F6B62; background: #E8F4F3; }
 .avail-slot__time { font-weight: 700; color: var(--ink); }
 .avail-slot__meta { font-size: var(--step--1); color: var(--muted); }
 
@@ -619,10 +729,12 @@ button:active, .btn:active { transform: translateY(1px); }
   width: 100% !important;
   min-height: 3rem;
   padding: var(--sp-3) var(--sp-4);
-  background: var(--parc-red); border-color: var(--parc-red); color: #fff;
-  text-align: center;
+  /* Outlined rather than filled: these pages carry four to eight of them, and
+     as solid red blocks they dominated the page. */
+  background: var(--surface); border: 2px solid var(--parc-red); color: var(--parc-700);
+  text-align: center; font-weight: 700;
 }
-.container button[style]:hover { background: var(--parc-700); border-color: var(--parc-700); }
+.container button[style]:hover { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
 .container button h3, .container button h7, .container button h5 {
   margin: 0; font-size: var(--step--1); color: inherit;
   text-transform: uppercase; letter-spacing: .03em;
@@ -665,7 +777,8 @@ button:active, .btn:active { transform: translateY(1px); }
   font-size: var(--step--1); font-weight: 600;
   background: var(--surface); border: 1px solid var(--line-2); color: var(--muted);
 }
-.chip.is-on { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+/* Matched to the calendar they filter, rather than a row of black pills. */
+.chip.is-on { background: #0F6B62; border-color: #0F6B62; color: #fff; }
 .chip__hint { font-weight: 400; opacity: .75; font-size: .85em; }
 
 .cal-summary { font-size: var(--step--1); color: var(--ink-2); margin-bottom: var(--sp-4); }
@@ -696,20 +809,23 @@ button:active, .btn:active { transform: translateY(1px); }
 .cal-cell__num { font-size: var(--step--1); font-weight: 600; }
 .cal-cell__count { font-size: .7rem; font-weight: 700; line-height: 1; }
 
-/* Availability density — three steps so a glance shows where the room is. */
+/* Availability density — three steps so a glance shows where the room is.
+   Teal rather than the brand red: this is data, and a red-saturated grid read
+   as a warning when it actually means "plenty of room". Single-hue lightness
+   ramp, so it stays legible under every colour-vision deficiency. */
 .cal-cell.has-slots { cursor: pointer; color: var(--ink); }
-.cal-cell.lvl-1 { background: #FDECEC; border-color: #F6C9C9; }
-.cal-cell.lvl-2 { background: #F3A3A3; border-color: #E88585; }
-.cal-cell.lvl-3 { background: var(--parc-red); border-color: var(--parc-700); color: #fff; }
-.cal-cell.has-slots:hover { outline: 2px solid var(--parc-700); outline-offset: 1px; }
+.cal-cell.lvl-1 { background: #E8F4F3; border-color: #C4E2DF; }
+.cal-cell.lvl-2 { background: #8FCBC6; border-color: #6FB5AF; }
+.cal-cell.lvl-3 { background: #0F6B62; border-color: #0B554E; color: #fff; }
+.cal-cell.has-slots:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
 .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ve-blue); }
 .cal-cell.is-selected { outline: 3px solid var(--ink); outline-offset: 1px; }
 
 .cal-legend { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap;
   font-size: var(--step--1); color: var(--muted); margin-top: var(--sp-3); }
 .cal-key { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line-2); }
-.cal-key.lvl-1 { background: #FDECEC; } .cal-key.lvl-2 { background: #F3A3A3; }
-.cal-key.lvl-3 { background: var(--parc-red); }
+.cal-key.lvl-1 { background: #E8F4F3; } .cal-key.lvl-2 { background: #8FCBC6; }
+.cal-key.lvl-3 { background: #0F6B62; }
 
 .cal-daybox {
   padding: var(--sp-4); background: var(--surface-2);
@@ -729,7 +845,7 @@ button:active, .btn:active { transform: translateY(1px); }
   padding: var(--sp-2) var(--sp-3);
   background: var(--surface); border: 1px solid var(--line-2); border-radius: var(--radius-sm);
 }
-.slot:hover { border-color: var(--parc-red); background: var(--parc-50); }
+.slot:hover { border-color: #0F6B62; background: #E8F4F3; }
 .slot__time { font-weight: 700; color: var(--ink); }
 .slot__meta { font-size: .75rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
 .cal-foot { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
@@ -761,11 +877,12 @@ button:active, .btn:active { transform: translateY(1px); }
   text-transform: uppercase; vertical-align: middle;
 }
 #filter-youth.is-on { background: var(--ve-blue); border-color: var(--ve-blue); color: #fff; }
+.cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink-2); }
 
 /* Section headings that used to be <h1> in the old template. Demoted to <h2>
    for a correct document outline; styled here so the pages look unchanged. */
 .page-section {
-  font-size: var(--step-4); color: var(--parc-red);
+  font-size: var(--step-4); color: var(--ink);
   text-align: center; font-weight: 700;
 }
 
@@ -779,6 +896,6 @@ button:active, .btn:active { transform: translateY(1px); }
    APPEARANCE must stay as it was. The old template picked heading levels for
    their font size and colour rather than for structure; these classes keep the
    look while the level does the semantic work. */
-.hx-4 { font-size: var(--step-1); color: var(--parc-red); font-weight: 700; }
+.hx-4 { font-size: var(--step-1); color: var(--ink-2); font-weight: 700; }
 .hx-5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
 .hx-6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }

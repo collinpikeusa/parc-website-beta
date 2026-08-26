@@ -69,7 +69,7 @@
 
   var state = {
     audience: null, data: null, tz: guessTz(),
-    month: null, selectedDay: null, youthOnly: false,
+    month: null, selectedDay: null, youthOnly: false, live: false,
     sessions: {},          // letter -> enabled
     bands: {}              // band id -> enabled
   };
@@ -156,7 +156,7 @@
 
     fetchData()
       .then(function (data) {
-        state.data = data;
+        state.data = normalize(data);
         var youth = audience === 'youth';
         // Youth-only sessions are hidden from everyone else.
         state.data.sources = data.sources.filter(function (s) { return youth || !s.youth; });
@@ -188,6 +188,32 @@
       });
   }
 
+  /**
+   * Reconcile the two data sources.
+   *
+   * The Worker labels the youth calendar "YOUTH"; the committed snapshot and
+   * every check in this file use "Y". Left unreconciled, a youth candidate on a
+   * Worker-backed page gets no Youth badge and — worse — bookingUrl() stops
+   * recognising youth sessions and routes them to a general one by seat count,
+   * which is a different session at a different fee.
+   *
+   * Normalising here rather than only in the Worker means the page is correct
+   * even if the deployed Worker is an older build.
+   */
+  function normalize(data) {
+    if (!data) return data;
+    var isYouth = function (l) { return l === 'Y' || l === 'YOUTH'; };
+    (data.sources || []).forEach(function (s) {
+      if (isYouth(s.letter)) { s.letter = 'Y'; s.youth = true; s.label = s.label || 'Youth'; }
+    });
+    (data.slots || []).forEach(function (slot) {
+      (slot.sessions || []).forEach(function (x) {
+        if (isYouth(x.letter)) x.letter = 'Y';
+      });
+    });
+    return data;
+  }
+
   function fetchData() {
     var youth = state.audience === 'youth';
     if (WORKER_URL) {
@@ -196,8 +222,11 @@
       var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
       var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 5000);
       return fetch(u, ctrl ? { signal: ctrl.signal } : undefined)
-        .then(function (r) { clearTimeout(timer); if (!r.ok) throw 0; return r.json(); })
-        .catch(function () { return fetch(SNAPSHOT_URL).then(function (r) { return r.json(); }); });
+        .then(function (r) { clearTimeout(timer); if (!r.ok) throw 0; state.live = true; return r.json(); })
+        .catch(function () {
+          state.live = false;               // Worker unreachable — fall back
+          return fetch(SNAPSHOT_URL).then(function (r) { return r.json(); });
+        });
     }
     return fetch(SNAPSHOT_URL).then(function (r) { if (!r.ok) throw 0; return r.json(); });
   }
@@ -292,20 +321,20 @@
     renderGrid(byDay);
     renderDay(byDay);
     var total = Object.keys(byDay).reduce(function (a, k) { return a + byDay[k].length; }, 0);
+    /* No running total. A candidate wants a time that suits them, not a tally
+       of how many exist. Two things still earn this line: the empty state
+       (otherwise an over-filtered calendar just looks broken with no
+       explanation) and, for youth candidates, what the Youth badge means. */
     var sum = document.getElementById('cal-summary');
     if (sum) {
-      sum.textContent = total
-        ? total + ' available exam time' + (total === 1 ? '' : 's') +
-          ' in the next ' + (state.data.days || 21) + ' days.'
-        : 'No times match these filters. Try turning another one on.';
-      if (total && state.audience === 'youth' && !state.youthOnly) {
-        var yCount = 0;
-        var byDayY = visibleByDay();
-        Object.keys(byDayY).forEach(function (k) {
-          byDayY[k].forEach(function (s) { if (youthPart(s)) yCount++; });
-        });
-        sum.textContent += ' ' + yCount + ' of them are youth sessions, marked "Youth".';
+      if (!total) {
+        sum.textContent = 'No times match these filters. Try turning another one on.';
+      } else if (state.audience === 'youth' && !state.youthOnly) {
+        sum.textContent = 'Sessions you can book at the youth rate are marked “Youth”.';
+      } else {
+        sum.textContent = '';
       }
+      sum.hidden = !sum.textContent;
     }
     renderFreshness();
   }
@@ -319,13 +348,21 @@
   function renderFreshness() {
     var el = document.getElementById('cal-freshness');
     if (!el || !state.data || !state.data.generated) return;
+
+    /* When a Worker is configured the data IS fetched per page load, so a
+       "checked at" timestamp is noise — it would always read "just now".
+       The line exists only to disclose that the committed snapshot can be
+       out of date, which is a real risk worth telling candidates about.
+       No Worker, no live data: Calendly's availability endpoint sends no
+       Access-Control-Allow-Origin header, so a browser cannot call it. */
+    if (state.live) { el.hidden = true; el.textContent = ''; return; }
     var ageMs = Date.now() - new Date(state.data.generated).getTime();
     var hours = ageMs / 3600000;
     var when = new Date(state.data.generated).toLocaleString('en-US',
       { timeZone: state.tz, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     if (hours < 24) {
       el.className = 'cal-freshness';
-      el.textContent = 'Availability checked ' + when + '.';
+      el.textContent = 'Times last checked ' + when + '. Calendly confirms what is still free when you book.';
     } else {
       el.className = 'cal-freshness is-stale';
       el.textContent = 'Availability last checked ' + when + ' (' + Math.round(hours / 24) +
