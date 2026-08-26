@@ -41,4 +41,21 @@ ${urls.map((u) => `  <url>
 </urlset>
 `;
 writeFileSync(join(ROOT, 'sitemap.xml'), xml);
+
+// robots.txt has to name the same host, or it points crawlers at another site.
+writeFileSync(join(ROOT, 'robots.txt'), `# ${SITE.origin.replace('https://','')}
+
+User-agent: *
+Allow: /
+
+# VE pages are deliberately NOT disallowed: they carry a noindex meta tag, and a
+# crawler has to be able to fetch a page to read it. A Disallow here would block
+# the crawl, the noindex would never be seen, and URLs already known to a search
+# engine could sit in the index with no way to remove them. The pages are
+# encrypted, so there is nothing to read even when fetched.
+Disallow: /ve/files/
+
+Sitemap: ${SITE.origin}/sitemap.xml
+`);
 console.log(`sitemap.xml: ${urls.length} public URLs`);
+console.log(`robots.txt : sitemap -> ${SITE.origin}/sitemap.xml`);

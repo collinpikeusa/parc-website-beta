@@ -13,7 +13,13 @@
 export const SITE = {
   name: 'PARC Radio & Technology',
   short: 'PARC',
-  origin: 'https://parcradio.net',
+  /* Override per build so canonical tags, Open Graph URLs and the sitemap all
+     name the host actually serving the page:
+        SITE_ORIGIN=https://radiotest.org node tools/deploy.mjs
+     A canonical pointing at a different host tells search engines that host has
+     the real version — which is wrong, and actively harmful when that host is
+     serving different content. */
+  origin: process.env.SITE_ORIGIN || 'https://parcradio.net',
   tagline: 'Amateur radio license exams, online and in person.',
   email: 'vetesting@yahoo.com',
   veEmail: 've@parcradio.org',
