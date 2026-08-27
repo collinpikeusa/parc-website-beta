@@ -116,8 +116,8 @@
 
     <div class="age-gate" id="age-gate">
       <h2>Find your session</h2>
-      <p>We run separate sessions for candidates 18 and under. Enter your date of birth and
-        we&rsquo;ll include the right calendars.</p>
+      <p>Enter your date of birth so we can show the sessions you are eligible
+          to book.</p>
       <form id="age-form" class="age-gate__form">
         <fieldset class="age-gate__fields">
           <legend class="noDisplay">Date of birth</legend>
@@ -135,13 +135,14 @@
           </span>
         </fieldset>
         <p class="age-gate__privacy">
-          Your date of birth is used only inside your own browser to pick the right calendars.
+          Your date of birth is used only inside your own browser to pick which sessions
+            to show.
           It is never sent to us, never sent to Calendly, and never stored.
         </p>
         <p class="ve-lock__status is-error" id="age-error" role="status" aria-live="polite"></p>
         <div class="age-gate__actions">
           <button type="submit" class="btn btn--primary">Show available times</button>
-          <button type="button" class="btn" id="age-skip">Skip &mdash; show all sessions</button>
+          <button type="button" class="btn" id="age-skip">Prefer not to say</button>
         </div>
       </form>
     </div>
@@ -156,12 +157,12 @@
       </div>
 
       <div class="cal-toolbar">
-        <div class="cal-filter" id="filter-youth-wrap" hidden>
-          <span class="cal-filter__label">Youth</span>
-          <div class="chips">
-            <button type="button" class="chip" id="filter-youth" aria-pressed="false">Youth sessions only</button>
-          </div>
-        </div>
+          <!-- Filled in by js/schedule.js once the age gate has resolved, and only
+               for candidates it applies to. Shipping the control here as hidden
+               markup would put its wording in the page source and in the site
+               search index, which is the disclosure the gate exists to prevent.
+               Keep the wording out of this file, comments included. -->
+          <div id="filter-audience-wrap"></div>
         <div class="cal-filter">
           <span class="cal-filter__label">Time of day</span>
           <div class="chips" id="filter-bands"></div>

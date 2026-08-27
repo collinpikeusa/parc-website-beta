@@ -84,13 +84,29 @@ for (const r of results) {
   }
 }
 
-const slots = [...bucket.values()].sort((a, b) => new Date(a.start) - new Date(b.start));
+/* Youth sessions are stripped from the committed snapshot. This file is served
+   at data/availability.json and anyone can read it, so leaving them in
+   advertised the youth calendar to every visitor — which is what the age gate
+   exists to avoid. The live Worker only returns them when the page asks with
+   include=youth, and it only asks once the date of birth says so. A youth
+   candidate falling back to this snapshot sees general sessions, which they can
+   book; the leak in the other direction is the one that matters. */
+const publicTypes = types.filter((t) => !t.youth);
+const slots = [...bucket.values()]
+  .map((s) => ({ ...s, sessions: s.sessions.filter((x) => x.letter !== 'Y') }))
+  .filter((s) => s.sessions.length)
+  .sort((a, b) => new Date(a.start) - new Date(b.start));
+
+for (const s of slots) {
+  s.remaining = s.sessions.reduce((n, x) => n + (x.remaining || 0), 0);
+}
+
 const out = {
   generated: new Date().toISOString(),
   timezone: TZ,
   days,
   partial: okCount < types.length,
-  sources: types.map((t) => ({ letter: t.letter, label: t.label, slug: t.slug, youth: !!t.youth })),
+  sources: publicTypes.map((t) => ({ letter: t.letter, label: t.label, slug: t.slug, youth: false })),
   slots,
 };
 

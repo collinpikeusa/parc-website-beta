@@ -49,12 +49,15 @@ if (key.length > 30) {
 for (const file of PAGES) {
   if (!existsSync(file)) continue;
   const before = readFileSync(file, 'utf8');
-  const after = before.replace(/(data-turnstile-sitekey=")[^"]*(")/, `$1${key}$2`);
-  if (after === before && key) {
+  /* Absent is an error; already-correct is not. Comparing before and after
+     conflated the two, so re-running with the same key looked like a missing
+     attribute and stopped the run before it reached the other pages. */
+  if (!/data-turnstile-sitekey="/.test(before)) {
     console.error(`Could not find data-turnstile-sitekey in ${file}.`);
     process.exit(1);
   }
-  writeFileSync(file, after);
+  writeFileSync(file, before.replace(/(data-turnstile-sitekey=")[^"]*(")/, `$1${key}$2`));
+  console.log(`  set in ${file.split('/').slice(-2).join('/')}`);
 }
 
 console.log(key ? `Site key set: ${key}` : 'Site key cleared.');

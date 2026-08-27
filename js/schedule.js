@@ -256,9 +256,17 @@
     /* Youth candidates see general sessions too (youth availability can be thin),
        so give them a way to narrow to just the youth ones. Never shown to anyone
        else, who has no youth slots in their data at all. */
-    var yWrap = document.getElementById('filter-youth-wrap');
+    var yWrap = document.getElementById('filter-audience-wrap');
     if (state.audience === 'youth' && yWrap) {
-      yWrap.hidden = false;
+      /* Built here rather than shipped as hidden markup: hidden markup is still
+         in View Source and is still picked up by the site search index, so it
+         announced the youth calendar to everyone. */
+      yWrap.className = 'cal-filter';
+      yWrap.innerHTML =
+        '<span class=\"cal-filter__label\">Youth</span>' +
+        '<div class=\"chips\">' +
+        '<button type=\"button\" class=\"chip\" id=\"filter-youth\" aria-pressed=\"false\">' +
+        'Youth sessions only</button></div>';
       var yBtn = document.getElementById('filter-youth');
       yBtn.addEventListener('click', function () {
         state.youthOnly = !state.youthOnly;
