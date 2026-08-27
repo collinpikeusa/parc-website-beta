@@ -1103,6 +1103,10 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
    anything that is not rendered. */
 .review-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
+/* Turnstile draws its own fixed-size iframe; this only gives it room. It is
+   empty until the widget renders, so it must not reserve space of its own. */
+.review-turnstile:not(:empty) { margin: var(--sp-4) 0; }
+
 .review-result { margin: var(--sp-3) 0 0; font-size: var(--step--1); min-height: 1.4em; }
 .review-result.is-ok { color: var(--ok); font-weight: 600; }
 .review-result.is-error { color: var(--parc-700); font-weight: 600; }
