@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 470" width="460" height="470"
+     role="img" aria-labelledby="dw-t dw-d">
+  <title id="dw-t">A desk that would stop your exam, seen from above</title>
+  <desc id="dw-d">A cluttered desk: loose paper and notes, a pen, a calculator, a second
+    monitor, a phone lying flat, headphones, a watch, and a handheld radio with QSL cards
+    on the wall behind. Any one of these will stop the session.</desc>
+
+  <style>
+    .hd   { font: 700 17px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#fff; }
+    .lbl  { font: 600 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#8E0004; }
+    .cap  { font: 400 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#454B52; }
+  </style>
+
+  <rect x="0" y="0" width="460" height="470" rx="10" fill="#FFF" stroke="#E8B4B6" stroke-width="2"/>
+
+  <!-- header -->
+  <rect x="0" y="0" width="460" height="40" rx="10" fill="#8E0004"/>
+  <rect x="0" y="28" width="460" height="12" fill="#8E0004"/>
+  <g transform="translate(20 20)">
+    <circle cx="0" cy="0" r="10" fill="#fff"/>
+    <path d="M-4.4 -4.4 L4.4 4.4 M4.4 -4.4 L-4.4 4.4" stroke="#8E0004" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <text class="hd" x="40" y="26">Not like this</text>
+
+  <!-- desk surface -->
+  <rect x="40" y="120" width="380" height="200" rx="8" fill="#F7F9FA" stroke="#B9C3CC" stroke-width="2"/>
+
+  <!-- second monitor, behind -->
+  <rect x="255" y="72" width="110" height="60" rx="4" fill="#2B3138"/>
+  <rect x="261" y="78" width="98" height="44" rx="2" fill="#6E7A86"/>
+  <rect x="298" y="132" width="24" height="8" fill="#93A1AC"/>
+  <circle cx="252" cy="76" r="9" fill="#8E0004"/>
+  <text class="hd" x="252" y="81" text-anchor="middle" font-size="13">2</text>
+
+  <!-- laptop -->
+  <rect x="180" y="150" width="100" height="34" rx="4" fill="#2B3138"/>
+  <rect x="186" y="156" width="88" height="22" rx="2" fill="#5C6672"/>
+
+  <!-- clutter -->
+  <g>
+    <!-- papers -->
+    <rect x="62" y="196" width="60" height="76" rx="3" fill="#fff" stroke="#B9C3CC" transform="rotate(-8 92 234)"/>
+    <rect x="70" y="188" width="60" height="76" rx="3" fill="#fff" stroke="#B9C3CC" transform="rotate(5 100 226)"/>
+    <path d="M80 210 h40 M80 222 h40 M80 234 h28" stroke="#C3CCD4" stroke-width="2.5"/>
+    <circle cx="60" cy="186" r="9" fill="#8E0004"/>
+    <text class="hd" x="60" y="191" text-anchor="middle" font-size="13">1</text>
+
+    <!-- pen -->
+    <rect x="140" y="288" width="52" height="7" rx="3.5" fill="#3A6EA5" transform="rotate(-12 166 291)"/>
+
+    <!-- calculator -->
+    <rect x="300" y="196" width="52" height="70" rx="5" fill="#3A424B"/>
+    <rect x="306" y="202" width="40" height="14" rx="2" fill="#9FB0A8"/>
+    <g fill="#7C8792">
+      <rect x="306" y="222" width="10" height="9" rx="1.5"/><rect x="321" y="222" width="10" height="9" rx="1.5"/>
+      <rect x="336" y="222" width="10" height="9" rx="1.5"/><rect x="306" y="236" width="10" height="9" rx="1.5"/>
+      <rect x="321" y="236" width="10" height="9" rx="1.5"/><rect x="336" y="236" width="10" height="9" rx="1.5"/>
+    </g>
+    <circle cx="360" cy="192" r="9" fill="#8E0004"/>
+    <text class="hd" x="360" y="197" text-anchor="middle" font-size="13">3</text>
+
+    <!-- phone lying flat -->
+    <rect x="196" y="240" width="30" height="54" rx="5" fill="#2B3138"/>
+    <rect x="200" y="245" width="22" height="44" rx="2" fill="#6E7A86"/>
+    <circle cx="190" cy="238" r="9" fill="#8E0004"/>
+    <text class="hd" x="190" y="243" text-anchor="middle" font-size="13">4</text>
+
+    <!-- headphones -->
+    <circle cx="248" cy="262" r="9" fill="#8E0004"/>
+    <text class="hd" x="248" y="267" text-anchor="middle" font-size="13">5</text>
+    <path d="M256 268 a20 14 0 0 1 40 0" fill="none" stroke="#3A424B" stroke-width="6" stroke-linecap="round"/>
+    <rect x="250" y="266" width="12" height="18" rx="4" fill="#3A424B"/>
+    <rect x="290" y="266" width="12" height="18" rx="4" fill="#3A424B"/>
+
+    <!-- watch -->
+    <circle cx="78" cy="140" r="9" fill="#8E0004"/>
+    <text class="hd" x="78" y="145" text-anchor="middle" font-size="13">6</text>
+    <rect x="86" y="146" width="26" height="20" rx="5" fill="#3A424B"/>
+    <path d="M92 146 v-12 M106 146 v-12 M92 166 v12 M106 166 v12" stroke="#5C6672" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <!-- handheld radio on the wall side -->
+  <rect x="398" y="150" width="26" height="60" rx="4" fill="#242A30"/>
+  <rect x="406" y="132" width="4" height="20" rx="2" fill="#242A30"/>
+  <circle cx="392" cy="146" r="9" fill="#8E0004"/>
+  <text class="hd" x="392" y="151" text-anchor="middle" font-size="13">7</text>
+
+  <g class="cap">
+    <text x="30" y="348">1  paper and notes</text>
+    <text x="30" y="368">2  a second monitor</text>
+    <text x="30" y="388">3  a calculator</text>
+    <text x="30" y="408">4  a phone lying on the desk</text>
+    <text x="232" y="348">5  headphones or earbuds</text>
+    <text x="232" y="368">6  a watch</text>
+    <text x="232" y="388">7  radios or QSL cards</text>
+  </g>
+  <text class="lbl" x="30" y="440">Any one of these stops the session.</text>
+
+  <!-- PARC mark -->
+  <g transform="translate(396 404) scale(0.38)" opacity="0.95">
+    <defs>
+      <radialGradient id="pmW" cx="38%" cy="30%" r="80%">
+        <stop offset="0%" stop-color="#8E1218"/><stop offset="55%" stop-color="#5E070C"/>
+        <stop offset="100%" stop-color="#2B0305"/>
+      </radialGradient>
+    </defs>
+    <circle cx="60" cy="60" r="58" fill="url(#pmW)"/>
+    <circle cx="60" cy="60" r="58" fill="none" stroke="#C9848A" stroke-width="2" opacity=".5"/>
+    <circle cx="60" cy="60" r="50" fill="none" stroke="#E9C3C6" stroke-width="1.3" opacity=".4"/>
+    <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" font-weight="700" fill="#F2E9EA">
+      <text x="20" y="70" font-size="34">P</text>
+      <text x="63" y="70" font-size="34">RC</text>
+      <text x="60" y="96" font-size="16" letter-spacing="4" text-anchor="middle">VE</text>
+    </g>
+    <g fill="#F2E9EA">
+      <path d="M50.6 70 L55 44 h2.6 l4.4 26 h-3.6 l-.9-6 h-2 l-.9 6 z"/>
+      <rect x="52.6" y="58" width="7.2" height="2.6"/>
+      <circle cx="56.2" cy="40.5" r="2.3"/>
+    </g>
+    <g fill="none" stroke="#F2E9EA" stroke-width="2.2" stroke-linecap="round" opacity=".92">
+      <path d="M48.6 36.5 a11 11 0 0 1 15.2 0"/>
+      <path d="M44.4 31.5 a17.5 17.5 0 0 1 23.6 0"/>
+    </g>
+  </g>
+</svg>
