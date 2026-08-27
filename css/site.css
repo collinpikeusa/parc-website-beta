@@ -1097,6 +1097,11 @@ button:active, .btn:active { transform: translateY(1px); }
 }
 .review-input:focus { border-color: var(--parc-red); outline-offset: 1px; }
 textarea.review-input { resize: vertical; min-height: 7rem; }
+.review-hint {
+  margin: calc(var(--sp-2) * -1) 0 var(--sp-4);
+  font-size: var(--step--1); color: var(--ink-2);
+}
+
 .review-count { font-size: var(--step--1); color: var(--muted); margin: calc(-1 * var(--sp-2)) 0 var(--sp-4); }
 
 /* Honeypot. Off-screen rather than display:none, because some bots skip
@@ -1106,6 +1111,19 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 /* Turnstile draws its own fixed-size iframe; this only gives it room. It is
    empty until the widget renders, so it must not reserve space of its own. */
 .review-turnstile:not(:empty) { margin: var(--sp-4) 0; }
+.review-turnstile { max-width: 100%; }
+
+/* The widget is a hard 300px wide. On a 320px phone the content column is about
+   288px, so it pushed the whole page sideways and gave the reviews page a
+   horizontal scrollbar. Scale it down rather than let it set the page width. */
+@media (max-width: 359px) {
+  .review-turnstile { transform: scale(.9); transform-origin: left top; }
+}
+
+/* A pasted URL or an unbroken run of characters would otherwise stretch the
+   card past the screen edge — the one thing a visitor can put on this page that
+   sets its width. */
+.review-card p, .review-text { overflow-wrap: anywhere; }
 
 .review-result { margin: var(--sp-3) 0 0; font-size: var(--step--1); min-height: 1.4em; }
 .review-result.is-ok { color: var(--ok); font-weight: 600; }
