@@ -1474,35 +1474,69 @@ a.skip-link:focus {
 }
 .checklist-head h2 { margin: 0; flex: 1 1 auto; }
 .checklist-head p { flex: 1 1 100%; margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.checklist-cta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4);
+  margin: var(--sp-4) 0 var(--sp-5);
+}
+.checklist-cta span { font-size: var(--step--1); color: var(--ink-2); }
+
+.checklist-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
 .checklist-block h3 {
   margin: var(--sp-5) 0 var(--sp-3); font-size: var(--step-0);
   color: var(--parc-700);
 }
 .checklist-block h3:first-of-type { margin-top: 0; }
 
-.checklist { list-style: none; margin: 0; padding: 0; break-inside: avoid; }
-.checklist li {
-  position: relative;
-  padding: var(--sp-2) 0 var(--sp-2) var(--sp-6);
-  border-bottom: 1px solid var(--line);
-  font-size: var(--step--1); line-height: 1.5;
-}
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { border-bottom: 1px solid var(--line); }
 .checklist li:last-child { border-bottom: 0; }
-/* An empty square to tick, drawn rather than an input so it prints reliably and
-   needs no state. */
-.checklist li::before {
-  content: ""; position: absolute; left: 0; top: .72em;
-  width: 1rem; height: 1rem;
-  border: 2px solid var(--muted); border-radius: 3px;
-  background: var(--surface);
+
+/* Real checkboxes, not drawn squares. The first version painted an empty box
+   with ::before, which looked tickable and was not — you could click it all day
+   and nothing happened. */
+.checklist label {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  padding: var(--sp-3) 0;
+  font-size: var(--step--1); line-height: 1.5;
+  cursor: pointer;
 }
+.checklist input[type="checkbox"] {
+  flex: none; width: 1.15rem; height: 1.15rem;
+  margin: .1rem 0 0; accent-color: var(--parc-red);
+  cursor: pointer;
+}
+.checklist input:checked + span { color: var(--muted); text-decoration: line-through; }
+.checklist label:hover span { color: var(--parc-700); }
+.checklist input:focus-visible { outline: 2px solid var(--parc-red); outline-offset: 2px; }
 
 @media print {
   .checklist-block { border-color: #000; break-inside: auto; }
   .checklist-head { border-bottom-color: #000; }
-  .checklist-block h3 { color: #000; break-after: avoid-page; }
-  .checklist li::before { border-color: #000; }
+  .checklist-cta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3) var(--sp-4);
+  margin: var(--sp-4) 0 var(--sp-5);
+}
+.checklist-cta span { font-size: var(--step--1); color: var(--ink-2); }
+
+.checklist-actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+
+.checklist-block h3 { color: #000; break-after: avoid-page; }
   .checklist li { break-inside: avoid; }
+  .checklist input[type="checkbox"] { -webkit-appearance: none; appearance: none;
+    border: 2px solid #000; border-radius: 2px; width: 1rem; height: 1rem; }
+
+  /* "Print this checklist" means the checklist, not the page it sits on. The
+     button sets this class before calling print() and drops it afterwards.
+     visibility rather than display, so the layout inside the block survives. */
+  body.print-checklist-only * { visibility: hidden; }
+  body.print-checklist-only .checklist-block,
+  body.print-checklist-only .checklist-block * { visibility: visible; }
+  body.print-checklist-only .checklist-block {
+    position: absolute; inset: 0 auto auto 0; width: 100%;
+    margin: 0; border: 0; padding: 0;
+  }
+  body.print-checklist-only .no-print { display: none !important; }
 }
 
 

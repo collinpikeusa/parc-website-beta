@@ -77,6 +77,49 @@
    The button is progressive enhancement: without JavaScript the page still
    prints from the browser's own menu, so nothing is lost. */
 (function () {
+  var block = document.querySelector('.checklist-block');
+  if (!block) return;
+
+  /* Print the checklist, not the page it lives on. The class scopes a print
+     rule that hides everything else; afterprint drops it again so the page is
+     unchanged on screen. beforeprint covers Ctrl+P as well as the button. */
   var btn = document.getElementById('print-checklist');
-  if (btn) btn.addEventListener('click', function () { window.print(); });
+  if (btn) {
+    btn.addEventListener('click', function () {
+      document.body.classList.add('print-checklist-only');
+      window.print();
+    });
+  }
+  window.addEventListener('afterprint', function () {
+    document.body.classList.remove('print-checklist-only');
+  });
+
+  /* Remember ticks on this device, so the list can be worked through the night
+     before and still be there in the morning. Per-browser only; nothing is sent
+     anywhere. Wrapped because storage throws outright in some privacy modes. */
+  var KEY = 'parc-checklist';
+  var boxes = block.querySelectorAll('input[type="checkbox"]');
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { saved = {}; }
+
+  Array.prototype.forEach.call(boxes, function (box, i) {
+    box.setAttribute('data-i', i);
+    if (saved[i]) box.checked = true;
+    box.addEventListener('change', function () {
+      saved[i] = box.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) { /* not fatal */ }
+      if (reset) reset.hidden = !Array.prototype.some.call(boxes, function (b) { return b.checked; });
+    });
+  });
+
+  var reset = document.getElementById('checklist-reset');
+  if (reset) {
+    reset.hidden = !Array.prototype.some.call(boxes, function (b) { return b.checked; });
+    reset.addEventListener('click', function () {
+      Array.prototype.forEach.call(boxes, function (b) { b.checked = false; });
+      saved = {};
+      try { localStorage.removeItem(KEY); } catch (e) { /* not fatal */ }
+      reset.hidden = true;
+    });
+  }
 })();
