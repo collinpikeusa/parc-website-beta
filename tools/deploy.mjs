@@ -66,7 +66,10 @@ function zone(h) {
      block contains a nested <div>, so the non-greedy match is safe. */
   return body
     .replace(/<div class="dropdown-content">[\s\S]*?<\/div>/g, '')
-    .replace(/<button class="dropbtn">[\s\S]*?<\/button>/g, '');
+    .replace(/<button class="dropbtn">[\s\S]*?<\/button>/g, '')
+    /* The toolbar also carries plain links styled as buttons, which are not
+       inside a menu — the profile link is one. Same reasoning: navigation. */
+    .replace(/<a class="[^"]*dropbtn[^"]*"[^>]*>[\s\S]*?<\/a>/g, '');
 }
 
 /* ---------- 1. build ------------------------------------------------------- */
