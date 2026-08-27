@@ -58,6 +58,6 @@
 
   <!-- callout: not behind, not in front -->
   <rect x="24" y="352" width="712" height="56" rx="8" fill="#FDF2F2" stroke="#E8B4B6"/>
-  <text class="lbl" x="44" y="376">Directly to your left or right — not behind you, and not beside your screen.</text>
-  <text class="sub" x="44" y="396">An examiner has to see your hands and your screen at the same time. Both devices stay on Zoom for the whole session.</text>
+  <text class="lbl" x="44" y="376">Directly to your left or right — not behind you.</text>
+  <text class="sub" x="44" y="396">An examiner must see your hands and your screen at once. Both devices stay on Zoom throughout.</text>
 </svg>

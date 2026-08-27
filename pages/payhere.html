@@ -95,12 +95,8 @@
       <h2><center>
         Payments
       </center></h2>
-		<p><br>
-<strong>Contact Us: </strong><br>
- <br>
-Our Examiners are all volunteers, not employees. This is not a business, so we do not provide instant responses via email or phone. To reach us, please email the address provided at the bottom of each page. Given that our volunteers have regular jobs, responses may take up to 24 hours, excluding holidays or system outages. <br>
- <br>
-Please refrain from contacting us or the FCC about your license status until ten business days have passed. For quick answers, refer to our FAQ section. Additionally, some of our retired members actively monitor our Facebook Group and can assist with questions there. Use the Facebook button on the Home Page to join the group. <br><br>
+		<br>
+  <br><br>
 			<center><div id="example2">Failure to thoroughly review both the procedures page and FAQ page on our website may lead to termination of your exam. Should we grant you access to the exam room and observe that you are unprepared or have not followed the specified procedures, you will be returned to the waiting room, and the next candidate will be considered. If unpreparedness persists on a subsequent attempt, you will be required to schedule a new exam.</div></center>
 			<br>
 			<center>			
@@ -111,12 +107,12 @@ Please refrain from contacting us or the FCC about your license status until ten
 <div id="paypal-button-container"></div>
 <script src="https://www.paypal.com/sdk/js?client-id=AZlHVoQU9jTArJuxtemL96vNsa-VpaPh0z-drVLXsANegsL6Ul1qntgQndtk8elRBp9rc2dQ3zZgrylH&currency=USD" data-sdk-integration-source="button-factory"></script>
 <script>
-  paypal.Buttons({
+  PayPal.Buttons({
       style: {
           shape: 'pill',
           color: 'gold',
           layout: 'vertical',
-          label: 'paypal',
+          label: 'PayPal',
           
       },
       createOrder: function(data, actions) {
@@ -133,9 +129,9 @@ Please refrain from contacting us or the FCC about your license status until ten
               alert('Transaction completed by ' + details.payer.name.given_name + '!');
           });
       }
-  }).render('#paypal-button-container');
+  }).render('#PayPal-button-container');
 </script>
-			</center></p>
+			</center>
 	  
   </section>
 </div>
