@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="PARC VE">
-  <!-- Source of truth for the badge used on PARC diagrams. Traced from
+  <!-- Not published: the leading underscore makes Jekyll skip this file, which is
+       deliberate — it is a build-time source, and the mark is inlined into each
+       diagram that uses it rather than linked.
+
+       Source of truth for the badge used on PARC diagrams. Traced from
        favicon.ico: a dark red disc, the wordmark PARC with an antenna mast
        standing in for the A, and VE beneath. Copy this file's contents into new
        diagrams rather than redrawing the mark by eye.
