@@ -57,7 +57,16 @@ function textOf(h) {
 function zone(h) {
   const a = h.search(/<div\s+class=["']container["']/i);
   const b = h.search(/<footer\b/i);
-  return a === -1 || b === -1 || b <= a ? h : h.slice(a, b);
+  const body = a === -1 || b === -1 || b <= a ? h : h.slice(a, b);
+
+  /* The four toolbar dropdowns sit inside the container, so they land in this
+     comparison even though they are navigation rather than exam text. Adding a
+     link to a menu would otherwise report as script drift and train everyone to
+     ignore that line. Verified across all 18 sources that no dropdown-content
+     block contains a nested <div>, so the non-greedy match is safe. */
+  return body
+    .replace(/<div class="dropdown-content">[\s\S]*?<\/div>/g, '')
+    .replace(/<button class="dropbtn">[\s\S]*?<\/button>/g, '');
 }
 
 /* ---------- 1. build ------------------------------------------------------- */
