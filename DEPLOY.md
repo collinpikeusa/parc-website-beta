@@ -153,7 +153,75 @@ snapshot automatically, so both paths work.
 > without notice. If the merged calendar ever stops appearing, that is the first
 > thing to check — the site keeps working, it just falls back.
 
-### F. Search visibility — owner only
+### F. Reviews page — optional, but the page is inert without it
+
+`pages/reviews.html` collects a star rating and a short comment. It needs a
+second Worker plus somewhere to keep what people write, so this is a little more
+involved than section E.
+
+**Nothing a visitor submits appears on the site until you approve it.** That is
+deliberate: the page is public, unauthenticated, and reachable by anyone, so it
+would otherwise be a spam board carrying the club's name.
+
+- [ ] Create the storage namespace and deploy:
+
+```bash
+cd worker
+./deploy-reviews-worker.sh
+```
+
+The script creates the KV namespace on the first run and stops so you can paste
+the id it prints into `wrangler-reviews.toml`. Run it again and it deploys, then
+prompts for the moderation key.
+
+- [ ] **Choose a long random moderation key** when prompted. It is the only thing
+      between the public and the approve/delete buttons. Store it in a password
+      manager — it is never written into this repository and cannot be recovered
+      from Cloudflare, only replaced.
+- [ ] Wire the URL into the page, from the repository root:
+
+```bash
+node tools/set-reviews-url.mjs https://parc-reviews.<you>.workers.dev
+```
+
+- [ ] Rebuild and deploy
+
+**Reading what people have submitted.** Set these two once per shell:
+
+```bash
+export REVIEWS_URL=https://parc-reviews.<you>.workers.dev
+export REVIEWS_ADMIN_KEY=<the key you chose>
+```
+
+Then:
+
+```bash
+node tools/moderate-reviews.mjs
+```
+
+That lists everything waiting, each with an id. Publish or discard one with:
+
+```bash
+node tools/moderate-reviews.mjs approve <id>
+```
+
+`delete <id>` discards instead; `unpublish <id>` takes a published one back down.
+Approving is instant — the page reads the list live, so nothing needs rebuilding.
+
+**What the Worker rejects on its own,** so most of what reaches you is real: a
+hidden field that only an automated submitter fills in, a cap of three
+submissions a day from one address, and a flag on anything containing a phone
+number or email. Flagged items still appear in the pending list, marked, rather
+than being thrown away — the judgement is yours.
+
+> **No `AggregateRating` markup, deliberately.** Star ratings can be made to show
+> in Google results, but only from an independent review platform. Google's own
+> guidance treats self-serving markup — a site publishing rating markup about
+> itself — as ineligible, and acting on it risks a manual action against the
+> whole domain. The page shows the average to visitors; it does not claim it to
+> search engines.
+
+### G. Search visibility — owner only
 
 - [ ] Verify `parcradio.net` in [Google Search Console](https://search.google.com/search-console)
 - [ ] Paste the verification token into `SITE.googleSiteVerification` in

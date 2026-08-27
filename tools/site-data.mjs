@@ -62,6 +62,7 @@ export const NAV = [
   { label: 'Online Testing', href: '/pages/Online_InstructionSeparation.html' },
   { label: 'In-Person Testing', href: '/pages/inperson.html' },
   { label: 'FAQ', href: '/pages/faq.html' },
+  { label: 'Reviews', href: '/pages/reviews.html' },
   { label: 'Schedule', href: '/pages/calendar.html' },
 ];
 
@@ -224,6 +225,12 @@ export const PAGES = {
     title: 'Your CSCE and FCC Form 605 Explained',
     desc: 'What the CSCE you receive after passing means, how FCC Form 605 fits in, and what happens between your exam and your call sign.',
     h1: 'CSCE and FCC Form 605',
+  },
+  'pages/reviews.html': {
+    scripts: ['/js/reviews.js'],
+    title: 'Reviews — What Candidates Say About PARC',
+    desc: 'Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.',
+    h1: 'Reviews',
   },
   'pages/donations.html': {
     title: 'Support PARC Radio & Technology',
