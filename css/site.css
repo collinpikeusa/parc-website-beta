@@ -1374,3 +1374,48 @@ a.skip-link:focus {
 .site-nav button.nav-toggle[aria-expanded="true"] .nav-toggle__bars {
   background: transparent;
 }
+
+
+/* ---------- exam-day timeline -------------------------------------------- */
+/* Numbered because the order is the information: a candidate wants to know what
+   comes next, not a set of equally-weighted facts. The rail is drawn on the list
+   itself so the steps stay connected when one wraps to several lines. */
+.timeline {
+  list-style: none;
+  margin: var(--sp-5) 0;
+  padding: 0 0 0 var(--sp-6);
+  position: relative;
+  counter-reset: step;
+  border-left: 2px solid var(--line-2);
+}
+.timeline > li {
+  counter-increment: step;
+  position: relative;
+  padding-bottom: var(--sp-5);
+}
+.timeline > li:last-child { padding-bottom: 0; }
+.timeline > li::before {
+  content: counter(step);
+  position: absolute;
+  left: calc(var(--sp-6) * -1 - 1px);
+  transform: translateX(-50%);
+  top: .15em;
+  width: 1.75rem; height: 1.75rem;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--parc-red); color: #fff;
+  font-size: var(--step--2); font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.timeline h3 { margin: 0 0 var(--sp-2); font-size: var(--step-0); }
+.timeline p  { margin: 0; color: var(--ink-2); }
+
+/* The last step is the one worth reading twice — it is where PARC is quicker
+   than the process candidates expect. */
+.timeline__win h3 { color: var(--parc-700); }
+.timeline__win::before { background: var(--parc-700); }
+
+@media (max-width: 560px) {
+  .timeline { padding-left: var(--sp-5); }
+  .timeline > li::before { width: 1.5rem; height: 1.5rem; }
+}

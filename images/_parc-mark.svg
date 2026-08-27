@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="PARC VE">
+  <!-- Source of truth for the badge used on PARC diagrams. Traced from
+       favicon.ico: a dark red disc, the wordmark PARC with an antenna mast
+       standing in for the A, and VE beneath. Copy this file's contents into new
+       diagrams rather than redrawing the mark by eye.
+
+       The letters are <text>, not paths, so the spacing cannot drift: an earlier
+       hand-drawn version had the C sitting on top of the R. -->
+  <defs>
+    <radialGradient id="pmDisc" cx="38%" cy="30%" r="80%">
+      <stop offset="0%"   stop-color="#8E1218"/>
+      <stop offset="55%"  stop-color="#5E070C"/>
+      <stop offset="100%" stop-color="#2B0305"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="60" cy="60" r="58" fill="url(#pmDisc)"/>
+  <circle cx="60" cy="60" r="58" fill="none" stroke="#C9848A" stroke-width="2" opacity=".5"/>
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#E9C3C6" stroke-width="1.3" opacity=".4"/>
+
+  <!-- P … RC, with a gap left at centre for the mast -->
+  <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
+     font-weight="700" fill="#F2E9EA">
+    <text x="20" y="70" font-size="34">P</text>
+    <text x="63" y="70" font-size="34">RC</text>
+    <text x="60" y="96" font-size="16" letter-spacing="4" text-anchor="middle">VE</text>
+  </g>
+
+  <!-- the mast that reads as the A -->
+  <g fill="#F2E9EA">
+    <path d="M50.6 70 L55 44 h2.6 l4.4 26 h-3.6 l-.9-6 h-2 l-.9 6 z"/>
+    <rect x="52.6" y="58" width="7.2" height="2.6"/>
+    <circle cx="56.2" cy="40.5" r="2.3"/>
+  </g>
+  <g fill="none" stroke="#F2E9EA" stroke-width="2.2" stroke-linecap="round" opacity=".92">
+    <path d="M48.6 36.5 a11 11 0 0 1 15.2 0"/>
+    <path d="M44.4 31.5 a17.5 17.5 0 0 1 23.6 0"/>
+  </g>
+</svg>
