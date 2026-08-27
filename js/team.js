@@ -6,9 +6,7 @@
  * hundred pixels, and uploading the original would be slow on the rural
  * connections a lot of our examiners are on.
  *
- * Profiles are held until a volunteer approves them. Reviews publish straight
- * away, but a face and a name on a public page is a different kind of mistake
- * to have to undo.
+ * Profiles publish as soon as they are sent, and come off again with a delete.
  *
  * The form lives on a passcode-locked VE page and carries a submit code that
  * only exists inside that page's ciphertext. Without the VE passcode there is
@@ -236,8 +234,7 @@
           clearPhoto();
           if (remaining) remaining.textContent = '600';
           result.className = 'review-result is-ok';
-          result.textContent = res.d.message
-            || 'Thank you. Your profile will appear once a volunteer has checked it.';
+          result.textContent = res.d.message || 'Thank you — you are on the team page now.';
         })
         .catch(function () {
           submit.disabled = false;
