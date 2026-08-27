@@ -62,8 +62,8 @@ export const NAV = [
   { label: 'Online Testing', href: '/pages/Online_InstructionSeparation.html' },
   { label: 'In-Person Testing', href: '/pages/inperson.html' },
   { label: 'FAQ', href: '/pages/faq.html' },
-  { label: 'Reviews', href: '/pages/reviews.html' },
   { label: 'Schedule', href: '/pages/calendar.html' },
+  { label: 'Reviews', href: '/pages/reviews.html' },
 ];
 
 /** Pages encrypted by tools/parc-lock.mjs. Their shells are always noindex. */
