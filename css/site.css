@@ -1250,3 +1250,127 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
   font-size: var(--step--1); line-height: 1.5;
   color: var(--ink-2);
 }
+
+
+/* ---------- FAQ ----------------------------------------------------------- */
+/* 34 questions used to render as one paragraph with 123 <br> tags. They are now
+   collapsed by default: the page opens as a scannable list of questions rather
+   than 3,600 words, and the answer you want is one click away instead of a
+   scroll hunt. <details> keeps that working without JavaScript, and browser
+   find-in-page still reaches closed answers in current Chrome and Safari. */
+.faq-toc {
+  margin: var(--sp-5) 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.faq-toc ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: var(--sp-2);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+.faq-toc li { display: flex; align-items: baseline; gap: var(--sp-2); }
+.faq-toc a { font-weight: 600; }
+.faq-toc__count {
+  font-size: var(--step--2); color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+.faq-item summary {
+  cursor: pointer;
+  padding: var(--sp-4) var(--sp-6) var(--sp-4) 0;
+  font-weight: 600; line-height: 1.4;
+  position: relative;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+/* A chevron that rotates, rather than the default triangle, so the control
+   reads the same on every browser. */
+.faq-item summary::after {
+  content: ""; position: absolute; right: var(--sp-2); top: 1.35em;
+  width: .55rem; height: .55rem;
+  border-right: 2px solid var(--parc-red); border-bottom: 2px solid var(--parc-red);
+  transform: translateY(-50%) rotate(45deg);
+  transition: transform .15s ease;
+}
+.faq-item[open] summary::after { transform: translateY(-25%) rotate(-135deg); }
+.faq-item summary:hover { color: var(--parc-700); }
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--parc-red); outline-offset: 2px; border-radius: var(--radius-sm);
+}
+.faq-answer { padding: 0 var(--sp-6) var(--sp-4) 0; }
+.faq-answer p { margin: 0 0 var(--sp-3); }
+.faq-answer p:last-child, .faq-answer ul:last-child { margin-bottom: 0; }
+.faq-answer ul { margin: 0 0 var(--sp-3); padding-left: var(--sp-5); }
+.faq-answer li { margin-bottom: var(--sp-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item summary::after { transition: none; }
+}
+
+
+/* ---------- controls that must never be overridden ------------------------ */
+/* Two bugs kept coming back here, both from the same cause: generic rules that
+   outrank a single class.
+   - `button:hover` is (0,1,1) and beats `.nav-toggle` (0,1,0), so the Menu
+     button's background could flip to near-white while its label and bars
+     stayed white. That is the white-on-white Menu button.
+   - `a:link` / `a:visited` are (0,1,1) and beat `.skip-link` (0,1,0), so the
+     skip link could paint as an unstyled blue link on white.
+   Both are stated here with literal colours (no custom property to fail to
+   resolve), for every state, prefixed so nothing generic can reach them. The
+   skip-link cannot be reached by a later a:link rule at this specificity. */
+
+.site-header .skip-link,
+.site-header .skip-link:link,
+.site-header .skip-link:visited,
+.site-header .skip-link:hover,
+.site-header .skip-link:focus,
+.site-header .skip-link:focus-visible,
+.site-header .skip-link:active,
+a.skip-link,
+a.skip-link:link,
+a.skip-link:visited,
+a.skip-link:hover,
+a.skip-link:focus,
+a.skip-link:focus-visible,
+a.skip-link:active {
+  background: #BA0005;
+  color: #FFFFFF;
+  text-decoration: none;
+  border: 0;
+}
+/* It sits on the red banner, so it needs an edge of its own to read as a
+   control rather than as text printed on the photograph. */
+.site-header .skip-link:focus,
+a.skip-link:focus {
+  outline: 3px solid #FFFFFF;
+  outline-offset: -3px;
+}
+
+.site-nav button.nav-toggle,
+.site-nav button.nav-toggle:link,
+.site-nav button.nav-toggle:visited,
+.site-nav button.nav-toggle:active {
+  background: transparent;
+  color: #FFFFFF;
+  border: 0;
+}
+/* A visible press state, kept dark so the white label stays readable. */
+.site-nav button.nav-toggle:hover,
+.site-nav button.nav-toggle:focus-visible {
+  background: #313740;
+  color: #FFFFFF;
+}
+.site-nav button.nav-toggle .nav-toggle__bars,
+.site-nav button.nav-toggle .nav-toggle__bars::before,
+.site-nav button.nav-toggle .nav-toggle__bars::after {
+  background: #FFFFFF;
+}
+.site-nav button.nav-toggle[aria-expanded="true"] .nav-toggle__bars {
+  background: transparent;
+}

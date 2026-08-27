@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 430" role="img"
+     aria-labelledby="t2d-title t2d-desc" width="760" height="430">
+  <title id="t2d-title">Where to put your two cameras, seen from above</title>
+  <desc id="t2d-desc">A desk seen from above. You sit at the desk with your computer in
+    front of you, its camera showing your face. A second device on a stand sits at ninety
+    degrees to your side, far enough back that its camera covers you, your hands, the
+    keyboard, your screen and the space around you.</desc>
+
+  <style>
+    .lbl   { font: 600 15px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #14171A; }
+    .sub   { font: 400 13px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #454B52; }
+    .tag   { font: 700 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #FFFFFF; letter-spacing: .04em; }
+    .angle { font: 700 13px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill: #8E0004; }
+  </style>
+
+  <!-- second device's field of view -->
+  <path d="M636 214 L232 96 L232 332 Z" fill="#BA0005" opacity=".08"/>
+  <path d="M636 214 L232 96 L232 332 Z" fill="none" stroke="#BA0005" stroke-width="1.5"
+        stroke-dasharray="5 4" opacity=".55"/>
+
+  <!-- desk -->
+  <rect x="196" y="150" width="300" height="150" rx="10" fill="#FFFFFF" stroke="#B9C3CC" stroke-width="2"/>
+  <text class="sub" x="346" y="292" text-anchor="middle">desk</text>
+
+  <!-- person, from above -->
+  <path d="M300 268 a46 34 0 0 1 92 0 z" fill="#DDE3E9"/>
+  <circle cx="346" cy="243" r="21" fill="#C8D2DA" stroke="#93A1AC" stroke-width="2"/>
+  <text class="sub" x="346" y="330" text-anchor="middle">you</text>
+
+  <!-- primary computer -->
+  <rect x="306" y="168" width="80" height="26" rx="4" fill="#2B3138"/>
+  <rect x="312" y="173" width="68" height="16" rx="2" fill="#5C6672"/>
+  <circle cx="346" cy="166" r="3.4" fill="#BA0005"/>
+  <path d="M346 170 L346 222" stroke="#BA0005" stroke-width="2" stroke-dasharray="4 3"/>
+  <text class="lbl" x="346" y="140" text-anchor="middle">Your computer</text>
+  <text class="sub" x="346" y="158" text-anchor="middle">camera on your face</text>
+
+  <!-- second device on a stand -->
+  <g transform="translate(636 214)">
+    <rect x="-14" y="-40" width="28" height="80" rx="5" fill="#2B3138"/>
+    <rect x="-9" y="-34" width="18" height="68" rx="2" fill="#5C6672"/>
+    <circle cx="-18" cy="0" r="3.4" fill="#BA0005"/>
+    <path d="M-6 44 L6 44 L10 62 L-10 62 Z" fill="#93A1AC"/>
+  </g>
+  <text class="lbl" x="636" y="120" text-anchor="middle">Second device</text>
+  <text class="sub" x="636" y="138" text-anchor="middle">phone or tablet,</text>
+  <text class="sub" x="636" y="154" text-anchor="middle">on a stand</text>
+  <text class="sub" x="636" y="312" text-anchor="middle">sees you, your hands,</text>
+  <text class="sub" x="636" y="328" text-anchor="middle">the keyboard, your screen</text>
+  <text class="sub" x="636" y="344" text-anchor="middle">and the room</text>
+
+  <!-- the 90 degree relationship -->
+  <path d="M346 214 L560 214" stroke="#8E0004" stroke-width="2"/>
+  <path d="M346 214 L346 176" stroke="#8E0004" stroke-width="2"/>
+  <path d="M346 190 L370 190 L370 214" fill="none" stroke="#8E0004" stroke-width="2"/>
+  <rect x="378" y="182" width="52" height="24" rx="4" fill="#8E0004"/>
+  <text class="tag" x="404" y="199" text-anchor="middle">90°</text>
+
+  <!-- callout: not behind, not in front -->
+  <rect x="24" y="352" width="712" height="56" rx="8" fill="#FDF2F2" stroke="#E8B4B6"/>
+  <text class="lbl" x="44" y="376">Directly to your left or right — not behind you, and not beside your screen.</text>
+  <text class="sub" x="44" y="396">An examiner has to see your hands and your screen at the same time. Both devices stay on Zoom for the whole session.</text>
+</svg>
