@@ -135,7 +135,8 @@
 
         <label class="review-label" for="review-name">Your name <span class="review-optional">(optional)</span></label>
         <input class="review-input" id="review-name" name="name" type="text" maxlength="60"
-               placeholder="First name or call sign initial &mdash; leave blank to stay anonymous">
+               aria-describedby="review-name-hint" placeholder="First name or call sign">
+        <p class="review-hint" id="review-name-hint">Leave blank to stay anonymous.</p>
 
         <label class="review-label" for="review-text">Your review</label>
         <textarea class="review-input" id="review-text" name="text" rows="5" maxlength="1200"
