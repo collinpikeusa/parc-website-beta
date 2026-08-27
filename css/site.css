@@ -1267,15 +1267,15 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 }
 .faq-toc ul {
   list-style: none; margin: 0; padding: 0;
-  display: grid; gap: var(--sp-2);
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  display: grid; gap: var(--sp-3) var(--sp-6);
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 }
-.faq-toc li { display: flex; align-items: baseline; gap: var(--sp-2); }
-.faq-toc a { font-weight: 600; }
-.faq-toc__count {
-  font-size: var(--step--2); color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
+/* Each entry is a whole grid cell, so the columns line up instead of wrapping
+   raggedly. The per-category question counts that used to sit beside each link
+   are gone — nobody chooses a topic by how many questions are under it, and the
+   loose numerals read as clutter at the top of the page. */
+.faq-toc li { display: block; }
+.faq-toc a { font-weight: 500; }
 
 .faq-item {
   border-bottom: 1px solid var(--line);
