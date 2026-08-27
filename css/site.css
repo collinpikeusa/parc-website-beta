@@ -1293,18 +1293,20 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
   .faq-toc ul { grid-template-columns: 1fr; }
 }
 
-/* Category headings sit BELOW the questions in the hierarchy on purpose. At
-   section-heading weight they competed with the questions, which are the thing
-   people scan; as quiet labels they divide the list without shouting over it. */
+/* Category headings. At full section-heading weight they competed with the
+   questions, which are what people scan; dropped to muted grey they stopped
+   dividing the page at all. This is the settled middle: same uppercase-with-rule
+   idiom as the Contents heading above, so the page reads as one system, but in
+   ink with a red keyline so a section start is unmissable. */
 .faq-cat {
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   font-weight: 700;
-  letter-spacing: .11em;
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);
   margin: var(--sp-7) 0 0;
   padding-bottom: var(--sp-3);
-  border-bottom: 2px solid var(--line-2);
+  border-bottom: 2px solid var(--parc-red);
 }
 .faq-cat:first-of-type { margin-top: var(--sp-5); }
 
