@@ -107,7 +107,9 @@
   <p>PARC is run entirely by volunteers. Hearing how a session went helps us
     improve, and helps the next candidate know what to expect.</p>
 
-  <div id="reviews" data-reviews-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
+  <div id="reviews"
+     data-turnstile-sitekey=""
+     data-reviews-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
 
     <div class="reviews-summary" id="reviews-summary" hidden></div>
     <div class="reviews-list" id="reviews-list"></div>
@@ -115,9 +117,9 @@
 
     <section class="review-form-wrap" id="review-form-wrap">
       <h2>Leave a review</h2>
-      <p class="review-form-note">Reviews are read by a volunteer before they appear,
-        so yours will not show up straight away. Please don&rsquo;t include your
-        address, phone number, email, or call sign &mdash; this page is public.</p>
+      <p class="review-form-note">Your review appears on this page straight away.
+        Please don&rsquo;t include your address, phone number, or email &mdash; this
+        page is public, and anything with contact details in it will be refused.</p>
 
       <form id="review-form" novalidate>
         <fieldset class="rating-field">
@@ -145,6 +147,11 @@
           <label for="review-website">Leave this field empty</label>
           <input id="review-website" name="website" type="text" tabindex="-1" autocomplete="off">
         </div>
+
+        <!-- Cloudflare Turnstile renders here, and only when a site key is set.
+             Without one the script is never fetched, so an unconfigured page
+             makes no third-party request at all. -->
+        <div class="review-turnstile" id="review-turnstile"></div>
 
         <button class="btn btn--primary" type="submit" id="review-submit">Submit review</button>
         <p class="review-result" id="review-result" role="status" aria-live="polite"></p>

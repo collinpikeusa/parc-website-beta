@@ -153,17 +153,20 @@ snapshot automatically, so both paths work.
 > without notice. If the merged calendar ever stops appearing, that is the first
 > thing to check — the site keeps working, it just falls back.
 
-### F. Reviews page — optional, but the page is inert without it
+### F. Reviews page — needs a Worker, a KV store, and a Turnstile widget
 
 `pages/reviews.html` collects a star rating and a short comment. It needs a
 second Worker plus somewhere to keep what people write, so this is a little more
 involved than section E.
 
-**Nothing a visitor submits appears on the site until you approve it.** That is
-deliberate: the page is public, unauthenticated, and reachable by anyone, so it
-would otherwise be a spam board carrying the club's name.
+**Reviews appear on the page as soon as they are submitted.** Nobody has to
+approve them. What keeps the page usable is Cloudflare Turnstile stopping
+automated submissions, a cap of three a day from one address, and a hard refusal
+of anything containing a phone number or email address. What none of that stops
+is a real person writing something abusive — that is visible until somebody
+deletes it, which is the trade for not having a queue to read.
 
-- [ ] Create the storage namespace and deploy:
+#### 1. Deploy the Worker and its storage
 
 ```bash
 cd worker
@@ -174,45 +177,68 @@ The script creates the KV namespace on the first run and stops so you can paste
 the id it prints into `wrangler-reviews.toml`. Run it again and it deploys, then
 prompts for the moderation key.
 
-- [ ] **Choose a long random moderation key** when prompted. It is the only thing
-      between the public and the approve/delete buttons. Store it in a password
-      manager — it is never written into this repository and cannot be recovered
-      from Cloudflare, only replaced.
-- [ ] Wire the URL into the page, from the repository root:
+- [ ] **Choose a long random moderation key** when prompted (`openssl rand -base64 24`).
+      It is the only thing between the public and the delete button. Store it in
+      a password manager — it is never written into this repository and cannot be
+      recovered from Cloudflare, only replaced.
+
+#### 2. Create the Turnstile widget
+
+- [ ] Cloudflare dashboard → **Turnstile** → Add widget
+- [ ] Name it `parc-reviews`; **Hostnames:** `radiotests.org`, `parcradio.net`,
+      `parcradio.org`; **Widget mode:** Managed
+- [ ] It gives you two keys. They are not interchangeable:
+
+| Key | Where it goes | Public? |
+|---|---|---|
+| **Site key** | the web page, via the command below | yes, by design |
+| **Secret key** | the Worker, as `TURNSTILE_SECRET` | **never commit it** |
+
+- [ ] Put the secret in the Worker: Workers & Pages → `parc-reviews` → Settings →
+      Variables and Secrets → Add → type **Secret** → name `TURNSTILE_SECRET`
+- [ ] Put the site key in the page, from the repository root:
+
+```bash
+node tools/set-turnstile-key.mjs 0xYOUR_SITE_KEY
+```
+
+That command refuses a key of secret-key length, so pasting the wrong half stops
+rather than publishing it.
+
+#### 3. Wire up the Worker URL and deploy
 
 ```bash
 node tools/set-reviews-url.mjs https://parc-reviews.<you>.workers.dev
 ```
 
-- [ ] Rebuild and deploy
+Then `node tools/deploy.mjs --push`.
 
-**Reading what people have submitted.** Set these two once per shell:
+**Half-configured is safe in one direction only.** With no site key the page never
+loads Turnstile and the Worker accepts submissions without a token — the form
+works, unprotected. With the secret set but no site key, every submission is
+refused. So set the site key first, or both together.
+
+#### 4. Taking a review down
+
+Set these once per terminal session:
 
 ```bash
 export REVIEWS_URL=https://parc-reviews.<you>.workers.dev
+```
+
+```bash
 export REVIEWS_ADMIN_KEY=<the key you chose>
 ```
 
-Then:
+Then `node tools/moderate-reviews.mjs` lists what is on the page with an id each,
+and this removes one:
 
 ```bash
-node tools/moderate-reviews.mjs
+node tools/moderate-reviews.mjs delete <id>
 ```
 
-That lists everything waiting, each with an id. Publish or discard one with:
-
-```bash
-node tools/moderate-reviews.mjs approve <id>
-```
-
-`delete <id>` discards instead; `unpublish <id>` takes a published one back down.
-Approving is instant — the page reads the list live, so nothing needs rebuilding.
-
-**What the Worker rejects on its own,** so most of what reaches you is real: a
-hidden field that only an automated submitter fills in, a cap of three
-submissions a day from one address, and a flag on anything containing a phone
-number or email. Flagged items still appear in the pending list, marked, rather
-than being thrown away — the judgement is yours.
+Deletion is immediate and permanent. The page reads live, so nothing needs
+rebuilding — and there is nothing to undo it with.
 
 > **No `AggregateRating` markup, deliberately.** Star ratings can be made to show
 > in Google results, but only from an independent review platform. Google's own
