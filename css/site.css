@@ -1419,3 +1419,90 @@ a.skip-link:focus {
   .timeline { padding-left: var(--sp-5); }
   .timeline > li::before { width: 1.5rem; height: 1.5rem; }
 }
+
+
+/* ---------- pre-exam checklist ------------------------------------------- */
+/* Meant to be printed and ticked off the day before, so the print rules matter
+   as much as the screen ones: boxes stay visible on paper, and a group never
+   splits across a page break. */
+.checklist-block {
+  margin: var(--sp-6) 0;
+  padding: var(--sp-5);
+  border: 2px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.checklist-head {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--sp-3) var(--sp-5);
+  border-bottom: 2px solid var(--parc-red);
+  padding-bottom: var(--sp-4); margin-bottom: var(--sp-4);
+}
+.checklist-head h2 { margin: 0; flex: 1 1 auto; }
+.checklist-head p { flex: 1 1 100%; margin: 0; color: var(--ink-2); font-size: var(--step--1); }
+.checklist-block h3 {
+  margin: var(--sp-5) 0 var(--sp-3); font-size: var(--step-0);
+  color: var(--parc-700);
+}
+.checklist-block h3:first-of-type { margin-top: 0; }
+
+.checklist { list-style: none; margin: 0; padding: 0; break-inside: avoid; }
+.checklist li {
+  position: relative;
+  padding: var(--sp-2) 0 var(--sp-2) var(--sp-6);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--step--1); line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: 0; }
+/* An empty square to tick, drawn rather than an input so it prints reliably and
+   needs no state. */
+.checklist li::before {
+  content: ""; position: absolute; left: 0; top: .72em;
+  width: 1rem; height: 1rem;
+  border: 2px solid var(--muted); border-radius: 3px;
+  background: var(--surface);
+}
+
+@media print {
+  .checklist-block { border-color: #000; break-inside: auto; }
+  .checklist-head { border-bottom-color: #000; }
+  .checklist-block h3 { color: #000; break-after: avoid-page; }
+  .checklist li::before { border-color: #000; }
+  .checklist li { break-inside: avoid; }
+}
+
+
+/* ---------- troubleshooting ---------------------------------------------- */
+/* Symptom as the heading, answer underneath: somebody arrives here already
+   knowing what went wrong and needs to find their own sentence fast. */
+.trouble {
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+.trouble:last-of-type { border-bottom: 0; }
+.trouble h3 {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--step-0);
+  display: flex; gap: var(--sp-3); align-items: baseline;
+}
+.trouble h3::before {
+  content: "?"; flex: none;
+  width: 1.4rem; height: 1.4rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--parc-50); color: var(--parc-700);
+  font-size: var(--step--2); font-weight: 700;
+}
+.trouble p { margin: 0 0 0 calc(1.4rem + var(--sp-3)); color: var(--ink-2); }
+
+
+/* The one fact about PARC that beats every other team, and it was buried in a
+   FAQ answer. Given its own weight on the homepage. */
+.home-usp {
+  margin: var(--sp-5) auto;
+  max-width: var(--measure);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 4px solid var(--parc-red);
+  background: var(--parc-50);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.home-usp strong { color: var(--parc-700); }
