@@ -23,8 +23,8 @@
   'use strict';
 
   /** Candidates at or under this age are shown youth sessions.
-   *  NOTE: the ARRL VEC youth rate normally applies UNDER 18. Change to 17 if
-   *  an 18-year-old should not be offered the youth calendar. */
+   *  NOTE: ARRL VEC youth eligibility normally stops at UNDER 18. Change this
+   *  to 17 if an 18-year-old should not be offered the youth calendar. */
   var YOUTH_MAX_AGE = 18;
 
   var root = document.getElementById('schedule');
@@ -205,7 +205,7 @@
    * every check in this file use "Y". Left unreconciled, a youth candidate on a
    * Worker-backed page gets no Youth badge and — worse — bookingUrl() stops
    * recognising youth sessions and routes them to a general one by seat count,
-   * which is a different session at a different fee.
+   * which is the wrong session type for that candidate.
    *
    * Normalising here rather than only in the Worker means the page is correct
    * even if the deployed Worker is an older build.
@@ -340,7 +340,10 @@
       if (!total) {
         sum.textContent = 'No times match these filters. Try turning another one on.';
       } else if (state.audience === 'youth' && !state.youthOnly) {
-        sum.textContent = 'Sessions you can book at the youth rate are marked “Youth”.';
+        /* Says which sessions are open to them, not what they cost. Terms are
+           settled at booking; stating them here would invite people to work the
+           date of birth backwards from the answer. */
+        sum.textContent = 'Sessions for candidates 18 and under are marked “Youth”.';
       } else {
         sum.textContent = '';
       }
@@ -445,8 +448,8 @@
   function bookingUrl(slot) {
     /* A youth candidate must land on the YOUTH calendar whenever one exists at
      * that time. Picking "most seats left" instead would quietly route them to a
-     * general session — a different session and, at the ARRL VEC youth rate, a
-     * different fee. Seat count only breaks ties among general sessions. */
+     * general session, which is booked and administered differently and is not
+     * what they were offered. Seat count only breaks ties among general sessions. */
     var best = (state.audience === 'youth' && youthPart(slot)) || slot.sessions.reduce(
       function (a, b) { return (b.remaining || 0) > (a.remaining || 0) ? b : a; },
       slot.sessions[0]);
