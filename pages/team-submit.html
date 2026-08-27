@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Volunteer Examiner Access | PARC</title>
-<link rel="canonical" href="https://parcradio.net/pages/ve-file.html">
+<link rel="canonical" href="https://parcradio.net/pages/team-submit.html">
 <meta name="robots" content="noindex, nofollow">
 
 <meta name="theme-color" content="#BA0005">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
 </head>
 <body>
 
@@ -89,9 +88,9 @@
 
 <div class="container">
 <section>
-  <div class="ve-lock" id="ve-file">
-    <h1 id="ve-file-title">VE Training Material</h1>
-    <p class="ve-lock__hint" id="ve-file-hint">This file is encrypted. Enter the VE passphrase to open it.</p>
+  <div class="ve-lock" id="ve-lock">
+    <h1>Volunteer Examiner Access</h1>
+    <p class="ve-lock__hint">This page is encrypted. Enter the VE passphrase to open it.</p>
     <form class="ve-lock__form" id="ve-form" autocomplete="off">
       <label class="ve-lock__label" for="ve-pass">Passphrase</label>
       <input class="ve-lock__input" id="ve-pass" name="passphrase" type="password"
@@ -99,16 +98,11 @@
       <label class="ve-lock__remember">
         <input type="checkbox" id="ve-remember"> Remember on this device for 12 hours
       </label>
-      <button class="btn btn--primary" type="submit" id="ve-submit">Open file</button>
+      <button class="btn btn--primary" type="submit" id="ve-submit">Unlock</button>
       <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
     </form>
-  </div>
-  <div id="ve-viewer" hidden>
-    <p class="ve-file__actions">
-      <a class="btn btn--primary" id="ve-open" href="#" target="_blank" rel="noopener">Open in a new tab</a>
-      <button type="button" class="btn" id="ve-relock">Lock</button>
-    </p>
-    <iframe id="ve-frame" class="ve-file__frame" title="VE training material"></iframe>
+    <p class="ve-lock__foot">Not a VE? <a href="../index.html">Return to the PARC home page</a>.
+      For access, email <a href="mailto:ve@parcradio.org">ve@parcradio.org</a>.</p>
   </div>
 </section>
 </div>
@@ -151,8 +145,9 @@
   </div>
 </footer>
 
+<script type="application/json" id="ve-payload">{"v":1,"salt":"z6qvikolDrER9P6Di4Lfdg==","it":600000,"iv":"MU8XZGWmn/v3ekp5","ct":"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","t":"Add Yourself to the Team Page"}</script>
 <script src="../js/site.js" defer></script>
 <script src="../js/search.js" defer></script>
-<script src="../js/ve-file.js" defer></script>
+<script src="../js/ve-lock.js" defer></script>
 </body>
 </html>

@@ -5,15 +5,20 @@
  *   node tools/set-reviews-url.mjs https://parc-reviews.<you>.workers.dev
  *   node tools/set-reviews-url.mjs --clear
  *
- * Sets data-reviews-endpoint on <div id="reviews">. Without it the page says
- * reviews are unavailable and hides the form — which is the right failure, since
- * a form that silently discards what someone wrote is worse than no form.
+ * The same Worker serves the Our Team page, so this wires up all three places
+ * that talk to it: the reviews page, the public team page, and the locked
+ * team-submit page in _ve-source. Missing an endpoint is a silent failure, so
+ * they are set together rather than one command each.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
-const PAGE = join(ROOT, 'pages', 'reviews.html');
+const TARGETS = [
+  [join(ROOT, 'pages', 'reviews.html'),        'data-reviews-endpoint'],
+  [join(ROOT, 'pages', 'team.html'),           'data-team-endpoint'],
+  [join(ROOT, '_ve-source', 'team-submit.html'), 'data-team-endpoint'],
+];
 const arg = process.argv[2];
 
 if (!arg) {
@@ -54,14 +59,17 @@ if (url) {
   console.log(`  ok — ${data.count} approved review(s), CORS allows ${cors}`);
 }
 
-const before = readFileSync(PAGE, 'utf8');
-const after = before.replace(/(<div id="reviews"[^>]*\sdata-reviews-endpoint=")[^"]*(")/,
-                             `$1${url}$2`);
-if (after === before && url) {
-  console.error('Could not find data-reviews-endpoint on <div id="reviews">.');
-  process.exit(1);
+for (const [file, attr] of TARGETS) {
+  if (!existsSync(file)) { console.log(`  skipped (not present): ${file}`); continue; }
+  const before = readFileSync(file, 'utf8');
+  const after = before.replace(new RegExp(`(${attr}=")[^"]*(")`), `$1${url}$2`);
+  if (after === before && url) {
+    console.error(`Could not find ${attr} in ${file}.`);
+    process.exit(1);
+  }
+  writeFileSync(file, after);
+  console.log(`  ${attr} -> ${file.split('/').slice(-2).join('/')}`);
 }
-writeFileSync(PAGE, after);
 
 console.log(url ? `\nWired in. Rebuild and deploy:` : `\nCleared. Rebuild and deploy:`);
 console.log('  node tools/deploy.mjs --push');

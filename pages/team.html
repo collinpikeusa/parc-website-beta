@@ -3,14 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Volunteer Examiner Access | PARC</title>
-<link rel="canonical" href="https://parcradio.net/pages/ve-file.html">
-<meta name="robots" content="noindex, nofollow">
+<title>Our Team — The Volunteer Examiners at PARC | PARC</title>
+<meta name="description" content="Meet the volunteer examiners who run PARC exam sessions almost every day of the week.">
+<link rel="canonical" href="https://parcradio.net/pages/team.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PARC Radio &amp; Technology">
+<meta property="og:title" content="Our Team — The Volunteer Examiners at PARC">
+<meta property="og:description" content="Meet the volunteer examiners who run PARC exam sessions almost every day of the week.">
+<meta property="og:url" content="https://parcradio.net/pages/team.html">
+<meta property="og:image" content="https://parcradio.net/images/og-parc.jpg">
+<meta name="twitter:card" content="summary_large_image">
 
 <meta name="theme-color" content="#BA0005">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
 <link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
+
+<!-- Cloudflare Web Analytics -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "9ba7325d05ee4c318c7d359aefcac7a8"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </head>
 <body>
 
@@ -52,7 +65,7 @@
         <li><a href="../pages/faq.html">FAQ</a></li>
         <li><a href="../pages/calendar.html">Schedule</a></li>
         <li><a href="../pages/reviews.html">Reviews</a></li>
-        <li><a href="../pages/team.html">Our Team</a></li>
+        <li><a href="../pages/team.html" aria-current="page">Our Team</a></li>
       </ul>
       <button type="button" class="nav-search-toggle" id="site-search-toggle"
               aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
@@ -89,27 +102,24 @@
 
 <div class="container">
 <section>
-  <div class="ve-lock" id="ve-file">
-    <h1 id="ve-file-title">VE Training Material</h1>
-    <p class="ve-lock__hint" id="ve-file-hint">This file is encrypted. Enter the VE passphrase to open it.</p>
-    <form class="ve-lock__form" id="ve-form" autocomplete="off">
-      <label class="ve-lock__label" for="ve-pass">Passphrase</label>
-      <input class="ve-lock__input" id="ve-pass" name="passphrase" type="password"
-             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
-      <label class="ve-lock__remember">
-        <input type="checkbox" id="ve-remember"> Remember on this device for 12 hours
-      </label>
-      <button class="btn btn--primary" type="submit" id="ve-submit">Open file</button>
-      <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
-    </form>
+
+  <h1>Our Team</h1>
+
+  <p>PARC is run by volunteer examiners who give up their evenings and weekends
+    so that candidates can test almost any day of the week. These are the people
+    on the other side of the camera.</p>
+
+  <div id="team"
+       data-team-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
+
+    <div class="team-grid" id="team-grid"></div>
+    <p class="reviews-status" id="team-status" role="status" aria-live="polite"></p>
+
+    <p class="team-footnote">Examine with PARC? Your profile goes up from the
+      <a href="script.html">VE section</a>.</p>
+
   </div>
-  <div id="ve-viewer" hidden>
-    <p class="ve-file__actions">
-      <a class="btn btn--primary" id="ve-open" href="#" target="_blank" rel="noopener">Open in a new tab</a>
-      <button type="button" class="btn" id="ve-relock">Lock</button>
-    </p>
-    <iframe id="ve-frame" class="ve-file__frame" title="VE training material"></iframe>
-  </div>
+
 </section>
 </div>
 
@@ -153,6 +163,6 @@
 
 <script src="../js/site.js" defer></script>
 <script src="../js/search.js" defer></script>
-<script src="../js/ve-file.js" defer></script>
+<script src="../js/team.js" defer></script>
 </body>
 </html>

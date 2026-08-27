@@ -188,9 +188,12 @@ body { overflow-wrap: break-word; }
 
 .nav-menu > li > a,
 .nav-sub-toggle {
-  /* Tighter horizontal padding than the vertical. Adding Reviews took the bar
-     to seven items, which wrapped to two rows below about 1200px — common
-     laptop territory. */
+  /* Horizontal padding is tighter than the vertical to keep eight items on one
+     row. It holds down to about 1200px; below that the bar wraps to two rows,
+     which is tidy and only affects the 900-1200px band since the mobile menu
+     takes over at 900. Trimming the tracking as well was measured and bought
+     nothing — the fixed Search and Donate block is what sets the limit — so the
+     uppercase labels keep the tracking they need to stay readable. */
   display: flex; align-items: center; gap: var(--sp-2);
   padding: var(--sp-4) var(--sp-3);
   color: #fff; text-decoration: none;
@@ -1128,3 +1131,78 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .review-result { margin: var(--sp-3) 0 0; font-size: var(--step--1); min-height: 1.4em; }
 .review-result.is-ok { color: var(--ok); font-weight: 600; }
 .review-result.is-error { color: var(--parc-700); font-weight: 600; }
+
+
+/* ---------- our team ------------------------------------------------------ */
+.team-grid {
+  display: grid;
+  /* auto-fill rather than auto-fit: with two or three volunteers listed,
+     auto-fit would stretch each card the full width of the page. */
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0;
+}
+
+.team-card {
+  display: flex; gap: var(--sp-4); align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-4);
+}
+
+.team-card__photo {
+  flex: none; width: 5rem; height: 5rem;
+  border-radius: 50%; object-fit: cover;
+  background: var(--surface-2);
+}
+/* Initial in a circle when somebody submits a bio without a photo, so the grid
+   keeps its rhythm instead of leaving a ragged gap. */
+.team-card__photo--none {
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--step-2); font-weight: 700; color: var(--parc-700);
+  background: var(--parc-50);
+}
+
+.team-card__body { min-width: 0; }
+.team-card__name { margin: 0 0 2px; font-size: var(--step-0); }
+.team-card__call {
+  font-family: var(--font-mono); font-size: var(--step--1);
+  font-weight: 600; color: var(--parc-700); letter-spacing: .03em;
+}
+.team-card__role {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--step--1); color: var(--muted); font-weight: 600;
+}
+.team-card__bio {
+  margin: 0; font-size: var(--step--1); line-height: 1.55;
+  color: var(--ink-2); overflow-wrap: anywhere;
+}
+
+.team-footnote { margin-top: var(--sp-5); font-size: var(--step--1); color: var(--muted); }
+
+.review-input--short { max-width: 12rem; }
+
+.review-file {
+  display: block; width: 100%; max-width: 26rem;
+  font: inherit; font-size: var(--step--1);
+  padding: var(--sp-3); margin-bottom: var(--sp-2);
+  border: 1px dashed var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface-2); color: var(--ink);
+}
+.review-file::file-selector-button {
+  font: inherit; font-weight: 600;
+  margin-right: var(--sp-3); padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink); cursor: pointer;
+}
+.review-file::file-selector-button:hover { background: var(--surface-2); }
+
+.team-preview {
+  display: flex; align-items: center; gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+.team-preview img {
+  width: 5rem; height: 5rem; border-radius: 50%;
+  object-fit: cover; border: 1px solid var(--line);
+}

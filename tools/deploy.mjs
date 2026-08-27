@@ -90,17 +90,28 @@ step('Verifying');
 
 // exam script text unchanged since before the rebuild
 try {
-  let same = 0;
+  let same = 0, added = 0, checked = 0;
   for (const rel of VE_PAGES) {
     const name = rel.split('/').pop();
     const src = join(ROOT, '_ve-source', name);
     if (!existsSync(src)) continue;
-    const before = textOf(zone(execSync(`git show ${BASELINE_TAG}:"${rel}"`, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1e8 })));
+
+    /* A locked page written after the rebuild has nothing in the baseline to
+       drift from. Counting it as a mismatch would turn "we added a page" into
+       a failed integrity check and train everyone to ignore this line. */
+    let before;
+    try {
+      before = textOf(zone(execSync(`git show ${BASELINE_TAG}:"${rel}"`,
+        { cwd: ROOT, encoding: 'utf8', maxBuffer: 1e8, stdio: ['pipe', 'pipe', 'ignore'] })));
+    } catch { added++; continue; }
+
+    checked++;
     if (before === textOf(zone(readFileSync(src, 'utf8')))) same++;
   }
-  same === VE_PAGES.length
-    ? ok(`exam script text unchanged (${same}/${VE_PAGES.length})`)
-    : bad(`exam script text DRIFTED — only ${same}/${VE_PAGES.length} match ${BASELINE_TAG}`);
+  same === checked
+    ? ok(`exam script text unchanged (${same}/${checked})`
+        + (added ? `, ${added} locked page(s) added since` : ''))
+    : bad(`exam script text DRIFTED — only ${same}/${checked} match ${BASELINE_TAG}`);
 } catch { warn(`could not compare against ${BASELINE_TAG} (tag missing?)`); }
 
 // every VE page carries ciphertext, and none leaks plaintext

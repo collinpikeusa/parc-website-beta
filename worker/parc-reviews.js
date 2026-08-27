@@ -19,17 +19,34 @@
  * minor putting personal details in prose. That is now visible until somebody
  * notices and deletes it. tools/moderate-reviews.mjs lists and deletes.
  *
+ * It also serves the Our Team page, because a second Worker would mean a second
+ * deploy, a second KV binding and a second copy of both secrets for a volunteer
+ * to keep straight. Team records share this namespace under a `team:` prefix.
+ *
+ * TEAM SUBMISSIONS ARE HELD FOR APPROVAL, unlike reviews. A form that puts a
+ * photograph of a named person straight onto a public page is not something to
+ * leave unattended, and the failure mode is not a bad review — it is someone
+ * else's face on your team page.
+ *
  * ROUTES
  *   GET  /            published reviews (public)
  *   POST /            submit a review   (public, Turnstile + rate limited)
  *   GET  /list        every stored review with ids  -- requires ADMIN_KEY
  *   POST /moderate    delete one                    -- requires ADMIN_KEY
  *
+ *   GET  /team              approved team members (public)
+ *   GET  /team/photo/<id>   one member's photo (public, immutable)
+ *   POST /team              submit a bio + photo (public, Turnstile, held)
+ *   GET  /team/pending      awaiting approval  -- requires ADMIN_KEY
+ *   POST /team/moderate     approve or delete  -- requires ADMIN_KEY
+ *
  * SETUP (see DEPLOY.md)
  *   1. Workers & Pages -> KV -> Create namespace, call it PARC_REVIEWS
  *   2. Bind it to this Worker as the variable REVIEWS
  *   3. Add a secret named ADMIN_KEY       (Settings -> Variables -> Encrypt)
  *   4. Add a secret named TURNSTILE_SECRET from the Turnstile widget
+ *   5. Optional: TEAM_SUBMIT_CODE, matching data-team-code on the locked
+ *      team-submit page, so only VEs can add themselves to the team page
  */
 
 const ALLOWED_DOMAINS = ['parcradio.net', 'parcradio.org', 'radiotests.org', 'github.io'];
@@ -42,6 +59,13 @@ const DEFAULT_ORIGIN = 'https://radiotests.org';
 const MAX_NAME = 60;
 const MAX_TEXT = 1200;
 const MAX_PER_IP_PER_DAY = 3;
+
+/* The page downscales photographs to 480px before upload, which lands well
+   under this. The cap is here so a hand-rolled POST cannot fill the namespace. */
+const MAX_PHOTO_BYTES = 400 * 1024;
+const MAX_BIO = 600;
+const MAX_ROLE = 60;
+const MAX_CALLSIGN = 12;
 
 function originAllowed(origin) {
   if (!origin) return false;
@@ -232,6 +256,141 @@ export default {
       if (inLive) await env.REVIEWS.delete(`approved:${id}`);
       if (inHeld) await env.REVIEWS.delete(`pending:${id}`);
       return json({ ok: true, action: 'deleted', id }, 200, H);
+    }
+
+    /* ================= Our Team =========================================== */
+
+    /* Photos are served from their own URL rather than inlined in the list, so
+       the JSON stays small and each image caches on its own. */
+    if (request.method === 'GET' && path.startsWith('/team/photo/')) {
+      const id = path.slice('/team/photo/'.length);
+      const rec = await env.REVIEWS.get(`teamphoto:${id}`, 'json');
+      if (!rec) return json({ error: 'not found' }, 404, H);
+      const bytes = Uint8Array.from(atob(rec.data), (c) => c.charCodeAt(0));
+      return new Response(bytes, {
+        headers: {
+          ...H,
+          'content-type': rec.type || 'image/jpeg',
+          /* The id changes whenever the photo does, so this can cache hard. */
+          'cache-control': 'public, max-age=31536000, immutable',
+        },
+      });
+    }
+
+    if (request.method === 'GET' && path === '/team') {
+      const items = await listByPrefix(env.REVIEWS, 'team:');
+      const shown = items
+        .filter((m) => m.approved)
+        .map((m) => ({
+          id: m.id, name: m.name, callsign: m.callsign,
+          role: m.role, bio: m.bio,
+          photo: m.hasPhoto ? `/team/photo/${m.id}` : null,
+        }));
+      return json({ count: shown.length, members: shown }, 200,
+        { ...H, 'cache-control': 'public, max-age=60' });
+    }
+
+    if (request.method === 'POST' && path === '/team') {
+      if (!originAllowed(origin)) return json({ error: 'origin not allowed' }, 403, H);
+
+      let body;
+      try { body = await request.json(); } catch { return json({ error: 'bad request' }, 400, H); }
+      if (clean(body.website, 50)) return json({ ok: true }, 200, H);
+
+      /* The submit code lives only inside the AES-encrypted VE page, so holding
+         it is proof of holding the VE passcode. Optional: without the secret set
+         the form still works, it is simply not gated. */
+      if (env.TEAM_SUBMIT_CODE && clean(body.code, 200) !== env.TEAM_SUBMIT_CODE) {
+        return json({ error: 'This form is for PARC volunteer examiners. '
+          + 'Please open it from the VE section so it can identify you.' }, 403, H);
+      }
+
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const human = await humanChecked(env, clean(body.turnstile, 4096), ip);
+      if (!human.ok) return json({ error: human.error }, 400, H);
+
+      const name = clean(body.name, MAX_NAME);
+      const callsign = clean(body.callsign, MAX_CALLSIGN).toUpperCase();
+      const role = clean(body.role, MAX_ROLE);
+      const bio = clean(body.bio, MAX_BIO);
+
+      if (name.length < 2) return json({ error: 'Please give the name you would like shown.' }, 400, H);
+      if (bio.length < 10) return json({ error: 'Please add a sentence or two about yourself.' }, 400, H);
+      if (EMAIL_RE.test(bio) || PHONE_RE.test(bio)) {
+        return json({ error: 'Please remove the contact details — this page is public. '
+          + 'Candidates reach the team through the address in the footer.' }, 400, H);
+      }
+
+      const day = new Date().toISOString().slice(0, 10);
+      const rlKey = `rl:team:${day}:${ip}`;
+      const used = Number(await env.REVIEWS.get(rlKey)) || 0;
+      if (used >= MAX_PER_IP_PER_DAY) {
+        return json({ error: 'You have already sent a profile today. Thank you!' }, 429, H);
+      }
+      await env.REVIEWS.put(rlKey, String(used + 1), { expirationTtl: 60 * 60 * 26 });
+
+      const id = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+
+      /* A data: URI from the page's canvas. Decoded here so a malformed one is
+         rejected on submit rather than breaking the photo route later. */
+      let hasPhoto = false;
+      const photo = typeof body.photo === 'string' ? body.photo : '';
+      if (photo) {
+        const m = photo.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+        if (!m) return json({ error: 'That photo could not be read. Please choose a JPEG or PNG.' }, 400, H);
+        const data = m[2];
+        if (data.length * 0.75 > MAX_PHOTO_BYTES) {
+          return json({ error: 'That photo is too large even after resizing. Please try another.' }, 400, H);
+        }
+        try { atob(data.slice(0, 64)); } catch {
+          return json({ error: 'That photo could not be read.' }, 400, H);
+        }
+        await env.REVIEWS.put(`teamphoto:${id}`, JSON.stringify({ type: m[1], data }));
+        hasPhoto = true;
+      }
+
+      const record = {
+        id, name, callsign, role, bio, hasPhoto,
+        approved: false,
+        at: new Date().toISOString(),
+      };
+      await env.REVIEWS.put(`team:${id}`, JSON.stringify(record));
+
+      return json({ ok: true,
+        message: 'Thank you. Your profile will appear once a volunteer has checked it.' }, 200, H);
+    }
+
+    if (path === '/team/pending') {
+      if (!authed) return json({ error: 'unauthorised' }, 401, H);
+      const items = await listByPrefix(env.REVIEWS, 'team:');
+      return json({
+        pending: items.filter((m) => !m.approved),
+        approved: items.filter((m) => m.approved),
+      }, 200, H);
+    }
+
+    if (request.method === 'POST' && path === '/team/moderate') {
+      if (!authed) return json({ error: 'unauthorised' }, 401, H);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: 'bad request' }, 400, H); }
+      const id = clean(body.id, 60);
+      const action = clean(body.action, 20);
+      if (!id) return json({ error: 'id required' }, 400, H);
+
+      const rec = await env.REVIEWS.get(`team:${id}`, 'json');
+      if (!rec) return json({ error: 'not found' }, 404, H);
+
+      if (action === 'approve') {
+        rec.approved = true;
+        await env.REVIEWS.put(`team:${id}`, JSON.stringify(rec));
+        return json({ ok: true, action: 'approved', id }, 200, H);
+      }
+      if (action === 'delete') {
+        await env.REVIEWS.delete(`team:${id}`);
+        if (rec.hasPhoto) await env.REVIEWS.delete(`teamphoto:${id}`);
+        return json({ ok: true, action: 'deleted', id }, 200, H);
+      }
+      return json({ error: 'action must be approve or delete' }, 400, H);
     }
 
     return json({ error: 'not found' }, 404, H);
