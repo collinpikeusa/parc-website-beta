@@ -188,8 +188,11 @@ body { overflow-wrap: break-word; }
 
 .nav-menu > li > a,
 .nav-sub-toggle {
+  /* Tighter horizontal padding than the vertical. Adding Reviews took the bar
+     to seven items, which wrapped to two rows below about 1200px — common
+     laptop territory. */
   display: flex; align-items: center; gap: var(--sp-2);
-  padding: var(--sp-4) var(--sp-4);
+  padding: var(--sp-4) var(--sp-3);
   color: #fff; text-decoration: none;
   font: inherit; font-weight: 600; font-size: var(--step--1);
   letter-spacing: .04em; text-transform: uppercase;
@@ -1041,3 +1044,65 @@ button:active, .btn:active { transform: translateY(1px); }
   .search-panel input { font-size: var(--step-0); padding-right: 2.75rem; }
   .search-panel__close { top: calc(var(--sp-3) + 2px); right: calc(var(--sp-3) + 4px); }
 }
+
+/* ---------- reviews ------------------------------------------------------- */
+.reviews-summary {
+  display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap;
+  padding: var(--sp-4) var(--sp-5); margin-bottom: var(--sp-5);
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.reviews-avg { font-size: var(--step-3); font-weight: 700; line-height: 1; }
+.reviews-count { color: var(--muted); font-size: var(--step--1); }
+
+.stars-inline { display: inline-flex; gap: 1px; }
+.star-mark { color: var(--line-2); font-size: 1.15em; line-height: 1; }
+/* Amber reads as a rating; red would read as an error. Dark enough to clear
+   3:1 against the page, which WCAG requires of graphics that carry meaning —
+   these stars ARE the rating. */
+.star-mark.is-on { color: #C07D14; }
+
+.reviews-list { display: grid; gap: var(--sp-4); }
+.review {
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+}
+.review__head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.review__name { font-weight: 700; }
+.review__date { color: var(--muted); font-size: var(--step--1); }
+.review__text { margin: 0; overflow-wrap: break-word; }
+.reviews-empty, .reviews-status { color: var(--muted); font-size: var(--step--1); }
+
+.review-form-wrap {
+  margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--line);
+}
+.review-form-note { font-size: var(--step--1); color: var(--ink-2); }
+.rating-field { border: 0; padding: 0; margin: 0 0 var(--sp-4); }
+.rating-field legend { font-weight: 700; font-size: var(--step--1); padding: 0 0 var(--sp-2); }
+.rating-stars { display: flex; gap: var(--sp-1); }
+.star {
+  background: none; border: 0; cursor: pointer; padding: var(--sp-1) 2px;
+  font-size: 2rem; line-height: 1; color: var(--line-2);
+  transition: color .12s ease, transform .06s ease;
+}
+.star:hover, .star.is-on { color: #C07D14; }
+.star:active { transform: scale(.92); }
+
+.review-label { display: block; font-weight: 700; font-size: var(--step--1); margin-bottom: var(--sp-1); }
+.review-optional { font-weight: 400; color: var(--muted); }
+.review-input {
+  font: inherit; width: 100%; padding: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  border: 1px solid var(--line-2); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+}
+.review-input:focus { border-color: var(--parc-red); outline-offset: 1px; }
+textarea.review-input { resize: vertical; min-height: 7rem; }
+.review-count { font-size: var(--step--1); color: var(--muted); margin: calc(-1 * var(--sp-2)) 0 var(--sp-4); }
+
+/* Honeypot. Off-screen rather than display:none, because some bots skip
+   anything that is not rendered. */
+.review-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.review-result { margin: var(--sp-3) 0 0; font-size: var(--step--1); min-height: 1.4em; }
+.review-result.is-ok { color: var(--ok); font-weight: 600; }
+.review-result.is-error { color: var(--parc-700); font-weight: 600; }
