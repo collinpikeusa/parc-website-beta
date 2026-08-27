@@ -236,6 +236,11 @@ export const PAGES = {
     desc: 'Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.',
     h1: 'Reviews',
   },
+  'pages/troubleshooting.html': {
+    title: 'If Something Goes Wrong — Exam Day Troubleshooting',
+    desc: 'The problems candidates hit most often before and during an online amateur radio exam, and what to do about each one.',
+    h1: 'If something goes wrong',
+  },
   'pages/team.html': {
     scripts: ['/js/team.js'],
     title: 'Our Team — The Volunteer Examiners at PARC',

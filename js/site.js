@@ -72,3 +72,11 @@
   if (mq.addEventListener) mq.addEventListener('change', onChange);
   else if (mq.addListener) mq.addListener(onChange);
 })();
+
+/* The checklist is designed to be printed and ticked off the day before an exam.
+   The button is progressive enhancement: without JavaScript the page still
+   prints from the browser's own menu, so nothing is lost. */
+(function () {
+  var btn = document.getElementById('print-checklist');
+  if (btn) btn.addEventListener('click', function () { window.print(); });
+})();
