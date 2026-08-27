@@ -91,49 +91,37 @@
 <h1 class="sr-only">Pay Your Exam Fee</h1>
 
 <div class="container">
-    <h2 class="noDisplay">Main Content</h2>
-      <h2><center>
-        Payments
-      </center></h2>
-		<br>
-  <br><br>
-			<center><div id="example2">Failure to thoroughly review both the procedures page and FAQ page on our website may lead to termination of your exam. Should we grant you access to the exam room and observe that you are unprepared or have not followed the specified procedures, you will be returned to the waiting room, and the next candidate will be considered. If unpreparedness persists on a subsequent attempt, you will be required to schedule a new exam.</div></center>
-			<br>
-			<center>			
-			<center>
-			  <div id="example3"><p2><strong>Do not pay here before selecting a TIME-SLOT! Go to the SCHEDULE tab to schedule a time-slot FIRST! Only use this payment tab when instructed to do so by the VE Team.</strong></p2></div></center>
-			<center>
-				<br>
-<div id="paypal-button-container"></div>
-<script src="https://www.paypal.com/sdk/js?client-id=AZlHVoQU9jTArJuxtemL96vNsa-VpaPh0z-drVLXsANegsL6Ul1qntgQndtk8elRBp9rc2dQ3zZgrylH&currency=USD" data-sdk-integration-source="button-factory"></script>
-<script>
-  PayPal.Buttons({
-      style: {
-          shape: 'pill',
-          color: 'gold',
-          layout: 'vertical',
-          label: 'PayPal',
-          
-      },
-      createOrder: function(data, actions) {
-          return actions.order.create({
-              purchase_units: [{
-                  amount: {
-                      value: '15'
-                  }
-              }]
-          });
-      },
-      onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-              alert('Transaction completed by ' + details.payer.name.given_name + '!');
-          });
-      }
-  }).render('#PayPal-button-container');
-</script>
-			</center>
-	  
-  </section>
+<section>
+
+  <h2 class="noDisplay">Main Content</h2>
+
+  <p class="lede">There is no separate payment step. The $15 exam fee is taken when
+    you book your time slot on the <a href="calendar.html">schedule page</a>, and
+    that is the only place an exam is paid for.</p>
+
+  <p><a class="btn btn--primary" href="calendar.html">Go to the schedule</a></p>
+
+  <h2>A few things that catch people out</h2>
+  <ul>
+    <li>Use the <strong>same email address</strong> for scheduling, payment and
+      registration. Different addresses are the most common reason a session goes
+      missing.</li>
+    <li>The fee is <strong>non-refundable</strong> and is forwarded to the ARRL VEC.
+      We do not keep it, so we cannot refund it once you have scheduled.</li>
+    <li>The <strong>FCC application fee</strong> is separate, comes later, and is paid
+      to the FCC directly &mdash; not to us. See
+      <a href="whatnext.html">what happens after you pass</a>.</li>
+  </ul>
+
+  <h2>Were you asked to pay here?</h2>
+  <p>If a member of the VE team has told you to make a payment outside of booking,
+    email <a href="mailto:vetesting@yahoo.com">vetesting@yahoo.com</a> and they will
+    tell you how. Do not send a payment that nobody has asked you for.</p>
+
+  <p>Looking to <a href="donations.html">support PARC</a> instead? Donations are
+    separate from exam fees and are handled through PayPal.</p>
+
+</section>
 </div>
 
 </main>
