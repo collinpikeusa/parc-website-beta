@@ -99,6 +99,8 @@ ${buildHeader(rel)}
 ${buildFooter(rel)}
 
 <script type="application/json" id="ve-payload">${JSON.stringify(payload)}</script>
+<script src="${link(rel, '/js/site.js')}" defer></script>
+<script src="${link(rel, '/js/search.js')}" defer></script>
 <script src="${link(rel, '/js/ve-lock.js')}" defer></script>
 </body>
 </html>

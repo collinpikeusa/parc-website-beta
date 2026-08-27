@@ -129,6 +129,14 @@ export function buildHeader(rel) {
         <span class="nav-toggle__bars" aria-hidden="true"></span> Menu
       </button>
 ${navHtml(rel)}
+      <form class="nav-search" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q" placeholder="Search…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <div class="nav-search__results" id="site-search-results" hidden></div>
+      </form>
+
       <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
         <input type="hidden" name="cmd" value="_s-xclick">
         <input type="hidden" name="hosted_button_id" value="${SITE.paypalButton}">
