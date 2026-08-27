@@ -1260,24 +1260,40 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
    find-in-page still reaches closed answers in current Chrome and Safari. */
 .faq-toc {
   margin: var(--sp-5) 0 var(--sp-6);
-  padding: var(--sp-4) var(--sp-5);
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
 }
+.faq-toc__title {
+  margin: 0 0 .25rem;
+  font-size: var(--step--2); font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid var(--ink);
+}
+/* Two columns of numbered entries with a hairline under each — a contents list
+   rather than a panel of links. It replaced a grey card whose three columns
+   wrapped raggedly. */
 .faq-toc ul {
   list-style: none; margin: 0; padding: 0;
-  display: grid; gap: var(--sp-3) var(--sp-6);
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-7);
+  counter-reset: toc;
 }
-/* Each entry is a whole grid cell, so the columns line up instead of wrapping
-   raggedly. The per-category question counts that used to sit beside each link
-   are gone — nobody chooses a topic by how many questions are under it, and the
-   loose numerals read as clutter at the top of the page. */
-.faq-toc li { display: block; }
-.faq-toc a { font-weight: 500; }
+.faq-toc li { counter-increment: toc; display: block; border-bottom: 1px solid var(--line); }
+.faq-toc a {
+  display: flex; align-items: baseline; gap: var(--sp-3);
+  padding: .55rem 0; text-decoration: none;
+  font-weight: 500; color: var(--ink);
+}
+.faq-toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  flex: none; font-variant-numeric: tabular-nums;
+  font-size: var(--step--2); font-weight: 700; color: var(--parc-red);
+}
+.faq-toc a:hover, .faq-toc a:focus-visible { color: var(--parc-700); }
 
-/* Category headings sit BELOW the questions in the hierarchy on purpose. Set at
+@media (max-width: 640px) {
+  .faq-toc ul { grid-template-columns: 1fr; }
+}
+
+/* Category headings sit BELOW the questions in the hierarchy on purpose. At
    section-heading weight they competed with the questions, which are the thing
    people scan; as quiet labels they divide the list without shouting over it. */
 .faq-cat {
