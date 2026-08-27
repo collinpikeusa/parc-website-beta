@@ -548,6 +548,20 @@ button:active, .btn:active { transform: translateY(1px); }
 }
 .dropbtn:hover { background: var(--parc-700); border-color: var(--parc-700); }
 
+/* Not a menu — a link straight to the team-profile form, sitting in the same row
+   as the four dropdowns. Outlined rather than solid so it does not compete with
+   the script menus, which are what a VE reaches for mid-session. */
+a.dropbtn--team,
+a.dropbtn--team:link,
+a.dropbtn--team:visited {
+  background: transparent; color: var(--parc-red);
+  border: 1px solid var(--parc-red); text-decoration: none;
+}
+a.dropbtn--team:hover,
+a.dropbtn--team:focus-visible {
+  background: var(--parc-red); color: #fff; border-color: var(--parc-red);
+}
+
 .dropdown-content {
   display: none; position: absolute; left: 0; top: 100%; z-index: 60;
   min-width: 16rem; text-align: left;
@@ -1210,4 +1224,29 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .team-preview img {
   width: 5rem; height: 5rem; border-radius: 50%;
   object-fit: cover; border: 1px solid var(--line);
+}
+
+
+/* ---------- instructional figures ---------------------------------------- */
+/* Screenshots inside a run of instructions. Bounded and centred so a wide
+   capture cannot set the page width, with the caption carrying the reason for
+   the step — the picture shows what to click, the words say why it matters. */
+.instruction-figure {
+  margin: var(--sp-5) 0;
+  padding: var(--sp-4);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.instruction-figure img {
+  display: block; max-width: 100%; height: auto;
+  margin-inline: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.instruction-figure figcaption {
+  margin-top: var(--sp-3);
+  font-size: var(--step--1); line-height: 1.5;
+  color: var(--ink-2);
 }

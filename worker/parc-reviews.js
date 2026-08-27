@@ -281,8 +281,11 @@ export default {
 
     if (request.method === 'GET' && path === '/team') {
       const items = await listByPrefix(env.REVIEWS, 'team:');
+      /* Every stored profile is shown. Nothing sets approved:false any more, so
+         filtering on it only hid profiles submitted while the earlier
+         hold-for-approval build was deployed — which is exactly what happened to
+         the first VE who used the form. Delete is the control now, not a flag. */
       const shown = items
-        .filter((m) => m.approved)
         .map((m) => ({
           id: m.id, name: m.name, callsign: m.callsign,
           role: m.role, bio: m.bio,
