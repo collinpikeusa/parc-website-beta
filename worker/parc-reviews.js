@@ -23,10 +23,12 @@
  * deploy, a second KV binding and a second copy of both secrets for a volunteer
  * to keep straight. Team records share this namespace under a `team:` prefix.
  *
- * TEAM SUBMISSIONS ARE HELD FOR APPROVAL, unlike reviews. A form that puts a
- * photograph of a named person straight onto a public page is not something to
- * leave unattended, and the failure mode is not a bad review — it is someone
- * else's face on your team page.
+ * TEAM PROFILES PUBLISH IMMEDIATELY, like reviews, and are deleted afterwards if
+ * something is wrong. What stands in for approval is where the form lives: on a
+ * passcode-locked VE page, so a visitor never reaches it. Optionally also
+ * TEAM_SUBMIT_CODE, which makes that a real gate rather than an unlisted URL —
+ * see DEPLOY.md. Without the code set, anyone who works out the endpoint can
+ * post, so keep an eye on the page.
  *
  * ROUTES
  *   GET  /            published reviews (public)
@@ -36,9 +38,9 @@
  *
  *   GET  /team              approved team members (public)
  *   GET  /team/photo/<id>   one member's photo (public, immutable)
- *   POST /team              submit a bio + photo (public, Turnstile, held)
- *   GET  /team/pending      awaiting approval  -- requires ADMIN_KEY
- *   POST /team/moderate     approve or delete  -- requires ADMIN_KEY
+ *   POST /team              submit a bio + photo (Turnstile, publishes at once)
+ *   GET  /team/list         every profile with ids  -- requires ADMIN_KEY
+ *   POST /team/moderate     delete one              -- requires ADMIN_KEY
  *
  * SETUP (see DEPLOY.md)
  *   1. Workers & Pages -> KV -> Create namespace, call it PARC_REVIEWS
@@ -351,21 +353,24 @@ export default {
 
       const record = {
         id, name, callsign, role, bio, hasPhoto,
-        approved: false,
+        approved: true,
         at: new Date().toISOString(),
       };
       await env.REVIEWS.put(`team:${id}`, JSON.stringify(record));
 
       return json({ ok: true,
-        message: 'Thank you. Your profile will appear once a volunteer has checked it.' }, 200, H);
+        message: 'Thank you — you are on the team page now.' }, 200, H);
     }
 
-    if (path === '/team/pending') {
+    if (path === '/team/list' || path === '/team/pending') {
       if (!authed) return json({ error: 'unauthorised' }, 401, H);
       const items = await listByPrefix(env.REVIEWS, 'team:');
       return json({
-        pending: items.filter((m) => !m.approved),
-        approved: items.filter((m) => m.approved),
+        count: items.length,
+        members: items,
+        /* Anything left unapproved by the earlier hold-for-approval build. It is
+           not on the page; publish it by asking, or delete it. */
+        notShown: items.filter((m) => !m.approved),
       }, 200, H);
     }
 
@@ -380,17 +385,17 @@ export default {
       const rec = await env.REVIEWS.get(`team:${id}`, 'json');
       if (!rec) return json({ error: 'not found' }, 404, H);
 
-      if (action === 'approve') {
+      if (action === 'show') {
         rec.approved = true;
         await env.REVIEWS.put(`team:${id}`, JSON.stringify(rec));
-        return json({ ok: true, action: 'approved', id }, 200, H);
+        return json({ ok: true, action: 'shown', id }, 200, H);
       }
       if (action === 'delete') {
         await env.REVIEWS.delete(`team:${id}`);
         if (rec.hasPhoto) await env.REVIEWS.delete(`teamphoto:${id}`);
         return json({ ok: true, action: 'deleted', id }, 200, H);
       }
-      return json({ error: 'action must be approve or delete' }, 400, H);
+      return json({ error: 'action must be delete or show' }, 400, H);
     }
 
     return json({ error: 'not found' }, 404, H);

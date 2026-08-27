@@ -242,58 +242,55 @@ rebuilding — and there is nothing to undo it with.
 
 #### 5. Our Team page
 
-The same Worker also serves `pages/team.html`. A second Worker would have meant a
-second deploy, a second KV binding and a second copy of both secrets to keep
-straight, so team records live in the namespace you already made, under their own
-prefix.
+The same Worker also serves `pages/team.html` — **no second Worker, no second KV
+namespace, no second copy of the secrets.** Team records live in the namespace
+you already made, under their own prefix. Pasting the current
+`worker/parc-reviews.js` into the existing Worker is the whole deployment.
 
 **The submission form is not on the public page.** It sits on a passcode-locked
 VE page, `pages/team-submit.html`, reachable from the VE section. The public page
-only displays approved profiles.
+only displays profiles.
 
-**Team profiles are held for approval** — unlike reviews, which publish straight
-away. A face and a name on a public page is a different kind of mistake to have
-to undo.
-
-Two optional extras make the lock real rather than a hidden URL:
-
-- [ ] Generate a submit code and put it in the locked page:
-
-```bash
-node tools/set-team-code.mjs "$(openssl rand -base64 24)"
-```
-
-- [ ] Add the same value to the Worker as a secret named `TEAM_SUBMIT_CODE`
-- [ ] Rebuild so the page is re-encrypted with it:
-
-```bash
-PARC_PASSCODE=... node tools/parc-lock.mjs
-```
-
-The code exists only inside that page's ciphertext, so holding it is proof of
-holding the VE passcode — the Worker can then refuse anyone who has not been let
-into the VE section. Without the secret set the Worker does not check, so the
-form still works while this is being set up. **Re-run `set-team-code.mjs`
-whenever the VE passcode changes**, since anyone who had the old passcode kept a
-copy of the code along with it.
-
-Approving profiles:
+**Profiles publish as soon as they are sent**, and come off again with a delete:
 
 ```bash
 node tools/moderate-team.mjs
 ```
 
-That lists what is waiting and what is live. `approve <id>` publishes one,
-`delete <id>` removes it and its photo. Uses the same `REVIEWS_URL` and
-`REVIEWS_ADMIN_KEY` as the review tool.
+That lists everyone on the page with an id each. `delete <id>` removes a profile
+and its photo together, immediately — the page reads live, so nothing needs
+rebuilding. Uses the same `REVIEWS_URL` and `REVIEWS_ADMIN_KEY` as the review
+tool.
 
-Photographs are resized to 480px square in the volunteer's browser before upload,
-so a photo straight from a phone is fine, and are served from their own cached
-URL rather than inlined in the list.
+Photographs are resized to a 480px square in the volunteer's browser before
+upload, so a photo straight from a phone is fine, and are served from their own
+cached URL rather than inlined in the list.
 
-> **This section replaces the Worker code.** After adding the team routes you
-> must paste the current `worker/parc-reviews.js` into the Worker again — the
-> deployed copy will not have them.
+##### Optional: make the VE lock a real gate
+
+The form already sits behind the VE passcode, which keeps visitors away from it.
+The Worker endpoint, though, is reachable by anyone who works out the URL and the
+shape of the request — so on its own this is an unlisted door, not a locked one.
+
+If that matters, give the locked page a submit code:
+
+```bash
+node tools/set-team-code.mjs "$(openssl rand -base64 24)"
+```
+
+Add the same value to the Worker as a secret named `TEAM_SUBMIT_CODE`, then
+rebuild so the page is re-encrypted with it:
+
+```bash
+PARC_PASSCODE=... node tools/parc-lock.mjs
+```
+
+The code then exists only inside that page's ciphertext, so holding it is proof
+of holding the VE passcode. **Re-run `set-team-code.mjs` whenever the VE passcode
+changes** — anyone who had the old passcode kept a copy of the code with it.
+
+Skip all of this and the form still works; it is simply not gated, and the team
+page is worth glancing at now and then.
 
 > **No `AggregateRating` markup, deliberately.** Star ratings can be made to show
 > in Google results, but only from an independent review platform. Google's own
