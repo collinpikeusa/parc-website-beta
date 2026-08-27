@@ -1506,3 +1506,20 @@ a.skip-link:focus {
   border-radius: 0 var(--radius) var(--radius) 0;
 }
 .home-usp strong { color: var(--parc-700); }
+
+
+/* ---------- touch targets ------------------------------------------------- */
+/* Links that sit inside a sentence are exempt from target-size guidance and are
+   left alone — padding them would wreck the line spacing of body copy. These are
+   the lists that act as navigation, where a 26px row is genuinely fiddly with a
+   thumb. Only applied on touch pointers so mouse users keep the tighter layout. */
+@media (pointer: coarse) {
+  .faq-toc li { align-items: center; }
+  .faq-toc a {
+    display: block;
+    padding-block: var(--sp-3);
+    min-height: 2.75rem;
+    display: flex; align-items: center;
+  }
+  .faq-item summary { padding-block: var(--sp-4); }
+}
