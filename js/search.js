@@ -29,7 +29,34 @@
   if (!form) return;
   var input = document.getElementById('site-search-input');
   var panel = document.getElementById('site-search-results');
+  var box = document.getElementById('site-search-panel');
+  var toggle = document.getElementById('site-search-toggle');
+  var closeBtn = document.getElementById('site-search-close');
   if (!input || !panel) return;
+
+  /* The field lives in a panel that drops below the bar rather than sitting in
+     it. In the bar it was taking 176px from the navigation, squeezing the menu
+     links from 902px down to 626px on a narrower desktop window — the menu was
+     paying for the search box. */
+  function openBox() {
+    if (!box) return;
+    box.hidden = false;
+    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+    load();
+    setTimeout(function () { input.focus(); }, 20);
+  }
+  function closeBox() {
+    if (!box) return;
+    box.hidden = true;
+    if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    hide();
+    input.value = '';
+    lastQuery = '';
+  }
+  if (toggle) toggle.addEventListener('click', function () {
+    box && box.hidden ? openBox() : closeBox();
+  });
+  if (closeBtn) closeBtn.addEventListener('click', function () { closeBox(); if (toggle) toggle.focus(); });
 
   var docs = null, loading = false, lastQuery = '', activeIndex = -1;
 
@@ -167,7 +194,7 @@
 
   input.addEventListener('keydown', function (e) {
     var opts = panel.querySelectorAll('.search-list li');
-    if (e.key === 'Escape') { hide(); input.blur(); return; }
+    if (e.key === 'Escape') { closeBox(); if (toggle) toggle.focus(); return; }
     if (!opts.length) return;
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
@@ -187,6 +214,17 @@
   });
 
   document.addEventListener('click', function (e) {
-    if (!form.contains(e.target) && !panel.contains(e.target)) hide();
+    if (box && !box.hidden &&
+        !box.contains(e.target) && (!toggle || !toggle.contains(e.target))) closeBox();
+  });
+
+  /* "/" focuses search, the convention on documentation sites. Ignored while
+     typing in another field. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    var el = document.activeElement, tag = el ? el.tagName : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (el && el.isContentEditable)) return;
+    e.preventDefault();
+    openBox();
   });
 })();

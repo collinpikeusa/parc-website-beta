@@ -346,18 +346,32 @@
         <li><a href="../pages/faq.html" aria-current="page">FAQ</a></li>
         <li><a href="../pages/calendar.html">Schedule</a></li>
       </ul>
-      <form class="nav-search" id="site-search" role="search" autocomplete="off">
-        <label class="sr-only" for="site-search-input">Search this site</label>
-        <input id="site-search-input" type="search" name="q" placeholder="Search…"
-               aria-controls="site-search-results" aria-expanded="false"
-               aria-autocomplete="list" role="combobox">
-        <div class="nav-search__results" id="site-search-results" hidden></div>
-      </form>
+      <button type="button" class="nav-search-toggle" id="site-search-toggle"
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-search-toggle__label">Search</span>
+      </button>
 
       <form class="nav-donate-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
         <input type="hidden" name="cmd" value="_s-xclick">
         <input type="hidden" name="hosted_button_id" value="FG837WNAHF4P4">
         <button type="submit" class="nav-donate">Donate</button>
+      </form>
+    </div>
+
+    <div class="search-panel" id="site-search-panel" hidden>
+      <form class="search-panel__inner" id="site-search" role="search" autocomplete="off">
+        <label class="sr-only" for="site-search-input">Search this site</label>
+        <input id="site-search-input" type="search" name="q"
+               placeholder="Search for fees, ID, scheduling, what to expect…"
+               aria-controls="site-search-results" aria-expanded="false"
+               aria-autocomplete="list" role="combobox">
+        <button type="button" class="search-panel__close" id="site-search-close"
+                aria-label="Close search">&times;</button>
+        <div class="nav-search__results" id="site-search-results" hidden></div>
       </form>
     </div>
   </nav>
