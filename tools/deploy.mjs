@@ -74,6 +74,7 @@ if (!CHECK_ONLY) {
   // 2. alt text + sitemap
   run('node tools/fix-alt.mjs');            ok('fix-alt.mjs   — image descriptions applied');
   run('node tools/build-seo.mjs');          ok('build-seo.mjs — sitemap.xml regenerated');
+  run('node tools/build-search-index.mjs'); ok('build-search-index.mjs — site search index rebuilt');
   // 3. encrypted pages LAST, so retheme cannot clobber them
   if (!process.env.PARC_PASSCODE) {
     warn('PARC_PASSCODE not set — skipping re-encryption, existing pages/ kept');
@@ -119,6 +120,19 @@ try {
     : bad(`only ${withPayload}/${VE_PAGES.length} VE pages have a payload — did retheme run after parc-lock?`);
   leaks === 0 ? ok('no plaintext script text in any published page')
               : bad(`${leaks} plaintext script phrase(s) found in published pages`);
+}
+
+// search index must never contain exam-script text
+{
+  const f = join(ROOT, 'data', 'search-index.json');
+  if (!existsSync(f)) warn('data/search-index.json missing — site search will be unavailable');
+  else {
+    const raw = readFileSync(f, 'utf8');
+    const leak = /All bracketed text is VE instruction|DO NOT READ|force quit which is/i.test(raw);
+    const n = (JSON.parse(raw).docs || []).length;
+    leak ? bad('search index contains VE script text — rebuild it')
+         : ok(`search index clean (${n} public pages)`);
+  }
 }
 
 // .nojekyll would disable the _config.yml excludes

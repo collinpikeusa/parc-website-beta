@@ -45,6 +45,7 @@ WEAK=""
 SITE_ORIGIN="https://$LIVE_DOMAIN" node tools/retheme.mjs >/dev/null
 node tools/fix-alt.mjs >/dev/null
 SITE_ORIGIN="https://$LIVE_DOMAIN" node tools/build-seo.mjs >/dev/null
+node tools/build-search-index.mjs >/dev/null
 SITE_ORIGIN="https://$LIVE_DOMAIN" node tools/parc-lock.mjs $WEAK >/dev/null
 
 echo

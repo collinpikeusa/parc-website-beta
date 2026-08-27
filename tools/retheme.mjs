@@ -112,6 +112,7 @@ ${content}
 ${buildFooter(rel)}
 
 <script src="${link(rel, '/js/site.js')}" defer></script>
+<script src="${link(rel, '/js/search.js')}" defer></script>
 ${(meta.scripts || []).map((s) => `<script src="${link(rel, s)}" defer></script>`).join('\n')}
 </body>
 </html>

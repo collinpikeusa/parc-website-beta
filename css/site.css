@@ -944,3 +944,54 @@ button:active, .btn:active { transform: translateY(1px); }
 .hx-4 { font-size: var(--step-1); color: var(--ink-2); font-weight: 700; }
 .hx-5 { font-size: var(--step-1); color: var(--ve-note); font-weight: 600; }
 .hx-6 { font-size: var(--step-0); color: var(--ve-note); font-weight: 600; }
+
+/* ---------- site search --------------------------------------------------- */
+.nav-search { position: relative; display: flex; align-items: center; margin-left: auto; }
+.nav-search input {
+  font: inherit; font-size: var(--step--1);
+  padding: var(--sp-2) var(--sp-3);
+  width: 11rem; max-width: 40vw;
+  color: #fff; background: rgba(255, 255, 255, .10);
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: var(--radius-sm);
+  transition: background-color .15s ease, border-color .15s ease, width .15s ease;
+}
+.nav-search input::placeholder { color: rgba(255, 255, 255, .72); }
+.nav-search input:focus {
+  background: var(--surface); color: var(--ink);
+  border-color: var(--surface); width: 15rem; outline-offset: 1px;
+}
+.nav-search input:focus::placeholder { color: var(--muted); }
+/* Chrome/Safari draw their own clear button; it is invisible on a dark field. */
+.nav-search input::-webkit-search-cancel-button { filter: invert(1); opacity: .6; }
+.nav-search input:focus::-webkit-search-cancel-button { filter: none; }
+
+.nav-search__results {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 120;
+  width: min(28rem, 85vw);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-3);
+  max-height: 70vh; overflow-y: auto;
+}
+.search-msg { margin: 0; padding: var(--sp-4); font-size: var(--step--1); color: var(--ink-2); }
+.search-list { list-style: none; margin: 0; padding: var(--sp-2) 0; }
+.search-list li { margin: 0; }
+.search-list a {
+  display: block; padding: var(--sp-3) var(--sp-4);
+  text-decoration: none; color: var(--ink);
+}
+.search-list li.is-active a,
+.search-list a:hover,
+.search-list a:focus-visible { background: var(--surface-2); }
+.search-title { display: block; font-weight: 700; color: var(--parc-700); margin-bottom: 2px; }
+.search-snip { display: block; font-size: var(--step--1); color: var(--ink-2); line-height: 1.45; }
+.search-snip mark { background: #FFF1A8; color: inherit; padding: 0 .1em; border-radius: 2px; }
+
+@media (max-width: 900px) {
+  /* Full width on its own row, under Menu and Donate. */
+  .nav-search { order: 3; flex: 1 0 100%; margin: var(--sp-2) 0 var(--sp-1); }
+  .nav-search input, .nav-search input:focus { width: 100%; max-width: none; }
+  .nav-search__results { right: auto; left: 0; width: 100%; }
+  .nav-menu { order: 4; }
+}
