@@ -153,7 +153,7 @@ snapshot automatically, so both paths work.
 > without notice. If the merged calendar ever stops appearing, that is the first
 > thing to check — the site keeps working, it just falls back.
 
-### F. Reviews page — needs a Worker, a KV store, and a Turnstile widget
+### F. Reviews and Our Team — one Worker, a KV store, and a Turnstile widget
 
 `pages/reviews.html` collects a star rating and a short comment. It needs a
 second Worker plus somewhere to keep what people write, so this is a little more
@@ -239,6 +239,61 @@ node tools/moderate-reviews.mjs delete <id>
 
 Deletion is immediate and permanent. The page reads live, so nothing needs
 rebuilding — and there is nothing to undo it with.
+
+#### 5. Our Team page
+
+The same Worker also serves `pages/team.html`. A second Worker would have meant a
+second deploy, a second KV binding and a second copy of both secrets to keep
+straight, so team records live in the namespace you already made, under their own
+prefix.
+
+**The submission form is not on the public page.** It sits on a passcode-locked
+VE page, `pages/team-submit.html`, reachable from the VE section. The public page
+only displays approved profiles.
+
+**Team profiles are held for approval** — unlike reviews, which publish straight
+away. A face and a name on a public page is a different kind of mistake to have
+to undo.
+
+Two optional extras make the lock real rather than a hidden URL:
+
+- [ ] Generate a submit code and put it in the locked page:
+
+```bash
+node tools/set-team-code.mjs "$(openssl rand -base64 24)"
+```
+
+- [ ] Add the same value to the Worker as a secret named `TEAM_SUBMIT_CODE`
+- [ ] Rebuild so the page is re-encrypted with it:
+
+```bash
+PARC_PASSCODE=... node tools/parc-lock.mjs
+```
+
+The code exists only inside that page's ciphertext, so holding it is proof of
+holding the VE passcode — the Worker can then refuse anyone who has not been let
+into the VE section. Without the secret set the Worker does not check, so the
+form still works while this is being set up. **Re-run `set-team-code.mjs`
+whenever the VE passcode changes**, since anyone who had the old passcode kept a
+copy of the code along with it.
+
+Approving profiles:
+
+```bash
+node tools/moderate-team.mjs
+```
+
+That lists what is waiting and what is live. `approve <id>` publishes one,
+`delete <id>` removes it and its photo. Uses the same `REVIEWS_URL` and
+`REVIEWS_ADMIN_KEY` as the review tool.
+
+Photographs are resized to 480px square in the volunteer's browser before upload,
+so a photo straight from a phone is fine, and are served from their own cached
+URL rather than inlined in the list.
+
+> **This section replaces the Worker code.** After adding the team routes you
+> must paste the current `worker/parc-reviews.js` into the Worker again — the
+> deployed copy will not have them.
 
 > **No `AggregateRating` markup, deliberately.** Star ratings can be made to show
 > in Google results, but only from an independent review platform. Google's own

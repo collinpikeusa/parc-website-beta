@@ -3,27 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reviews — What Candidates Say About PARC | PARC</title>
-<meta name="description" content="Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.">
-<link rel="canonical" href="https://radiotests.org/pages/reviews.html">
-<meta name="robots" content="index, follow, max-image-preview:large">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="PARC Radio &amp; Technology">
-<meta property="og:title" content="Reviews — What Candidates Say About PARC">
-<meta property="og:description" content="Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.">
-<meta property="og:url" content="https://radiotests.org/pages/reviews.html">
-<meta property="og:image" content="https://radiotests.org/images/og-parc.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<title>Volunteer Examiner Access | PARC</title>
+<link rel="canonical" href="https://radiotests.org/pages/team-submit.html">
+<meta name="robots" content="noindex, nofollow">
 
 <meta name="theme-color" content="#BA0005">
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="stylesheet" href="../css/site.css">
-<link rel="preload" as="image" href="../images/banner-1600.jpg" fetchpriority="high">
-
-<!-- Cloudflare Web Analytics -->
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "9ba7325d05ee4c318c7d359aefcac7a8"}'></script>
-<!-- End Cloudflare Web Analytics -->
 </head>
 <body>
 
@@ -64,7 +50,7 @@
         <li><a href="../pages/inperson.html">In-Person Testing</a></li>
         <li><a href="../pages/faq.html">FAQ</a></li>
         <li><a href="../pages/calendar.html">Schedule</a></li>
-        <li><a href="../pages/reviews.html" aria-current="page">Reviews</a></li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
         <li><a href="../pages/team.html">Our Team</a></li>
       </ul>
       <button type="button" class="nav-search-toggle" id="site-search-toggle"
@@ -102,66 +88,22 @@
 
 <div class="container">
 <section>
-
-  <h1>Reviews</h1>
-
-  <p>PARC is run entirely by volunteers. Hearing how a session went helps us
-    improve, and helps the next candidate know what to expect.</p>
-
-  <div id="reviews"
-     data-turnstile-sitekey="0x4AAAAAAEdTSpiOH_-p-yFA"
-     data-reviews-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
-
-    <div class="reviews-summary" id="reviews-summary" hidden></div>
-    <div class="reviews-list" id="reviews-list"></div>
-    <p class="reviews-status" id="reviews-status" role="status" aria-live="polite"></p>
-
-    <section class="review-form-wrap" id="review-form-wrap">
-      <h2>Leave a review</h2>
-      <p class="review-form-note">Your review appears on this page straight away.
-        Please don&rsquo;t include your address, phone number, or email &mdash; this
-        page is public, and anything with contact details in it will be refused.</p>
-
-      <form id="review-form" novalidate>
-        <fieldset class="rating-field">
-          <legend>Your rating</legend>
-          <div class="rating-stars" id="rating-stars" role="radiogroup" aria-label="Rating out of 5">
-            <button type="button" class="star" data-value="1" role="radio" aria-checked="false" aria-label="1 star">&#9733;</button>
-            <button type="button" class="star" data-value="2" role="radio" aria-checked="false" aria-label="2 stars">&#9733;</button>
-            <button type="button" class="star" data-value="3" role="radio" aria-checked="false" aria-label="3 stars">&#9733;</button>
-            <button type="button" class="star" data-value="4" role="radio" aria-checked="false" aria-label="4 stars">&#9733;</button>
-            <button type="button" class="star" data-value="5" role="radio" aria-checked="false" aria-label="5 stars">&#9733;</button>
-          </div>
-        </fieldset>
-
-        <label class="review-label" for="review-name">Your name <span class="review-optional">(optional)</span></label>
-        <input class="review-input" id="review-name" name="name" type="text" maxlength="60"
-               aria-describedby="review-name-hint" placeholder="First name or call sign">
-        <p class="review-hint" id="review-name-hint">Leave blank to stay anonymous.</p>
-
-        <label class="review-label" for="review-text">Your review</label>
-        <textarea class="review-input" id="review-text" name="text" rows="5" maxlength="1200"
-                  placeholder="How did your exam session go?"></textarea>
-        <p class="review-count"><span id="review-remaining">1200</span> characters left</p>
-
-        <!-- Honeypot: hidden from people, tempting to bots. -->
-        <div class="review-hp" aria-hidden="true">
-          <label for="review-website">Leave this field empty</label>
-          <input id="review-website" name="website" type="text" tabindex="-1" autocomplete="off">
-        </div>
-
-        <!-- Cloudflare Turnstile renders here, and only when a site key is set.
-             Without one the script is never fetched, so an unconfigured page
-             makes no third-party request at all. -->
-        <div class="review-turnstile" id="review-turnstile"></div>
-
-        <button class="btn btn--primary" type="submit" id="review-submit">Submit review</button>
-        <p class="review-result" id="review-result" role="status" aria-live="polite"></p>
-      </form>
-    </section>
-
+  <div class="ve-lock" id="ve-lock">
+    <h1>Volunteer Examiner Access</h1>
+    <p class="ve-lock__hint">This page is encrypted. Enter the VE passphrase to open it.</p>
+    <form class="ve-lock__form" id="ve-form" autocomplete="off">
+      <label class="ve-lock__label" for="ve-pass">Passphrase</label>
+      <input class="ve-lock__input" id="ve-pass" name="passphrase" type="password"
+             autocomplete="current-password" autocapitalize="off" spellcheck="false" required>
+      <label class="ve-lock__remember">
+        <input type="checkbox" id="ve-remember"> Remember on this device for 12 hours
+      </label>
+      <button class="btn btn--primary" type="submit" id="ve-submit">Unlock</button>
+      <p class="ve-lock__status" id="ve-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="ve-lock__foot">Not a VE? <a href="../index.html">Return to the PARC home page</a>.
+      For access, email <a href="mailto:ve@parcradio.org">ve@parcradio.org</a>.</p>
   </div>
-
 </section>
 </div>
 
@@ -203,8 +145,9 @@
   </div>
 </footer>
 
+<script type="application/json" id="ve-payload">{"v":1,"salt":"TU63Amj85FM+NsGQpnCHQA==","it":600000,"iv":"Rpj/LoX8iN48lUnZ","ct":"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","t":"Add Yourself to the Team Page"}</script>
 <script src="../js/site.js" defer></script>
 <script src="../js/search.js" defer></script>
-<script src="../js/reviews.js" defer></script>
+<script src="../js/ve-lock.js" defer></script>
 </body>
 </html>

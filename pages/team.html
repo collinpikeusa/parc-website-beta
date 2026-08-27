@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reviews — What Candidates Say About PARC | PARC</title>
-<meta name="description" content="Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.">
-<link rel="canonical" href="https://radiotests.org/pages/reviews.html">
+<title>Our Team — The Volunteer Examiners at PARC | PARC</title>
+<meta name="description" content="Meet the volunteer examiners who run PARC exam sessions almost every day of the week.">
+<link rel="canonical" href="https://radiotests.org/pages/team.html">
 <meta name="robots" content="index, follow, max-image-preview:large">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PARC Radio &amp; Technology">
-<meta property="og:title" content="Reviews — What Candidates Say About PARC">
-<meta property="og:description" content="Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.">
-<meta property="og:url" content="https://radiotests.org/pages/reviews.html">
+<meta property="og:title" content="Our Team — The Volunteer Examiners at PARC">
+<meta property="og:description" content="Meet the volunteer examiners who run PARC exam sessions almost every day of the week.">
+<meta property="og:url" content="https://radiotests.org/pages/team.html">
 <meta property="og:image" content="https://radiotests.org/images/og-parc.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
@@ -64,8 +64,8 @@
         <li><a href="../pages/inperson.html">In-Person Testing</a></li>
         <li><a href="../pages/faq.html">FAQ</a></li>
         <li><a href="../pages/calendar.html">Schedule</a></li>
-        <li><a href="../pages/reviews.html" aria-current="page">Reviews</a></li>
-        <li><a href="../pages/team.html">Our Team</a></li>
+        <li><a href="../pages/reviews.html">Reviews</a></li>
+        <li><a href="../pages/team.html" aria-current="page">Our Team</a></li>
       </ul>
       <button type="button" class="nav-search-toggle" id="site-search-toggle"
               aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
@@ -103,62 +103,20 @@
 <div class="container">
 <section>
 
-  <h1>Reviews</h1>
+  <h1>Our Team</h1>
 
-  <p>PARC is run entirely by volunteers. Hearing how a session went helps us
-    improve, and helps the next candidate know what to expect.</p>
+  <p>PARC is run by volunteer examiners who give up their evenings and weekends
+    so that candidates can test almost any day of the week. These are the people
+    on the other side of the camera.</p>
 
-  <div id="reviews"
-     data-turnstile-sitekey="0x4AAAAAAEdTSpiOH_-p-yFA"
-     data-reviews-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
+  <div id="team"
+       data-team-endpoint="https://parc-reviews.collinpikeusa.workers.dev">
 
-    <div class="reviews-summary" id="reviews-summary" hidden></div>
-    <div class="reviews-list" id="reviews-list"></div>
-    <p class="reviews-status" id="reviews-status" role="status" aria-live="polite"></p>
+    <div class="team-grid" id="team-grid"></div>
+    <p class="reviews-status" id="team-status" role="status" aria-live="polite"></p>
 
-    <section class="review-form-wrap" id="review-form-wrap">
-      <h2>Leave a review</h2>
-      <p class="review-form-note">Your review appears on this page straight away.
-        Please don&rsquo;t include your address, phone number, or email &mdash; this
-        page is public, and anything with contact details in it will be refused.</p>
-
-      <form id="review-form" novalidate>
-        <fieldset class="rating-field">
-          <legend>Your rating</legend>
-          <div class="rating-stars" id="rating-stars" role="radiogroup" aria-label="Rating out of 5">
-            <button type="button" class="star" data-value="1" role="radio" aria-checked="false" aria-label="1 star">&#9733;</button>
-            <button type="button" class="star" data-value="2" role="radio" aria-checked="false" aria-label="2 stars">&#9733;</button>
-            <button type="button" class="star" data-value="3" role="radio" aria-checked="false" aria-label="3 stars">&#9733;</button>
-            <button type="button" class="star" data-value="4" role="radio" aria-checked="false" aria-label="4 stars">&#9733;</button>
-            <button type="button" class="star" data-value="5" role="radio" aria-checked="false" aria-label="5 stars">&#9733;</button>
-          </div>
-        </fieldset>
-
-        <label class="review-label" for="review-name">Your name <span class="review-optional">(optional)</span></label>
-        <input class="review-input" id="review-name" name="name" type="text" maxlength="60"
-               aria-describedby="review-name-hint" placeholder="First name or call sign">
-        <p class="review-hint" id="review-name-hint">Leave blank to stay anonymous.</p>
-
-        <label class="review-label" for="review-text">Your review</label>
-        <textarea class="review-input" id="review-text" name="text" rows="5" maxlength="1200"
-                  placeholder="How did your exam session go?"></textarea>
-        <p class="review-count"><span id="review-remaining">1200</span> characters left</p>
-
-        <!-- Honeypot: hidden from people, tempting to bots. -->
-        <div class="review-hp" aria-hidden="true">
-          <label for="review-website">Leave this field empty</label>
-          <input id="review-website" name="website" type="text" tabindex="-1" autocomplete="off">
-        </div>
-
-        <!-- Cloudflare Turnstile renders here, and only when a site key is set.
-             Without one the script is never fetched, so an unconfigured page
-             makes no third-party request at all. -->
-        <div class="review-turnstile" id="review-turnstile"></div>
-
-        <button class="btn btn--primary" type="submit" id="review-submit">Submit review</button>
-        <p class="review-result" id="review-result" role="status" aria-live="polite"></p>
-      </form>
-    </section>
+    <p class="team-footnote">Examine with PARC? Your profile goes up from the
+      <a href="script.html">VE section</a>.</p>
 
   </div>
 
@@ -205,6 +163,6 @@
 
 <script src="../js/site.js" defer></script>
 <script src="../js/search.js" defer></script>
-<script src="../js/reviews.js" defer></script>
+<script src="../js/team.js" defer></script>
 </body>
 </html>

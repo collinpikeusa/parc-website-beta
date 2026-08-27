@@ -64,10 +64,14 @@ export const NAV = [
   { label: 'FAQ', href: '/pages/faq.html' },
   { label: 'Schedule', href: '/pages/calendar.html' },
   { label: 'Reviews', href: '/pages/reviews.html' },
+  { label: 'Our Team', href: '/pages/team.html' },
 ];
 
 /** Pages encrypted by tools/parc-lock.mjs. Their shells are always noindex. */
 export const VE_PAGES = [
+  /* Not an exam script — the form that puts a VE on the public team page. It is
+     locked so that only people who already hold the VE passcode can submit one. */
+  'pages/team-submit.html',
   'pages/script.html', 'pages/script2.html', 'pages/scriptnospace.html',
   'pages/scriptupdate.html', 'pages/easyread.html', 'pages/oldscript.html',
   'pages/ScriptBreakOutPreRead.html', 'pages/Online_MainRoomSetupScript.html',
@@ -232,6 +236,12 @@ export const PAGES = {
     desc: 'Read what candidates say about taking their amateur radio licence exam with PARC, and leave a review of your own session.',
     h1: 'Reviews',
   },
+  'pages/team.html': {
+    scripts: ['/js/team.js'],
+    title: 'Our Team — The Volunteer Examiners at PARC',
+    desc: 'Meet the volunteer examiners who run PARC exam sessions almost every day of the week.',
+    h1: 'Our Team',
+  },
   'pages/donations.html': {
     title: 'Support PARC Radio & Technology',
     desc: 'PARC is an all-volunteer group. Donations cover exam materials, equipment, and community outreach — none of it pays a salary.',
@@ -260,6 +270,7 @@ export const PAGES = {
  *  locked shell shows a generic title so the URL alone doesn't reveal which
  *  script sits behind it. */
 export const VE_TITLES = {
+  'team-submit.html': 'Add Yourself to the Team Page',
   'script.html': 'Single Room Script',
   'script2.html': 'Single Room Script (Shutdown)',
   'scriptnospace.html': 'Single Room Script — No Space',

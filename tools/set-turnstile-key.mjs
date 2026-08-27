@@ -13,11 +13,14 @@
  * submissions without a token, so the form keeps working while it is being set
  * up. Configure both halves to actually enforce the check.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
-const PAGE = join(ROOT, 'pages', 'reviews.html');
+const PAGES = [
+  join(ROOT, 'pages', 'reviews.html'),
+  join(ROOT, '_ve-source', 'team-submit.html'),
+];
 const arg = process.argv[2];
 
 if (!arg) {
@@ -43,13 +46,16 @@ if (key.length > 30) {
   process.exit(1);
 }
 
-const before = readFileSync(PAGE, 'utf8');
-const after = before.replace(/(data-turnstile-sitekey=")[^"]*(")/, `$1${key}$2`);
-if (after === before && key) {
-  console.error('Could not find data-turnstile-sitekey on the reviews page.');
-  process.exit(1);
+for (const file of PAGES) {
+  if (!existsSync(file)) continue;
+  const before = readFileSync(file, 'utf8');
+  const after = before.replace(/(data-turnstile-sitekey=")[^"]*(")/, `$1${key}$2`);
+  if (after === before && key) {
+    console.error(`Could not find data-turnstile-sitekey in ${file}.`);
+    process.exit(1);
+  }
+  writeFileSync(file, after);
 }
-writeFileSync(PAGE, after);
 
 console.log(key ? `Site key set: ${key}` : 'Site key cleared.');
 console.log('\nThe other half goes in the Worker, not here:');
