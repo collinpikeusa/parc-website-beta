@@ -60,6 +60,12 @@ export function buildHead(rel, meta) {
     L.push('');
   }
   L.push('<meta name="theme-color" content="#BA0005">');
+  /* Chrome on Android auto-darkens pages that state no preference, inverting
+     colours in the compositor after CSS has run. It gets menus wrong — a light
+     dropdown panel keeps light text and becomes unreadable. Declaring a scheme
+     opts the page out. This site is light by design; if a dark palette is ever
+     added, change this to "light dark" rather than removing it. */
+  L.push('<meta name="color-scheme" content="light">');
   L.push(`<link rel="icon" href="${link(rel, '/favicon.ico')}" sizes="any">`);
   L.push(`<link rel="stylesheet" href="${link(rel, '/css/site.css')}">`);
   if (meta.preloadBanner !== false)

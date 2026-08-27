@@ -20,6 +20,11 @@
 
 /* ---------- design tokens ------------------------------------------------ */
 :root {
+  /* Paired with the color-scheme meta tag. Tells the browser the page has an
+     intentional scheme, so form controls and scrollbars are rendered light and
+     Chrome's Android auto-dark inversion leaves the page alone. */
+  color-scheme: light;
+
   /* Brand red sampled from Banner.jpg, behind the PARC wordmark. */
   --parc-red:   #BA0005;
   --parc-700:   #8E0004;
