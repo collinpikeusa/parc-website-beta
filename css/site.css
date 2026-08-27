@@ -1523,3 +1523,51 @@ a.skip-link:focus {
   }
   .faq-item summary { padding-block: var(--sp-4); }
 }
+
+
+/* ---------- side-by-side comparison --------------------------------------- */
+/* Two drawings that only mean something next to each other. They are separate
+   files rather than one wide image so they stack on a phone at full size, where
+   a single side-by-side drawing would shrink until neither half was legible. */
+.compare-figs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: var(--sp-4);
+  margin: var(--sp-5) 0;
+}
+.compare-figs figure { margin: 0; }
+.compare-figs img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius);
+}
+.compare-figs figcaption {
+  margin-top: var(--sp-2);
+  font-size: var(--step--1); color: var(--ink-2); line-height: 1.5;
+}
+
+
+/* ---------- long-document contents ---------------------------------------- */
+.doc-toc {
+  margin: var(--sp-5) 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--parc-red);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.doc-toc h2 { margin: 0 0 var(--sp-3); font-size: var(--step-0); }
+.doc-toc ol { margin: 0; padding-left: var(--sp-5); }
+.doc-toc li { margin-bottom: var(--sp-2); }
+.doc-toc a { font-weight: 600; }
+.doc-toc__note {
+  margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--muted);
+}
+/* Section starts, so the eye can find where one topic ends and the next begins
+   in a document this long. scroll-margin keeps the heading clear of the sticky
+   nav when a contents link jumps to it. */
+h2.doc-section {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-4);
+  border-top: 2px solid var(--line-2);
+  scroll-margin-top: 5rem;
+}

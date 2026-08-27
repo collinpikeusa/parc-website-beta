@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 470" width="460" height="470"
+     role="img" aria-labelledby="dr-t dr-d">
+  <title id="dr-t">A desk that is ready for the exam, seen from above</title>
+  <desc id="dr-d">A clear desk: one laptop in front of you with its camera on your face,
+    a phone on a stand at ninety degrees to your side watching the whole workspace, and
+    your photo identification. Nothing else on the surface.</desc>
+
+  <style>
+    .hd  { font: 700 17px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#fff; }
+    .lbl { font: 600 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#15503A; }
+    .cap { font: 400 12px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; fill:#454B52; }
+  </style>
+
+  <rect x="0" y="0" width="460" height="470" rx="10" fill="#FFF" stroke="#A9CDBB" stroke-width="2"/>
+
+  <!-- header -->
+  <rect x="0" y="0" width="460" height="40" rx="10" fill="#15503A"/>
+  <rect x="0" y="28" width="460" height="12" fill="#15503A"/>
+  <g transform="translate(20 20)">
+    <circle cx="0" cy="0" r="10" fill="#fff"/>
+    <path d="M-4.6 .4 L-1.4 3.8 L4.8 -4" stroke="#15503A" stroke-width="2.8" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text class="hd" x="40" y="26">Like this</text>
+
+  <!-- desk surface -->
+  <rect x="40" y="120" width="380" height="200" rx="8" fill="#F7F9FA" stroke="#B9C3CC" stroke-width="2"/>
+
+  <!-- second device field of view -->
+  <path d="M396 220 L150 150 L150 292 Z" fill="#15503A" opacity=".07"/>
+  <path d="M396 220 L150 150 L150 292 Z" fill="none" stroke="#15503A" stroke-width="1.4"
+        stroke-dasharray="5 4" opacity=".5"/>
+
+  <!-- you -->
+  <path d="M180 288 a40 30 0 0 1 80 0 z" fill="#DDE3E9"/>
+  <circle cx="220" cy="266" r="19" fill="#C8D2DA" stroke="#93A1AC" stroke-width="2"/>
+  <text class="cap" x="220" y="336" text-anchor="middle">you</text>
+
+  <!-- laptop -->
+  <rect x="182" y="158" width="76" height="26" rx="4" fill="#2B3138"/>
+  <rect x="188" y="163" width="64" height="16" rx="2" fill="#5C6672"/>
+  <circle cx="220" cy="155" r="3.2" fill="#15503A"/>
+  <path d="M220 158 L220 246" stroke="#15503A" stroke-width="2" stroke-dasharray="4 3"/>
+  <text class="lbl" x="220" y="140" text-anchor="middle">one screen, camera on you</text>
+
+  <!-- second device on a stand -->
+  <g transform="translate(396 220)">
+    <rect x="-12" y="-34" width="24" height="68" rx="4" fill="#2B3138"/>
+    <rect x="-8" y="-29" width="16" height="58" rx="2" fill="#5C6672"/>
+    <circle cx="-15" cy="0" r="3.2" fill="#15503A"/>
+    <path d="M-5 38 L5 38 L9 54 L-9 54 Z" fill="#93A1AC"/>
+  </g>
+  <text class="lbl" x="396" y="164" text-anchor="middle">phone on a stand,</text>
+  <text class="lbl" x="396" y="180" text-anchor="middle">90° to your side</text>
+
+  <!-- photo ID, the one thing allowed -->
+  <rect x="86" y="228" width="56" height="36" rx="4" fill="#fff" stroke="#93A1AC" stroke-width="1.6"/>
+  <circle cx="100" cy="244" r="8" fill="#C8D2DA"/>
+  <path d="M114 238 h22 M114 246 h22 M114 254 h14" stroke="#C3CCD4" stroke-width="2.4"/>
+  <text class="lbl" x="114" y="282" text-anchor="middle">photo ID</text>
+
+  <g class="cap">
+    <text x="30" y="360">One screen. One laptop. Nothing else on the surface,</text>
+    <text x="30" y="380">nothing within reach, and nothing ham-related on the walls.</text>
+  </g>
+  <text class="lbl" x="30" y="440">This is what an examiner is looking for.</text>
+
+  <!-- PARC mark -->
+  <g transform="translate(396 404) scale(0.38)" opacity="0.95">
+    <defs>
+      <radialGradient id="pmR" cx="38%" cy="30%" r="80%">
+        <stop offset="0%" stop-color="#8E1218"/><stop offset="55%" stop-color="#5E070C"/>
+        <stop offset="100%" stop-color="#2B0305"/>
+      </radialGradient>
+    </defs>
+    <circle cx="60" cy="60" r="58" fill="url(#pmR)"/>
+    <circle cx="60" cy="60" r="58" fill="none" stroke="#C9848A" stroke-width="2" opacity=".5"/>
+    <circle cx="60" cy="60" r="50" fill="none" stroke="#E9C3C6" stroke-width="1.3" opacity=".4"/>
+    <g font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif" font-weight="700" fill="#F2E9EA">
+      <text x="20" y="70" font-size="34">P</text>
+      <text x="63" y="70" font-size="34">RC</text>
+      <text x="60" y="96" font-size="16" letter-spacing="4" text-anchor="middle">VE</text>
+    </g>
+    <g fill="#F2E9EA">
+      <path d="M50.6 70 L55 44 h2.6 l4.4 26 h-3.6 l-.9-6 h-2 l-.9 6 z"/>
+      <rect x="52.6" y="58" width="7.2" height="2.6"/>
+      <circle cx="56.2" cy="40.5" r="2.3"/>
+    </g>
+    <g fill="none" stroke="#F2E9EA" stroke-width="2.2" stroke-linecap="round" opacity=".92">
+      <path d="M48.6 36.5 a11 11 0 0 1 15.2 0"/>
+      <path d="M44.4 31.5 a17.5 17.5 0 0 1 23.6 0"/>
+    </g>
+  </g>
+</svg>
