@@ -1277,11 +1277,27 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .faq-toc li { display: block; }
 .faq-toc a { font-weight: 500; }
 
+/* Category headings sit BELOW the questions in the hierarchy on purpose. Set at
+   section-heading weight they competed with the questions, which are the thing
+   people scan; as quiet labels they divide the list without shouting over it. */
+.faq-cat {
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: var(--sp-7) 0 0;
+  padding-bottom: var(--sp-3);
+  border-bottom: 2px solid var(--line-2);
+}
+.faq-cat:first-of-type { margin-top: var(--sp-5); }
+
 .faq-item {
   border-bottom: 1px solid var(--line);
 }
 .faq-item summary {
   cursor: pointer;
+  font-weight: 500;
   padding: var(--sp-4) var(--sp-6) var(--sp-4) 0;
   font-weight: 600; line-height: 1.4;
   position: relative;
