@@ -1739,3 +1739,52 @@ h2.doc-section {
   overflow-wrap: normal;
   hyphens: none;
 }
+
+
+/* ---------- page navigation (replaces the legacy button tables) ----------- */
+/* These were <table border="1"> grids of <button style="height:100px;width:200px">
+   wrapped in nested <center> tags, with the table never closed. They rendered
+   at uneven widths, wrapped raggedly, and overlapped each other. One grid, equal
+   cells, wrapping properly at any width. */
+.page-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--sp-3);
+  margin: var(--sp-6) 0;
+  padding: 0;
+  list-style: none;
+}
+.page-link {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 3.25rem;
+  padding: var(--sp-3) var(--sp-4);
+  text-align: center;
+  font-weight: 600; font-size: var(--step--1);
+  letter-spacing: .03em; text-transform: uppercase;
+  color: var(--parc-700);
+  background: var(--surface);
+  border: 2px solid var(--parc-red);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background-color .15s ease, color .15s ease;
+}
+.page-link:link, .page-link:visited { color: var(--parc-700); }
+.page-link:hover, .page-link:focus-visible {
+  background: var(--parc-red); color: #fff; border-color: var(--parc-red);
+}
+
+/* Back and Next read as direction, so they get arrows and sit at the edges. */
+.page-links--pager { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.page-link--back::before { content: "\2190\00a0"; }
+.page-link--next::after  { content: "\00a0\2192"; }
+.page-link--back, .page-link--next {
+  border-color: var(--line-2); color: var(--ink-2);
+}
+.page-link--back:hover, .page-link--next:hover,
+.page-link--back:focus-visible, .page-link--next:focus-visible {
+  background: var(--ink); border-color: var(--ink); color: #fff;
+}
+
+@media (max-width: 480px) {
+  .page-links { grid-template-columns: 1fr; }
+}
