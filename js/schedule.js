@@ -120,9 +120,14 @@
     return new Intl.DateTimeFormat('en-CA',
       { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
   }
+  /* hourCycle h23 rather than hour12:false. Several Safari and Firefox builds
+     read hour12:false as h24 and return "24" for midnight, which would file a
+     midnight session under Late night instead of Early morning — and PARC runs
+     a midnight calendar. The modulo covers engines that ignore hourCycle. */
   function hourIn(d, tz) {
-    return Number(new Intl.DateTimeFormat('en-US',
-      { timeZone: tz, hour: '2-digit', hour12: false }).format(d));
+    var h = Number(new Intl.DateTimeFormat('en-US',
+      { timeZone: tz, hour: '2-digit', hourCycle: 'h23' }).format(d));
+    return isNaN(h) ? 0 : h % 24;
   }
   function timeLabel(d, tz) {
     return new Intl.DateTimeFormat('en-US',
