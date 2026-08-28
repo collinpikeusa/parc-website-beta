@@ -830,6 +830,14 @@ a.dropbtn--team:focus-visible {
    otherwise empty row whenever the five band chips filled the line. Sitting
    directly after the chips keeps it part of the same group at any width. */
 .cal-filter--tz .cal-filter__label { white-space: nowrap; }
+.tz-detected { display: inline-flex; align-items: baseline; gap: var(--sp-2); }
+.tz-change {
+  background: none; border: 0; padding: 0;
+  font: inherit; font-size: var(--step--2);
+  color: var(--parc-red); text-decoration: underline;
+  cursor: pointer;
+}
+.tz-change:hover { color: var(--parc-700); }
 .cal-filter__label {
   font-size: var(--step--1); font-weight: 700; color: var(--ink-2);
   text-transform: uppercase; letter-spacing: .04em;
@@ -1340,6 +1348,17 @@ textarea.review-input { resize: vertical; min-height: 7rem; }
 .faq-answer p { margin: 0 0 var(--sp-3); }
 .faq-answer p:last-child, .faq-answer ul:last-child { margin-bottom: 0; }
 .faq-answer ul { margin: 0 0 var(--sp-3); padding-left: var(--sp-5); }
+
+/* Answers that differ by exam type. Splitting them into two labelled bullets
+   means a candidate reads only the half that applies to them, instead of
+   scanning a paragraph for the words "In-Person". */
+.faq-split { list-style: none; padding-left: 0 !important; }
+.faq-split li {
+  padding-left: var(--sp-4);
+  border-left: 3px solid var(--line-2);
+  margin-bottom: var(--sp-3);
+}
+.faq-split li strong { color: var(--parc-700); }
 .faq-answer li { margin-bottom: var(--sp-2); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1526,14 +1545,16 @@ a.skip-link:focus {
   .checklist input[type="checkbox"] { -webkit-appearance: none; appearance: none;
     border: 2px solid #000; border-radius: 2px; width: 1rem; height: 1rem; }
 
-  /* "Print this checklist" means the checklist, not the page it sits on. The
-     button sets this class before calling print() and drops it afterwards.
-     visibility rather than display, so the layout inside the block survives. */
-  body.print-checklist-only * { visibility: hidden; }
-  body.print-checklist-only .checklist-block,
-  body.print-checklist-only .checklist-block * { visibility: visible; }
+  /* "Print this checklist" means the checklist, not the page it sits on.
+     js/site.js marks every ancestor's siblings before calling print().
+
+     It does NOT use the usual visibility:hidden + position:absolute trick.
+     Firefox clips absolutely-positioned content to the first page, so a
+     22-item checklist printed as a single page with the rest missing —
+     which is exactly how this was first written. Hiding siblings instead
+     leaves the checklist in normal flow, so it paginates properly. */
+  .print-hide { display: none !important; }
   body.print-checklist-only .checklist-block {
-    position: absolute; inset: 0 auto auto 0; width: 100%;
     margin: 0; border: 0; padding: 0;
   }
   body.print-checklist-only .no-print { display: none !important; }
@@ -1639,3 +1660,37 @@ h2.doc-section {
   border-top: 2px solid var(--line-2);
   scroll-margin-top: 5rem;
 }
+
+
+.field-list { margin: var(--sp-3) 0; padding-left: var(--sp-5); }
+.field-list li { margin-bottom: var(--sp-2); }
+.field-eg {
+  font-family: var(--font-mono); font-size: .92em;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: .05em .35em;
+}
+
+/* ---------- in-person registration form ----------------------------------- */
+/* A template to copy into an email. It was originally laid out with one <br>
+   per field and a row of "=" as a rule; converting <br> to paragraphs flattened
+   it into prose and the form became unusable. A <pre> keeps the line structure,
+   copies cleanly, and cannot be flattened again by a markup pass. */
+.reg-form {
+  margin: var(--sp-6) 0;
+  padding: var(--sp-5);
+  border: 2px solid var(--line-2);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.reg-form h2 { margin: 0 0 var(--sp-3); font-size: var(--step-1); }
+.reg-form pre {
+  margin: var(--sp-4) 0 0;
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono); font-size: var(--step--1);
+  line-height: 1.9;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.reg-form__note { margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--ink-2); }
