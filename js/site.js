@@ -83,16 +83,33 @@
   /* Print the checklist, not the page it lives on. The class scopes a print
      rule that hides everything else; afterprint drops it again so the page is
      unchanged on screen. beforeprint covers Ctrl+P as well as the button. */
+  /* Mark every sibling of every ancestor, so only the checklist's own branch of
+     the tree survives the print rule. Keeping it in normal flow is what lets it
+     run to a second page — Firefox will not paginate an absolutely positioned
+     element, it just clips it. */
+  function isolate(on) {
+    var node = block;
+    while (node && node !== document.body) {
+      var kids = node.parentNode.children;
+      for (var i = 0; i < kids.length; i++) {
+        if (kids[i] !== node) kids[i].classList.toggle('print-hide', on);
+      }
+      node = node.parentNode;
+    }
+    document.body.classList.toggle('print-checklist-only', on);
+  }
+
   var btn = document.getElementById('print-checklist');
   if (btn) {
     btn.addEventListener('click', function () {
-      document.body.classList.add('print-checklist-only');
+      isolate(true);
       window.print();
+      /* Firefox returns from print() before afterprint fires reliably in some
+         versions, so restore on a timer as well. Both paths are idempotent. */
+      setTimeout(function () { isolate(false); }, 1000);
     });
   }
-  window.addEventListener('afterprint', function () {
-    document.body.classList.remove('print-checklist-only');
-  });
+  window.addEventListener('afterprint', function () { isolate(false); });
 
   /* Remember ticks on this device, so the list can be worked through the night
      before and still be there in the morning. Per-browser only; nothing is sent

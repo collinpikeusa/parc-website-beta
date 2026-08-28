@@ -78,6 +78,37 @@
     bands: {}              // band id -> enabled
   };
 
+  /* "America/Chicago" is an IANA identifier, not something a candidate in
+     Alabama recognises. Ask the browser for the real display name, which tracks
+     daylight saving on its own, and shorten it to "Central time". The map is
+     the fallback for engines that return an abbreviation instead. */
+  var ZONE_NAMES = {
+    'America/New_York': 'Eastern time',
+    'America/Chicago': 'Central time',
+    'America/Denver': 'Mountain time',
+    'America/Phoenix': 'Arizona time',
+    'America/Los_Angeles': 'Pacific time',
+    'America/Anchorage': 'Alaska time',
+    'Pacific/Honolulu': 'Hawaii time'
+  };
+
+  function zoneLabel(tz) {
+    try {
+      var parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'long' })
+        .formatToParts(new Date());
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type === 'timeZoneName') {
+          var n = parts[i].value;
+          if (/Standard Time|Daylight Time/.test(n)) {
+            return n.replace(/\s*(Standard|Daylight)\s+Time$/, ' time');
+          }
+          if (n && !/^GMT|^UTC/.test(n)) return n;
+        }
+      }
+    } catch (e) { /* fall through to the map */ }
+    return ZONE_NAMES[tz] || tz.split('/').pop().replace(/_/g, ' ');
+  }
+
   function guessTz() {
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Chicago'; }
     catch (e) { return 'America/Chicago'; }
@@ -293,17 +324,36 @@
       bBox.appendChild(b);
     });
 
+    /* The browser already knows where the candidate is, so times appear in their
+       own zone without anyone being asked. The picker stays available behind a
+       "change" link, for a browser that has it wrong or somebody booking from a
+       different zone to the one they will test in. */
     var tzSel = document.getElementById('tz-select');
+    var tzName = document.getElementById('tz-name');
+    var tzChange = document.getElementById('tz-change');
+    if (tzName) tzName.textContent = zoneLabel(state.tz);
     if (tzSel) {
-      ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Phoenix',
-       'America/Los_Angeles', 'America/Anchorage', 'Pacific/Honolulu'].forEach(function (z) {
-        tzSel.appendChild(new Option(z.split('/')[1].replace(/_/g, ' '), z));
+      tzSel.innerHTML = '';
+      Object.keys(ZONE_NAMES).forEach(function (z) {
+        tzSel.appendChild(new Option(ZONE_NAMES[z], z));
       });
       if (![].some.call(tzSel.options, function (o) { return o.value === state.tz; })) {
-        tzSel.appendChild(new Option(state.tz.replace(/_/g, ' '), state.tz));
+        tzSel.appendChild(new Option(zoneLabel(state.tz), state.tz));
       }
       tzSel.value = state.tz;
-      tzSel.addEventListener('change', function () { state.tz = tzSel.value; render(); });
+      tzSel.addEventListener('change', function () {
+        state.tz = tzSel.value;
+        if (tzName) tzName.textContent = zoneLabel(state.tz);
+        render();
+      });
+    }
+    if (tzChange && tzSel) {
+      tzChange.addEventListener('click', function () {
+        var open = !tzSel.hidden;
+        tzSel.hidden = open;
+        tzChange.setAttribute('aria-expanded', String(!open));
+        if (!open) tzSel.focus();
+      });
     }
 
     document.getElementById('cal-prev').addEventListener('click', function () { shiftMonth(-1); });
