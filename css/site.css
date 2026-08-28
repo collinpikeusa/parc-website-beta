@@ -727,6 +727,16 @@ a.dropbtn--team:focus-visible {
   font: inherit; padding: var(--sp-2) var(--sp-3);
   border: 1px solid var(--line-2); border-radius: var(--radius-sm); background: var(--surface);
 }
+.age-gate__why { margin: 0 0 var(--sp-3); }
+.age-gate__safe {
+  margin: 0 0 var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-2);
+  border-left: 3px solid var(--good, #1C6340);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--step--1); color: var(--ink-2);
+}
+.age-gate__safe strong { color: var(--ink); }
 .age-gate__privacy { font-size: var(--step--1); color: var(--muted); margin-bottom: var(--sp-3); }
 .age-gate__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
 

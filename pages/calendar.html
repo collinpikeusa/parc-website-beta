@@ -115,9 +115,13 @@
   <div id="schedule" data-availability-endpoint="https://parc-availability.collinpikeusa.workers.dev">
 
     <div class="age-gate" id="age-gate">
-      <h2>Find your session</h2>
-      <p>Enter your date of birth so we can show the sessions you are eligible
-          to book.</p>
+        <h2>Before you pick a time</h2>
+        <p class="age-gate__why">Candidates under 18 need different identification, and
+          some sessions have different requirements. Tell us your date of birth and we
+          will show you the times you can actually book.</p>
+        <p class="age-gate__safe"><strong>This stays on your device.</strong> Your date of
+          birth is never sent to us, never sent to Calendly, and never saved anywhere. It
+          is used once, in your browser, to decide which times to show.</p>
       <form id="age-form" class="age-gate__form">
         <fieldset class="age-gate__fields">
           <legend class="noDisplay">Date of birth</legend>
@@ -134,11 +138,6 @@
             <select id="dob-year" required><option value="">Year</option></select>
           </span>
         </fieldset>
-        <p class="age-gate__privacy">
-          Your date of birth is used only inside your own browser to pick which sessions
-            to show.
-          It is never sent to us, never sent to Calendly, and never stored.
-        </p>
         <p class="ve-lock__status is-error" id="age-error" role="status" aria-live="polite"></p>
         <div class="age-gate__actions">
           <button type="submit" class="btn btn--primary">Show available times</button>
