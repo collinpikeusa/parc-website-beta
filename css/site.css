@@ -1704,3 +1704,14 @@ h2.doc-section {
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .reg-form__note { margin: var(--sp-3) 0 0; font-size: var(--step--1); color: var(--ink-2); }
+
+
+/* A page kept for reference whose content is tied to a past event. The notice
+   has to be unmissable: without it the page reads as current advice. */
+.shutdown-notice {
+  margin: var(--sp-4) 0 var(--sp-6);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--warn-bg, #FBF2E0);
+  border-left: 4px solid #8A5A00;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
