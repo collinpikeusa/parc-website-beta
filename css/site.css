@@ -518,7 +518,17 @@ th { background: var(--surface-2); font-weight: 700; }
 .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ---------- buttons ------------------------------------------------------ */
-button, .btn {
+/* One button shape for the whole site: same size, radius, weight and casing.
+   Only the fill changes, and the fill carries the meaning.
+
+     .btn--primary   solid red      the main action here, one per view
+     .page-link      red outline    a choice among several, or navigation
+     .btn            grey outline   quiet: back, next, dismiss, cancel
+
+   The navigation grids used to be a separate component with 2px borders, a
+   larger radius and uppercase labels, so the same kind of action looked
+   different depending which page you were on. */
+button, .btn, .page-link {
   font: inherit; font-weight: 600; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
   padding: var(--sp-3) var(--sp-5);
@@ -527,10 +537,13 @@ button, .btn {
   transition: background-color .15s ease, border-color .15s ease, transform .05s ease;
 }
 button:hover, .btn:hover { background: var(--surface-2); border-color: var(--muted); }
-button:active, .btn:active { transform: translateY(1px); }
+button:active, .btn:active, .page-link:active { transform: translateY(1px); }
 
-.btn--primary { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
-.btn--primary:hover { background: var(--parc-700); border-color: var(--parc-700); color: #fff; }
+.btn--primary,
+.btn--primary:link,
+.btn--primary:visited { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
+.btn--primary:hover,
+.btn--primary:focus-visible { background: var(--parc-700); border-color: var(--parc-700); color: #fff; }
 
 
 /* ---------- script toolbar (VE pages) ------------------------------------ */
@@ -1754,30 +1767,26 @@ h2.doc-section {
   padding: 0;
   list-style: none;
 }
-.page-link {
-  display: flex; align-items: center; justify-content: center;
-  min-height: 3.25rem;
-  padding: var(--sp-3) var(--sp-4);
-  text-align: center;
-  font-weight: 600; font-size: var(--step--1);
-  letter-spacing: .03em; text-transform: uppercase;
-  color: var(--parc-700);
-  background: var(--surface);
-  border: 2px solid var(--parc-red);
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: background-color .15s ease, color .15s ease;
-}
-.page-link:link, .page-link:visited { color: var(--parc-700); }
-.page-link:hover, .page-link:focus-visible {
-  background: var(--parc-red); color: #fff; border-color: var(--parc-red);
-}
+/* The outlined variant of the shared button. Only the colour differs — the box
+   comes from the base rule, so a navigation choice and an action button are the
+   same shape and size wherever they appear. */
+.page-link,
+.page-link:link,
+.page-link:visited { border-color: var(--parc-red); color: var(--parc-700); }
+
+/* The shared base is inline-flex, which shrinks to its text. Inside a grid the
+   cells should be equal, so stretch them. */
+.page-links .page-link { display: flex; width: 100%; }
+.page-link:hover,
+.page-link:focus-visible { background: var(--parc-red); border-color: var(--parc-red); color: #fff; }
 
 /* Back and Next read as direction, so they get arrows and sit at the edges. */
 .page-links--pager { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
 .page-link--back::before { content: "\2190\00a0"; }
 .page-link--next::after  { content: "\00a0\2192"; }
-.page-link--back, .page-link--next {
+.page-link--back, .page-link--next,
+.page-link--back:link, .page-link--next:link,
+.page-link--back:visited, .page-link--next:visited {
   border-color: var(--line-2); color: var(--ink-2);
 }
 .page-link--back:hover, .page-link--next:hover,
