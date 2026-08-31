@@ -1797,3 +1797,19 @@ h2.doc-section {
 @media (max-width: 480px) {
   .page-links { grid-template-columns: 1fr; }
 }
+
+
+/* ---------- legacy <center> containment ----------------------------------- */
+/* The original pages centre things with <center>, and one of them was left
+   unclosed — it centred the remaining two thirds of a page, leaving list numbers
+   at the margin while their text floated in the middle. The tag is balanced
+   again, but never centre a list or a paragraph of body copy even if an ancestor
+   asks for it: prose is read left-aligned and a marker has to sit beside its
+   item. Headings and single buttons may still be centred. */
+.container center ol,
+.container center ul,
+.container center p,
+.container center li,
+.container center table { text-align: left; }
+.container center ol,
+.container center ul { display: block; margin-inline: 0; }
