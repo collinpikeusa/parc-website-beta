@@ -310,6 +310,40 @@ page is worth glancing at now and then.
       own but takes weeks; removal requests take hours.
 - [ ] Consider a Google Business Profile for the in-person Roanoke/Auburn sessions
 
+### H. Traffic analytics — already wired, one token per domain
+
+Cloudflare Web Analytics. Cookieless, no personal data, no consent banner — the
+reason it is here rather than Google Analytics is that the schedule page asks
+minors for a date of birth, so anything setting cookies is the wrong tool.
+
+The token is chosen by hostname at build time from `SITE.analyticsTokens` in
+`tools/site-data.mjs`, resolved through `SITE_ORIGIN`:
+
+| Domain | Token |
+|---|---|
+| `radiotests.org` | `9ba7325d05ee4c318c7d359aefcac7a8` |
+| `parcradio.net` | `a3f57bbf8cf048d69b86140eb93c297d` |
+| `parcradio.org` | `86375f5cd0ea45a9a9083404b92011b6` |
+
+**These are not secrets.** Each ships in the HTML of every page it builds and is
+readable in View Source. Do not store them with `ADMIN_KEY` or `TURNSTILE_SECRET`.
+
+Three things worth knowing:
+
+- **`noindex` pages get no beacon.** That is all 19 VE pages plus `payhere`,
+  `team-submit` and `ve-file`. Examiners reopen script pages repeatedly during a
+  live session, which would inflate pageviews and make any old-site/new-site
+  comparison meaningless. It also keeps volunteers out of the data.
+- **An unlisted host emits no beacon at all**, rather than falling back to another
+  domain's token. Silence is the safe failure; mislabelled traffic is not. Add the
+  host to `analyticsTokens` when you add a domain.
+- **`sync-live-branch.sh` prints the token it built with.** Check that line: a
+  wrong token still renders perfectly and only shows up as another site's traffic
+  climbing for no reason.
+
+To add a domain: create the site in Cloudflare dash → Web Analytics → Add a site,
+add the hostname and token to `analyticsTokens`, rebuild, deploy.
+
 ---
 
 ## Routine: updating the site

@@ -51,6 +51,10 @@ SITE_ORIGIN="https://$LIVE_DOMAIN" node tools/parc-lock.mjs $WEAK >/dev/null
 echo
 echo "  CNAME      : $(cat CNAME)"
 echo "  canonical  : $(grep -o 'canonical" href="https://[^/]*' index.html | sed 's/.*href="//')"
+# The analytics token is keyed off SITE_ORIGIN in tools/site-data.mjs. Printed
+# because the failure is silent: a wrong token still renders, it just files this
+# site's traffic under another domain, and an empty result means an unlisted host.
+echo "  analytics  : $(grep -ho '"token": "[a-f0-9]*"' index.html | sed 's/.*: "//;s/"//')"
 echo "  VE payloads: $(grep -l 've-payload' pages/*.html | wc -l)/18"
 echo "  tracked _ve-source: $(git ls-files | grep -c '^_ve-source/' || true)"
 echo

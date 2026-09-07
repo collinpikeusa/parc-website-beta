@@ -15,7 +15,7 @@ export const SITE = {
   short: 'PARC',
   /* Override per build so canonical tags, Open Graph URLs and the sitemap all
      name the host actually serving the page:
-        SITE_ORIGIN=https://radiotest.org node tools/deploy.mjs
+        SITE_ORIGIN=https://radiotests.org node tools/deploy.mjs
      A canonical pointing at a different host tells search engines that host has
      the real version — which is wrong, and actively harmful when that host is
      serving different content. */
@@ -32,14 +32,38 @@ export const SITE = {
   // Paste the token from Search Console -> Settings -> Ownership verification.
   googleSiteVerification: '',
 
-  /* Cloudflare Web Analytics token, or '' for none.
+  /* Cloudflare Web Analytics, one token per site.
      Deliberately this and not Google Analytics: the schedule page asks minors
      for a date of birth, so anything that sets cookies or builds a cross-site
      profile is the wrong tool here. Cloudflare Web Analytics is cookieless,
      stores no personal data, and needs no consent banner.
      Get a token at: Cloudflare dash -> Web Analytics -> Add a site.
-     Override per build with ANALYTICS_TOKEN=... */
-  analyticsToken: process.env.ANALYTICS_TOKEN || '9ba7325d05ee4c318c7d359aefcac7a8',
+
+     Keyed by hostname because the same source builds several domains, and a
+     token is what tells Cloudflare which site a hit belongs to. Shipping one
+     domain's token from another silently merges their traffic into one graph,
+     which is the exact comparison this is here to make possible.
+
+     These are NOT secrets. Each ships in the HTML of every page it builds and
+     is readable in View Source. Worker secrets are the opposite - see DEPLOY.md. */
+  analyticsTokens: {
+    'radiotests.org': '9ba7325d05ee4c318c7d359aefcac7a8',
+    'parcradio.net':  'a3f57bbf8cf048d69b86140eb93c297d',
+    'parcradio.org':  '86375f5cd0ea45a9a9083404b92011b6',
+  },
+
+  /* Resolved from origin, so a build cannot emit the wrong site's token.
+     An unlisted host yields '' and the beacon is simply omitted, which is the
+     safe failure: no analytics beats attributing this site's traffic to another.
+     ANALYTICS_TOKEN=... overrides for a one-off build; ANALYTICS_TOKEN= (empty)
+     disables it. */
+  get analyticsToken() {
+    if (process.env.ANALYTICS_TOKEN !== undefined) return process.env.ANALYTICS_TOKEN;
+    let host;
+    try { host = new URL(this.origin).hostname.replace(/^www\./, ''); }
+    catch { return ''; }
+    return this.analyticsTokens[host] || '';
+  },
 };
 
 export const NAV = [
