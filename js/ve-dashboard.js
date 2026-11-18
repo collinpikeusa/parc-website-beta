@@ -31,7 +31,8 @@
     delta:   { label: 'D · Delta', page: 'Online_ScriptD.html' },
     easy:    { label: 'Easy Read', page: 'easyread.html' },
     compact: { label: 'No-Space Version', page: 'scriptnospace.html' },
-    w5yi:    { label: 'W5YI Version', page: 'Online_ScriptW5YI.html' }
+    w5yi:    { label: 'W5YI Version', page: 'Online_ScriptW5YI.html' },
+    old:     { label: 'Old Script', page: 'oldscript.html' }
   };
   var COMMON = ['current', 'full', 'id', 'scan'];
   var DEFAULT_ZOOM = root.getAttribute('data-zoom') || '';
@@ -364,6 +365,35 @@
   each(root.querySelectorAll('[data-reader]'), function (b) {
     b.addEventListener('click', function () { chooseReader(b.getAttribute('data-reader')); });
   });
+  /* The VE link row (the same menus as the scripts): a script opens in the
+     reader rather than leaving the dashboard. Modified clicks (new tab,
+     new window) are left to the browser. */
+  var pageToReader = {};
+  for (var rk in READERS) {
+    if (Object.prototype.hasOwnProperty.call(READERS, rk) && !pageToReader[READERS[rk].page]) {
+      pageToReader[READERS[rk].page] = rk;
+    }
+  }
+  root.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[data-reader-link]') : null;
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button) return;
+    var key = pageToReader[a.getAttribute('href')];
+    if (!key) return;
+    e.preventDefault();
+    chooseReader(key);
+    var dd = a.closest('.dropdown');
+    if (dd) {
+      dd.classList.remove('is-open');
+      var b = dd.querySelector('.dropbtn');
+      if (b && b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
+    }
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    var card = document.querySelector('.dash-reader');
+    if (card && card.scrollIntoView) card.scrollIntoView({ block: 'start' });
+    var h = $('dash-reader-h');
+    if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+  });
+
   $('dash-reader-more').addEventListener('change', function () { if (this.value) chooseReader(this.value); });
   $('dash-reader-focus').addEventListener('click', function () {
     var on = $('dash-workspace').classList.toggle('is-reader-focus');

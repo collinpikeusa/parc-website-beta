@@ -913,8 +913,7 @@ a.dropbtn--team:focus-visible {
 .ve-bar {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: var(--sp-1) var(--sp-4);
-  /* Fixed, not var(--ink): the dashboard's dark mode redefines --ink as a
-     light colour, which turned this bar pale. */
+  /* Fixed, not var(--ink): dark mode redefines --ink as a light colour. */
   background: #1F2328; color: #fff;
   border-bottom: 3px solid var(--parc-red);
   padding-block: var(--sp-1);
@@ -931,39 +930,24 @@ a.dropbtn--team:focus-visible {
   content: ""; flex: none; width: .55em; height: .55em; border-radius: 50%;
   background: var(--parc-red); box-shadow: 0 0 0 3px rgba(186,0,5,.28);
 }
-.ve-bar__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
-.ve-bar a.ve-bar__link,
 .ve-bar .ve-bar__lock {
-  /* inline-block, not flex: flex would drop the space in "Session Dashboard". */
-  display: inline-block; vertical-align: middle; text-align: center;
+  flex: none; display: inline-block; vertical-align: middle; text-align: center;
   padding: calc((2.25rem - 1.2em) / 2 - 1px) var(--sp-3);
-  border-radius: var(--radius-sm); border: 1px solid transparent;
+  border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,.6);
+  color: #fff; background: transparent;
   font: inherit; font-weight: 600; font-size: 1em; line-height: 1.2;
   letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
-  text-decoration: none; cursor: pointer; box-shadow: none;
+  cursor: pointer; box-shadow: none;
   transition: background-color .15s ease, border-color .15s ease, color .15s ease;
 }
-.ve-bar a.ve-bar__link:link, .ve-bar a.ve-bar__link:visited { color: #fff; background: transparent; }
-.ve-bar a.ve-bar__link:hover, .ve-bar a.ve-bar__link:focus-visible { color: #fff; background: var(--nav-bg-2); }
-.ve-bar .ve-bar__lock { color: #fff; background: transparent; border-color: rgba(255,255,255,.6); }
 .ve-bar .ve-bar__lock:hover, .ve-bar .ve-bar__lock:focus-visible { color: #1F2328; background: #fff; border-color: #fff; }
-.ve-bar a.ve-bar__link:focus-visible, .ve-bar .ve-bar__lock:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-/* Below the nav's own breakpoint: the notice on one line, the controls centred
-   on the next. "Session" is dropped from the dashboard link on phones so the
-   three controls stay on one row. */
-@media (max-width: 900px) {
-  .ve-bar { justify-content: center; text-align: center; padding-bottom: var(--sp-2); row-gap: 0; }
-  .ve-bar__label { display: block; padding-bottom: var(--sp-1); }
-  .ve-bar__label::before { display: inline-block; vertical-align: .08em; margin-right: var(--sp-2); }
-  .ve-bar__links { justify-content: center; gap: var(--sp-1); }
-}
+.ve-bar .ve-bar__lock:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Phones: the notice may wrap; Lock stays beside it on the right. */
 @media (max-width: 600px) {
-  .ve-bar__label { font-size: .82em; letter-spacing: .03em; }
-  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: var(--sp-2); letter-spacing: .02em; }
-  .ve-bar__long { display: none; }
-}
-@media (max-width: 360px) {
-  .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: 6px; letter-spacing: 0; }
+  .ve-bar { flex-wrap: nowrap; }
+  .ve-bar__label { flex: 1 1 auto; font-size: .82em; letter-spacing: .03em; }
+  .ve-bar__label::before { align-self: flex-start; margin-top: .45em; }
+  .ve-bar .ve-bar__lock { padding-inline: var(--sp-2); letter-spacing: .02em; }
 }
 .ve-file__actions {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
@@ -2410,6 +2394,14 @@ a.dash-skip:focus { left: var(--sp-4); top: var(--sp-4); z-index: 50; background
 .dash-dialog h3 { font-size: var(--step-1); margin-top: var(--sp-4); }
 .dash-check { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-4); font-weight: 600; }
 .dash-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--parc-red); }
+
+/* The dashboard's copy of the scripts' VE link row (My Profile and the four
+   menus), centred under the heading like it is in the scripts. */
+.dash-ve-links {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: var(--sp-1); margin: 0 0 var(--sp-4);
+}
+.dash-ve-links > a.dropbtn { margin: var(--sp-1); }
 
 /* A VE page shown inside the dashboard's reader: the dashboard already carries
    the VE bar, so the framed copy drops its own. Set by js/ve-lock.js. */
