@@ -49,6 +49,11 @@
       else localStorage.removeItem(THEME_KEY);
     } catch (e) { useMemory = true; }
     apply();
+    /* Storage events reach other pages only. The dashboard's Dark Mode button,
+       on this page, listens for this one. */
+    var ev = document.createEvent('Event');
+    ev.initEvent('parc-themechange', false, false);
+    document.dispatchEvent(ev);
   }
 
   apply();
@@ -59,6 +64,7 @@
   window.addEventListener('storage', function (e) {
     if (e.key === THEME_KEY || e.key === null) apply();
   });
+  document.addEventListener('parc-themechange', apply);
   if (mq) {
     if (mq.addEventListener) mq.addEventListener('change', apply);
     else if (mq.addListener) mq.addListener(apply);

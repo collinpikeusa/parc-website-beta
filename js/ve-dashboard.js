@@ -151,6 +151,10 @@
       if (t) localStorage.setItem(THEME_KEY, t);
       else localStorage.removeItem(THEME_KEY);
     } catch (e) { themeUseMemory = true; }
+    /* The nav's theme switch (js/site.js) on this same page listens for this. */
+    var ev = document.createEvent('Event');
+    ev.initEvent('parc-themechange', false, false);
+    document.dispatchEvent(ev);
   }
   /* Before the site theme, the dashboard kept its own. A VE who had chosen dark
      here keeps it, once, unless a site theme has been chosen since. */
@@ -386,6 +390,7 @@
   window.addEventListener('storage', function (e) {
     if (e.key === THEME_KEY || e.key === null) applyAppearance();
   });
+  document.addEventListener('parc-themechange', applyAppearance);
   if (themeMq) {
     if (themeMq.addEventListener) themeMq.addEventListener('change', applyAppearance);
     else if (themeMq.addListener) themeMq.addListener(applyAppearance);
