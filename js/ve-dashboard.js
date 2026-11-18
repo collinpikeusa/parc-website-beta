@@ -98,7 +98,6 @@
         startedAtEpoch: isFinite(t.startedAtEpoch) ? t.startedAtEpoch : 0
       },
       preferences: {
-        theme: p.theme === 'dark' ? 'dark' : 'light',
         remember: p.remember !== false,
         telegram: telegramUser(p.telegram || ''),
         zoom: validZoom(p.zoom) ? p.zoom : DEFAULT_ZOOM,
@@ -127,6 +126,35 @@
 
   var saved = decode(read('sessionStorage', TAB_STORE)) || decode(read('localStorage', STORE));
   var state = cleanState(saved);
+
+  /* ---------- theme ------------------------------------------------------ */
+  /* The dashboard uses the site-wide theme: the same key and rules as js/site.js,
+     repeated here because the two scripts are re-run in no fixed order when the
+     page is unlocked. Without a stored choice the device setting applies;
+     choosing the theme the device already uses clears the stored choice. */
+  var THEME_KEY = 'parc-theme';
+  var themeMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var themeMemory = null, themeUseMemory = false;
+  function storedTheme() {
+    var t = themeMemory;
+    if (!themeUseMemory) {
+      try { t = localStorage.getItem(THEME_KEY); } catch (e) { t = themeMemory; }
+    }
+    return t === 'dark' || t === 'light' ? t : null;
+  }
+  function deviceDark() { return !!(themeMq && themeMq.matches); }
+  function siteDark() { var t = storedTheme(); return t ? t === 'dark' : deviceDark(); }
+  function setSiteDark(dark) {
+    var t = dark === deviceDark() ? null : (dark ? 'dark' : 'light');
+    themeMemory = t;
+    try {
+      if (t) localStorage.setItem(THEME_KEY, t);
+      else localStorage.removeItem(THEME_KEY);
+    } catch (e) { themeUseMemory = true; }
+  }
+  /* Before the site theme, the dashboard kept its own. A VE who had chosen dark
+     here keeps it, once, unless a site theme has been chosen since. */
+  if (saved && saved.preferences && saved.preferences.theme === 'dark' && !storedTheme()) setSiteDark(true);
   var elapsed = restoreElapsed(state.timer), running = state.timer.running, start = now(), raf = 0;
   var lastSavedAt = 0, copying = false;
 
@@ -341,8 +369,9 @@
 
   /* ---------- appearance, settings, help --------------------------------- */
   function applyAppearance() {
-    var dark = state.preferences.theme === 'dark';
-    document.documentElement.setAttribute('data-dash-theme', dark ? 'dark' : 'light');
+    var dark = siteDark(), t = storedTheme();
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.removeAttribute('data-theme');
     document.documentElement.setAttribute('data-dash-size', state.preferences.textSize);
     $('dash-theme').setAttribute('aria-pressed', String(dark));
     $('dash-zoom').href = state.preferences.zoom;
@@ -351,9 +380,16 @@
       : 'Set a Telegram destination in Settings';
   }
   $('dash-theme').addEventListener('click', function () {
-    state.preferences.theme = state.preferences.theme === 'dark' ? 'light' : 'dark';
-    applyAppearance(); persist();
+    setSiteDark(!siteDark());
+    applyAppearance();
   });
+  window.addEventListener('storage', function (e) {
+    if (e.key === THEME_KEY || e.key === null) applyAppearance();
+  });
+  if (themeMq) {
+    if (themeMq.addEventListener) themeMq.addEventListener('change', applyAppearance);
+    else if (themeMq.addListener) themeMq.addListener(applyAppearance);
+  }
 
   var settings = $('dash-settings'), help = $('dash-help');
   function openDialog(d) {
