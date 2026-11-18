@@ -78,7 +78,7 @@
     if (!r.ok) { r.field = 'dash-score'; return r; }
     return {
       ok: true,
-      line: candidate + ', ' + fmt(ms) + ', ' + exam + ', ' + r.number + '/' + r.max,
+      line: candidate + ' ' + fmt(ms) + ' ' + exam + ' ' + r.number + '/' + r.max,
       fingerprint: JSON.stringify([candidate, exam, r.number, fmt(ms)])
     };
   }
