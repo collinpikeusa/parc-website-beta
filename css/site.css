@@ -1284,6 +1284,16 @@ a.dropbtn--team:focus-visible {
   background: var(--nav-bg-2); border-color: rgba(255, 255, 255, .5);
 }
 .nav-search-toggle svg { flex: none; }
+/* Icon only at every width, like the theme switch beside it; the button keeps
+   its aria-label and a tooltip. The bar's content is capped at 1208px, and the
+   eight menu items, "Search", the switch and Donate needed 1244px: the word
+   pushed "Our Team" onto a second row at any desktop width. Icon only, the row
+   holds down to about 1210px. On a phone the word cost a third of the bar. */
+.nav-search-toggle { padding: var(--sp-2); }
+.nav-search-toggle__label {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
 
 /* The theme switch: an icon button beside Search. Every state is written
    against .site-nav button.nav-theme-toggle with literal colours, because the
@@ -1294,7 +1304,7 @@ a.dropbtn--team:focus-visible {
 .site-nav button.nav-theme-toggle:active {
   align-self: center; flex: none;
   display: inline-flex; align-items: center; justify-content: center;
-  width: 2.375rem; height: 2.375rem; padding: 0; margin-left: var(--sp-2);
+  width: 2.375rem; height: 2.375rem; padding: 0; margin-left: 0;
   background: transparent; color: #FFFFFF;
   border: 1px solid rgba(255, 255, 255, .28); border-radius: var(--radius-sm);
   transform: none;
@@ -1375,13 +1385,6 @@ a.dropbtn--team:focus-visible {
   .nav-theme-toggle  { order: 3; }
   .nav-donate-form   { order: 4; margin-left: var(--sp-2); align-self: center; }
   .nav-menu          { order: 5; }
-
-  /* Icon only; the word costs a third of the bar on a phone. */
-  .nav-search-toggle { padding: var(--sp-2); }
-  .nav-search-toggle__label {
-    position: absolute; width: 1px; height: 1px;
-    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
-  }
 
   .search-panel__inner { padding: var(--sp-3); }
   .search-panel input { font-size: var(--step-0); padding-right: 2.75rem; }

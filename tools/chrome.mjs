@@ -177,7 +177,8 @@ export function buildHeader(rel) {
       </button>
 ${navHtml(rel)}
       <button type="button" class="nav-search-toggle" id="site-search-toggle"
-              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site">
+              aria-expanded="false" aria-controls="site-search-panel" aria-label="Search this site"
+              title="Search this site">
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
           <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
           <line x1="12.8" y1="12.8" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
