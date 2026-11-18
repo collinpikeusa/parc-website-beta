@@ -1390,7 +1390,8 @@ a.dropbtn--team:focus-visible {
 /* At 320px (an iPhone on Larger Text) Menu, Search, the theme switch and Donate
    only share one row with tighter gaps. */
 @media (max-width: 360px) {
-  .site-nav button.nav-theme-toggle { margin-left: 0; }
+  .site-nav__inner { padding-right: var(--sp-3); }
+  .site-nav button.nav-theme-toggle { margin-left: 0; width: 2.25rem; height: 2.25rem; }
   .nav-donate-form { margin-left: 0; }
   .nav-donate { padding-inline: var(--sp-3); }
   .site-nav button.nav-toggle { gap: var(--sp-2); }
