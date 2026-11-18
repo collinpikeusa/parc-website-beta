@@ -16,6 +16,8 @@
 
   var payloadEl = document.getElementById('ve-payload');
   if (!payloadEl) return;
+  // Where this file was loaded from, to load js/ve-protect.js beside it.
+  var SELF = (document.currentScript && document.currentScript.src) || '';
 
   var P;
   try { P = JSON.parse(payloadEl.textContent); } catch (e) { return; }
@@ -178,6 +180,13 @@
 
     if (P.t) document.title = P.t + ' | PARC';
     rerunScripts();
+
+    // Copy, save and print deterrents for the unlocked material.
+    if (SELF) {
+      var guard = document.createElement('script');
+      guard.src = SELF.replace(/ve-lock\.js(\?.*)?$/, 've-protect.js');
+      document.body.appendChild(guard);
+    }
 
     var btn = document.getElementById('ve-relock');
     if (btn) btn.addEventListener('click', function () { clearCached(); location.reload(); });

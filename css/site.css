@@ -870,8 +870,19 @@ a.dropbtn--team:focus-visible {
 @media (max-width: 360px) {
   .ve-bar a.ve-bar__link, .ve-bar .ve-bar__lock { padding-inline: 6px; letter-spacing: 0; }
 }
-.ve-file__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-bottom: var(--sp-4); }
-.ve-file__frame { width: 100%; height: min(80vh, 900px); border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-2); }
+.ve-file__actions {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--sp-3); margin-bottom: var(--sp-2);
+}
+.ve-file__name { margin: 0; }
+/* Training documents drawn as page images by js/ve-file.js (PDF.js). */
+.ve-file__pages { display: grid; gap: var(--sp-4); margin-top: var(--sp-3); }
+.ve-file__page {
+  position: relative; width: 100%; aspect-ratio: 8.5 / 11;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-1); overflow: hidden;
+}
+.ve-file__page canvas { display: block; width: 100%; height: 100%; }
 
 /* ---------- schedule page ------------------------------------------------ */
 .age-gate {
@@ -2275,3 +2286,37 @@ html.ve-framed .ve-bar,
 html.ve-framed .site-header, html.ve-framed .site-banner, html.ve-framed .site-nav,
 html.ve-framed .site-footer, html.ve-framed .study-band, html.ve-framed .skip-link { display: none; }
 html.ve-framed .container { margin-block: 0; }
+
+/* ---------- VE copy deterrents (js/ve-protect.js) ------------------------ */
+/* Unlocked VE material: no selecting, long-press callout or dragging, except
+   in form fields, which the dashboard needs. */
+html.ve-protected body {
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+}
+html.ve-protected img, html.ve-protected canvas { -webkit-user-drag: none; }
+html.ve-protected input, html.ve-protected textarea, html.ve-protected select,
+html.ve-protected [contenteditable="true"], html.ve-protected .ve-allow-copy {
+  -webkit-user-select: text; user-select: text;
+  -webkit-touch-callout: default;
+}
+.ve-protect-notice {
+  position: fixed; left: 50%; bottom: var(--sp-5); z-index: 1000;
+  transform: translate(-50%, 1rem); opacity: 0; pointer-events: none;
+  max-width: calc(100vw - 2 * var(--sp-4)); margin: 0;
+  padding: var(--sp-3) var(--sp-4); border-radius: var(--radius-sm);
+  background: #1F2328; color: #fff; box-shadow: var(--shadow-3);
+  font-size: var(--step--1); font-weight: 600; text-align: center;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.ve-protect-notice.is-shown { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .ve-protect-notice { transition: none; } }
+/* Printing from the browser menu prints a notice instead of the material. */
+@media print {
+  html.ve-protected body > * { display: none !important; }
+  html.ve-protected body::before {
+    content: "VE material may not be printed.";
+    display: block; padding: 2rem; font: 600 14pt/1.4 sans-serif; color: #000;
+  }
+}
+
