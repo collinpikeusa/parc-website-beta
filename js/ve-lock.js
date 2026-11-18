@@ -133,7 +133,7 @@
       '<span class="ve-bar__label">VE material \u2014 not for public distribution</span>' +
       '<span class="ve-bar__links">' +
       '<a class="ve-bar__link" href="../index.html">Main Website</a>' +
-      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html">Session Dashboard</a>') +
+      (onDash || framed ? '' : '<a class="ve-bar__link" href="ve-dashboard.html"><span class="ve-bar__long">Session </span>Dashboard</a>') +
       '<button type="button" class="ve-bar__lock" id="ve-relock">Lock</button></span>';
     doc.body.insertBefore(bar, doc.body.firstChild);
 
